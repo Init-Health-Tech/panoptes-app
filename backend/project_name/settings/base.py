@@ -71,6 +71,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "common.context_processors.admin_environment_label",
                 "common.context_processors.sentry_dsn",
                 "common.context_processors.commit_sha",
             ],
@@ -181,6 +182,11 @@ CELERY_EVENT_QUEUE_TTL = config("CELERY_EVENT_QUEUE_TTL", cast=float, default=5.
 # Sentry
 SENTRY_DSN = config("SENTRY_DSN", default="")
 COMMIT_SHA = config("RENDER_GIT_COMMIT", default="")
+ADMIN_ENVIRONMENT_LABEL = config("ADMIN_ENVIRONMENT_LABEL", default="")
+ADMIN_ENVIRONMENT_COLOR = config("ADMIN_ENVIRONMENT_COLOR", default="#111827")
+ADMIN_ENVIRONMENT_BACKGROUND_COLOR = config(
+    "ADMIN_ENVIRONMENT_BACKGROUND_COLOR", default="#f59e0b"
+)
 
 # Fix for Safari 12 compatibility issues, please check:
 # https://github.com/vintasoftware/safari-samesite-cookie-issue

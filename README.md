@@ -146,6 +146,8 @@ After completing ALL of the above, remove this `Project bootstrap` section from 
         -   The url format is the following: `postgres://USER:PASSWORD@HOST:PORT/NAME`
     -   If you wish to use another database engine locally, add a new `DATABASE_URL` setting for the database you wish to use
         -   Please refer to [dj-database-url](https://github.com/jazzband/dj-database-url#url-schema) on how to configure `DATABASE_URL` for commonly used engines
+-   Set `ADMIN_ENVIRONMENT_LABEL` to the text you want displayed in the Django admin notice (for example `Local`, `Staging`, or `Production`). If omitted, the admin falls back to the current Django settings module name.
+-   Optionally set `ADMIN_ENVIRONMENT_COLOR` and `ADMIN_ENVIRONMENT_BACKGROUND_COLOR` to customize the notice colors.
 -   Open a new command line window and go to the project's directory
 -   Run `poetry install`
 
@@ -280,6 +282,18 @@ You can generate a new key by running the following command on your local machin
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
+
+#### `ADMIN_ENVIRONMENT_LABEL`
+
+Set this to a short label such as `Production`, `Staging`, or `Review App`. The value is rendered as a persistent notice above the Django admin so staff users can immediately see which environment they are changing.
+
+#### `ADMIN_ENVIRONMENT_COLOR`
+
+Controls the notice text color. Defaults to `#111827`.
+
+#### `ADMIN_ENVIRONMENT_BACKGROUND_COLOR`
+
+Controls the notice background color. Defaults to `#f59e0b`.
 
 ### Build script
 

@@ -135,3 +135,6 @@ JS_REVERSE_EXCLUDE_NAMESPACES = ["admin"]
 
 # Sentry
 sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], release=COMMIT_SHA)
+ADMIN_ENVIRONMENT_LABEL = config("ADMIN_ENVIRONMENT_LABEL", default="")
+ADMIN_ENVIRONMENT_COLOR = config("ADMIN_ENVIRONMENT_COLOR", default="white")
+ADMIN_ENVIRONMENT_BACKGROUND_COLOR = config("ADMIN_ENVIRONMENT_BACKGROUND_COLOR", default="red")
