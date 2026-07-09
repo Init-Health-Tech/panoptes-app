@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID - Personnel Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline": "#707a6d",
+                        "on-secondary-container": "#32713b",
+                        "surface": "#f9f9f9",
+                        "secondary": "#2b6b35",
+                        "on-primary-fixed": "#002106",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#aef3af",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#a6f5a8",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#19662a",
+                        "primary-container": "#368040",
+                        "tertiary-fixed-dim": "#95d1d1",
+                        "on-secondary-fixed-variant": "#0e5220",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c0c9bb",
+                        "inverse-primary": "#8bd88e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "tertiary": "#246262",
+                        "tertiary-fixed": "#b1eeed",
+                        "surface-container-low": "#f4f3f3",
+                        "surface-tint": "#206c2f",
+                        "primary-fixed-dim": "#8bd88e",
+                        "on-secondary-fixed": "#002107",
+                        "on-primary-container": "#e3ffde",
+                        "on-surface-variant": "#40493e",
+                        "inverse-surface": "#2f3131",
+                        "on-primary-fixed-variant": "#00531b",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "on-tertiary-fixed": "#002020",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#aef3af",
+                        "surface-container": "#eeeeed",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#3f7b7b",
+                        "on-tertiary-fixed-variant": "#074f4f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d9fffe",
+                        "secondary-fixed-dim": "#93d695"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 10px; }
+        .active-ring { outline: 2px solid #19662a; outline-offset: 2px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface shadow-sm flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Panoptes</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70 uppercase tracking-widest">Clinical &amp; Logistics</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<!-- Patients Tab as Active (closest match to Personnel/Management context) -->
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-surface-container-high text-primary font-bold transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md flex items-center justify-center gap-2 shadow-md hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Scan
+            </button>
+<div class="pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar Anchor -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Panoptes RFID</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Inventory</a>
+<a class="font-label-md text-primary border-b-2 border-primary pb-1" href="#">Personnel</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-lg">search</span>
+</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-1.5 text-body-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Search profiles..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined">sensors</span></button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Personnel Dashboard Content -->
+<section class="flex-1 flex overflow-hidden">
+<!-- Left Sidebar: Filterable Directory -->
+<div class="w-1/3 min-w-[380px] bg-white border-r border-outline-variant flex flex-col">
+<div class="p-6 border-b border-outline-variant">
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-headline-sm text-headline-sm">Staff Directory</h2>
+<span class="font-label-md text-label-md text-outline">128 active personnel</span>
+</div>
+<div class="flex gap-2 bg-surface-container-low p-1 rounded-lg">
+<button class="flex-1 py-1.5 text-label-md rounded bg-white shadow-sm text-primary">All</button>
+<button class="flex-1 py-1.5 text-label-md rounded text-on-surface-variant hover:bg-white/50">Doctors</button>
+<button class="flex-1 py-1.5 text-label-md rounded text-on-surface-variant hover:bg-white/50">Technicians</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Technician Item -->
+<div class="p-4 border-b border-outline-variant bg-surface-container-low cursor-pointer hover:bg-surface-container-high transition-colors" onclick="selectProfile('tech-1')">
+<div class="flex items-start gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional headshot of a healthcare technician with short dark hair, wearing clean green clinical scrubs and a digital RFID lanyard. The lighting is bright and sterile, typical of a modern hospital environment, with a soft-focus background of medical monitoring equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiR5kUU3I4wWtn3rCQjt791QESNDanvwa5VbBvZuuRGMD6UFzQuvo1qPR644yhgWCaG1JUROJ3wiHZYkTbVtoMyUmgUk9pO2R9349r_gu-lFfpJPtWvy4F783o5T3eJYh2XmOBqk1o2iNBCgdL-x5G76Z-txTt6vmlmQGApOlm_kP6EV4ohrimtQ9hle6dCFhNNEOoQUqOW6ijUtlD8CU2xaYW5xn8XDInhqPfs2X0VYJqUK6xCWIGV5z59BkTQZfmL_mnHjcuPNWx"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full border-2 border-white"></span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[16px] leading-tight">Sarah Jenkins</h3>
+<span class="font-label-md text-[10px] uppercase bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded">Active</span>
+</div>
+<p class="font-label-md text-outline">Lead RFID Technician</p>
+<div class="mt-2 flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs font-medium">Surgery A - Wing 4</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Doctor Item -->
+<div class="p-4 border-b border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors" onclick="selectProfile('doc-1')">
+<div class="flex items-start gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover grayscale-[0.2]" data-alt="A portrait of a senior male physician with graying hair and glasses, wearing a white lab coat over a blue button-down shirt. The aesthetic is professional and clinical, with bright ambient lighting and a high-key background suggesting a clean medical office or research facility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADGXPWC1NTfS9L4yftCg2pMZf7tP0M0X9j_mEe4TTk2dI6il-qVuw8tTzsi6SWDHtJdjvvfxyfdS3b3e8VD_yjfY3x8hZwx_DdhRnWHMP6djO9G6eBglQbFIVPf9gOG60xlELw8fAOgUK1KUF4Urdo2O71SxfVFi_NGT_P95b-hG6HbaEGGvv-rJoDFp_ZbxPH-fPpDBX_G0EETfsuCMJ1eboqWctl4VnebFlp_iRDks_Ucu8oD_Zt5yyIqW_xYyIHyAWdVX6FP9CX"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[16px] leading-tight">Dr. Alistair Vance</h3>
+<span class="font-label-md text-[10px] uppercase bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded">Off-site</span>
+</div>
+<p class="font-label-md text-outline">Chief Surgical Officer</p>
+<div class="mt-2 flex items-center gap-1.5 text-outline">
+<span class="material-symbols-outlined text-sm">history</span>
+<span class="text-xs">Last procedure: 2h ago</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Technician -->
+<div class="p-4 border-b border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-start gap-4">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A high-quality studio portrait of a young medical professional, a female technician with her hair tied back, wearing dark blue scrubs. The lighting is cool and professional, emphasizing a modern healthcare brand identity, with soft teal accents in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAtdqr_HNfp-HGW04la-fV_SNlitmEA57I8a5MdwnTHiviN_jE-0fyyfFLB_pPo1066bcDpZIEWKDIpoYqnrWxuBtM7WvbqsK1bhyS2dvk-supctvTCX3modlEhlq-CkiAyMWC73JGeIsrxtvVGvKuNKYaE10H2iqBniQzaVMxKsodaHjnwAcZ995mwT7BfNdjlK9LO4ah9MMHWV8bPBIXpNaJmKoLoU0MWi_H7H3i2ZZdto2enlhEJL5wF40Z2Fo4MipHbAALlIRo"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-tertiary-container rounded-full border-2 border-white"></span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-[16px] leading-tight">Marcus Thorne</h3>
+<span class="font-label-md text-[10px] uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-0.5 rounded">Available</span>
+</div>
+<p class="font-label-md text-outline">Equipment Specialist</p>
+<div class="mt-2 flex items-center gap-1.5 text-outline">
+<span class="material-symbols-outlined text-sm">home_pin</span>
+<span class="text-xs">Central Warehouse</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Repeat Items for scroll -->
+<div class="p-4 border-b border-outline-variant cursor-pointer hover:bg-surface-container-low transition-colors opacity-60">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center font-bold text-outline">EM</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-[16px]">Elena Martinez</h3>
+<p class="font-label-md text-outline">Radiology Tech</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Detailed Profile Card -->
+<div class="flex-1 bg-background p-8 overflow-y-auto custom-scrollbar" id="profile-canvas">
+<!-- Technician Detail View (Default) -->
+<div class="max-w-4xl mx-auto space-y-6" id="tech-1-view">
+<div class="bg-white rounded-xl shadow-sm overflow-hidden border border-outline-variant">
+<div class="h-32 relative">
+
+<div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent"></div>
+</div>
+<div class="px-8 pb-8 -mt-12 relative flex items-end gap-6">
+<img class="w-32 h-32 rounded-2xl border-4 border-white shadow-lg object-cover" data-alt="Close up professional portrait of Sarah Jenkins, a healthcare technician with focused expression, wearing clean green clinical scrubs. The setting is a brightly lit medical storage facility with RFID scanners in the background, creating a high-tech medical aesthetic with clean white and green colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDjrz0OOV80psyZtxOpvoeDcf_1C6OxU8Yxowm3jUwt0Hn1KPJExx9N68ufkr0r6N6YWB8qMMzMYYL_D-rvhSaXvTyMd0QZvdJe-at8Hv5MksQhclZg7yLp5G2UtHnYQgM7xffMtA1F2SgMNoaaLbEoG9Axh9RNla5oFZjNmEYGCBrYuumnjnZa6DEowKRHQORJkMkRHiiaIAHzI3WYFtC0Gpbbf7DOg6w-zrePBvN13eZHYaMz5XKbNAC1xb76UkrNc4ILNJ2kYgX"/>
+<div class="pb-2">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Sarah Jenkins</h1>
+<p class="font-body-md text-outline flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">badge</span> 
+                                    Senior Field Technician (ID: #RFID-9920)
+                                </p>
+</div>
+<div class="ml-auto pb-4 flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg font-label-md hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined text-lg">mail</span> Contact
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md shadow-md hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">edit</span> Manage Assignment
+                                </button>
+</div>
+</div>
+</div>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Status Card -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="font-label-md text-outline mb-4 uppercase tracking-tighter">Current Status</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-secondary">Active</h4>
+<p class="text-xs text-outline">Engagement: 4.2 hrs</p>
+</div>
+</div>
+<div class="mt-6">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-medium">Daily Workload</span>
+<span class="text-xs font-medium">85%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<!-- Active Assignment Card -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="font-label-md text-outline mb-4 uppercase tracking-tighter">Active Assignment</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">medical_information</span>
+</div>
+<div>
+<h4 class="font-headline-sm">Surgery A</h4>
+<p class="text-xs text-outline">Wing 4, Room 402</p>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<span class="text-[10px] px-2 py-1 bg-surface-container-highest rounded text-on-surface-variant">Asset Tracking</span>
+<span class="text-[10px] px-2 py-1 bg-surface-container-highest rounded text-on-surface-variant">Sterility Check</span>
+</div>
+</div>
+<!-- Communication Card -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="font-label-md text-outline mb-4 uppercase tracking-tighter">Connection Info</p>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">phone_android</span>
+<span class="text-body-sm font-data-mono">+1 (555) 012-9920</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">radio</span>
+<span class="text-body-sm font-data-mono">CH-12 (Emergency)</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-lg">mail_outline</span>
+<span class="text-body-sm">s.jenkins@panoptes.com</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Task History Table -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-[18px]">Recent Activity Log</h3>
+<button class="text-primary font-label-md flex items-center gap-1">
+                                View Export <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-3 font-label-md text-outline uppercase tracking-wider text-xs">Event</th>
+<th class="px-6 py-3 font-label-md text-outline uppercase tracking-wider text-xs">Location</th>
+<th class="px-6 py-3 font-label-md text-outline uppercase tracking-wider text-xs">Time</th>
+<th class="px-6 py-3 font-label-md text-outline uppercase tracking-wider text-xs">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">inventory</span>
+<span class="text-body-sm font-medium">Maleta Audit Complete</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm">ICU North Storage</td>
+<td class="px-6 py-4 text-body-sm text-outline">09:42 AM</td>
+<td class="px-6 py-4">
+<span class="text-[11px] font-bold text-secondary bg-secondary-container px-2 py-0.5 rounded">VERIFIED</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-sm">priority_high</span>
+<span class="text-body-sm font-medium">RFID Tag Replacement</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm">Operating Theater 2</td>
+<td class="px-6 py-4 text-body-sm text-outline">08:15 AM</td>
+<td class="px-6 py-4">
+<span class="text-[11px] font-bold text-on-surface-variant bg-surface-container-highest px-2 py-0.5 rounded">RESOLVED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Doctor Read-Only View (Hidden by default, shown via JS) -->
+<div class="hidden max-w-4xl mx-auto space-y-6" id="doc-1-view">
+<div class="bg-white rounded-xl shadow-sm p-8 border border-outline-variant flex items-start gap-8">
+<img class="w-40 h-40 rounded-full object-cover grayscale-[0.3]" data-alt="A refined and professional portrait of Dr. Alistair Vance, a senior medical professional with graying hair and a calm expression. He is wearing a white medical coat and a stethoscope around his neck. The lighting is sophisticated and bright, with a minimalist background that reflects a high-end corporate medical facility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN0oknaJdkNi_RQiOQ8qhSxHi9iIPuN6bVUaEXAsWWQlh9amAeyUyAKwJsf7aOvYLIHBe6DTbTci5ruRhs9M2Ukdaqvl4nzY_Hzjif8LKh6okJTijzq-J8EqD9-1rP5N04VupZvq7og09PSAf58gLyEyO-a_A9CAtvoBssirTHgzy24cEY8DCvpaBfIYnozweOunfJrJ3iuTkCC7plwL-cK5-_4b4RYGtHqxaKES-6vRMFhy2YEO6jKCKQJ1Ept_X4SnyrWaOlblzE"/>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h1 class="font-headline-lg text-headline-lg">Dr. Alistair Vance, MD</h1>
+<p class="font-body-md text-primary font-semibold">Chief Surgical Officer</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full text-xs font-medium text-outline">General Surgery</span>
+<span class="px-3 py-1 bg-surface-container rounded-full text-xs font-medium text-outline">Logistics Oversight</span>
+<span class="px-3 py-1 bg-surface-container rounded-full text-xs font-medium text-outline">MD-0012</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center min-w-[120px]">
+<p class="text-[10px] text-outline uppercase font-bold">Procedure Success</p>
+<p class="text-3xl font-display-lg text-primary">99.2%</p>
+</div>
+</div>
+<div class="mt-6 border-t border-outline-variant pt-6 flex gap-12">
+<div>
+<p class="text-xs text-outline mb-1">Primary Department</p>
+<p class="font-body-md font-bold">Vascular Surgery</p>
+</div>
+<div>
+<p class="text-xs text-outline mb-1">Total Procedures (2024)</p>
+<p class="font-body-md font-bold">482 Units</p>
+</div>
+<div>
+<p class="text-xs text-outline mb-1">Last Logged On</p>
+<p class="font-body-md font-bold">14 Oct, 11:30 AM</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+<h3 class="font-headline-sm mb-4">Procedure History</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+<div>
+<p class="text-sm font-bold">Cardiac Stent Placement</p>
+<p class="text-[10px] text-outline">Oct 12, 2024 • Room 202</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+<div>
+<p class="text-sm font-bold">Bilateral Bypass</p>
+<p class="text-[10px] text-outline">Oct 10, 2024 • Room 105</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden">
+<h3 class="font-headline-sm mb-4">Inventory Affiliation</h3>
+<p class="text-sm text-outline mb-6">Equipment and Maletas frequently authorized by Dr. Vance.</p>
+<div class="flex -space-x-4">
+<div class="w-16 h-16 rounded-lg bg-surface-container-highest border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-primary">medical_services</span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-highest border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-primary">biotech</span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-highest border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-primary">heart_plus</span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-low border-2 border-white flex items-center justify-center text-xs font-bold text-outline">
+                                    +12
+                                </div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        function selectProfile(profileId) {
+            const techView = document.getElementById('tech-1-view');
+            const docView = document.getElementById('doc-1-view');
+            const canvas = document.getElementById('profile-canvas');
+            
+            // Basic toggle logic
+            if (profileId === 'tech-1') {
+                techView.classList.remove('hidden');
+                docView.classList.add('hidden');
+            } else if (profileId === 'doc-1') {
+                docView.classList.remove('hidden');
+                techView.classList.add('hidden');
+            }
+            
+            // Simple animation trigger for content entry
+            canvas.style.opacity = '0';
+            canvas.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                canvas.style.transition = 'all 0.4s ease';
+                canvas.style.opacity = '1';
+                canvas.style.transform = 'translateY(0)';
+            }, 50);
+        }
+
+        // Initialize micro-interactions
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => el.classList.add('scale-95'));
+            el.addEventListener('mouseup', () => el.classList.remove('scale-95'));
+            el.addEventListener('mouseleave', () => el.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>

@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     "django_guid",
     "common",
     "users",
+    "organizations",
+    "inventory",
+    "medical",
+    "logistics",
 ]
 
 MIDDLEWARE = [
@@ -52,6 +56,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "organizations.middleware.OrganizationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
@@ -59,7 +64,7 @@ MIDDLEWARE = [
     "django_guid.middleware.guid_middleware",
 ]
 
-ROOT_URLCONF = "{{project_name}}.urls"
+ROOT_URLCONF = "project_name.urls"
 
 TEMPLATES = [
     {
@@ -88,7 +93,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "{{project_name}}.wsgi.application"
+WSGI_APPLICATION = "project_name.wsgi.application"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -119,8 +124,8 @@ REST_FRAMEWORK = {
 
 # drf-spectacular
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Vinta Boilerplate API",
-    "DESCRIPTION": "A Django project boilerplate with Vinta's best practices",
+    "TITLE": "Panoptes API",
+    "DESCRIPTION": "RFID medical and logistics control platform for INIT Health Tech",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }

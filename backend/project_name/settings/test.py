@@ -3,6 +3,15 @@ from .base import *
 
 SECRET_KEY = "test"  # nosec
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": base_dir_join("test_db.sqlite3"),
+    }
+}
+
+DEFENDER_REDIS_URL = "redis://localhost:6379/0"
+
 STATIC_ROOT = base_dir_join("staticfiles")
 STATIC_URL = "/static/"
 

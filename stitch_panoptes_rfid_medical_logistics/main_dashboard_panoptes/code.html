@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .radar-pulse {
+            position: relative;
+        }
+        .radar-pulse::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: currentColor;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline": "#707a6d",
+                        "on-secondary-container": "#32713b",
+                        "surface": "#f9f9f9",
+                        "secondary": "#2b6b35",
+                        "on-primary-fixed": "#002106",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#aef3af",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#a6f5a8",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#19662a",
+                        "primary-container": "#368040",
+                        "tertiary-fixed-dim": "#95d1d1",
+                        "on-secondary-fixed-variant": "#0e5220",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c0c9bb",
+                        "inverse-primary": "#8bd88e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "tertiary": "#246262",
+                        "tertiary-fixed": "#b1eeed",
+                        "surface-container-low": "#f4f3f3",
+                        "surface-tint": "#206c2f",
+                        "primary-fixed-dim": "#8bd88e",
+                        "on-secondary-fixed": "#002107",
+                        "on-primary-container": "#e3ffde",
+                        "on-surface-variant": "#40493e",
+                        "inverse-surface": "#2f3131",
+                        "on-primary-fixed-variant": "#00531b",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "on-tertiary-fixed": "#002020",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#aef3af",
+                        "surface-container": "#eeeeed",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#3f7b7b",
+                        "on-tertiary-fixed-variant": "#074f4f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d9fffe",
+                        "secondary-fixed-dim": "#93d695"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Persistent SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface dark:bg-inverse-surface shadow-sm flex flex-col py-6 z-50 transition-all duration-300">
+<!-- Brand Header -->
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="sensors" style="font-variation-settings: 'FILL' 1;">sensors</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-sm font-bold text-primary dark:text-inverse-primary leading-none">Panoptes</h1>
+<p class="font-label-md text-label-md text-outline uppercase tracking-wider mt-1">Clinical &amp; Logistics</p>
+</div>
+</div>
+<!-- Mode Toggle -->
+<div class="px-4 mb-6">
+<div class="bg-surface-container-low rounded-lg p-1 flex">
+<button class="flex-1 py-1.5 px-2 rounded-md bg-white shadow-sm text-primary font-label-md transition-all">Clinical</button>
+<button class="flex-1 py-1.5 px-2 rounded-md text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all">Logistics</button>
+</div>
+</div>
+<!-- Main Navigation -->
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-surface-container-high dark:bg-secondary-container text-primary dark:text-on-secondary-container font-bold scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="warehouse">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<!-- CTA & Footer -->
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-headline-sm text-label-md shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Scan
+            </button>
+<div class="pt-4 border-t border-outline-variant space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-64 text-on-surface-variant" placeholder="Search Inventory, RFID IDs, Patients..." type="text"/>
+</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-primary dark:text-inverse-primary border-b-2 border-primary pb-1 font-label-md text-label-md transition-colors" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary font-label-md text-label-md transition-colors" href="#">Inventory</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary font-label-md text-label-md transition-colors" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="relative text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary-container radar-pulse text-secondary"></div>
+<span class="font-label-md text-label-md text-secondary uppercase">Scanning Active</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-container-padding space-y-stack-lg">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Command Center</h2>
+<p class="text-on-surface-variant text-body-md">Real-time RFID logistics and clinical tracking.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                        Filter View
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                        Export Data
+                    </button>
+</div>
+</div>
+<!-- Top Section: 4 KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- KPI Card 1 -->
+<div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined" data-icon="tag">tag</span>
+</div>
+<span class="text-secondary font-label-md text-label-md">+12.5%</span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Active RFID Tags</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-md">14,282</span>
+<span class="text-outline text-body-sm">units</span>
+</div>
+<div class="mt-4 h-12 w-full">
+<div class="flex items-end h-full gap-1">
+<div class="w-full bg-secondary/20 h-[30%] rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-[45%] rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-[35%] rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-[60%] rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-[50%] rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-[80%] rounded-t-sm"></div>
+<div class="w-full bg-secondary h-[100%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- KPI Card 2 -->
+<div class="glass-card p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-tertiary/10 text-tertiary">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+<span class="text-tertiary font-label-md text-label-md">Normal</span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Kits in Transit</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-md">42</span>
+<span class="text-outline text-body-sm">Maletas</span>
+</div>
+<div class="mt-4 h-12 w-full flex items-center">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-3/4 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- KPI Card 3 -->
+<div class="glass-card p-6 rounded-xl shadow-sm border-l-4 border-error">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-error/10 text-error">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<span class="text-error font-label-md text-label-md">Critical</span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Low Stock Alerts</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-md text-error">18</span>
+<span class="text-outline text-body-sm">skus</span>
+</div>
+<div class="mt-4 flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200" data-alt="High quality professional photograph of a medical supplies stock room with shelves of bandages and surgical kits, dramatic red warning lighting, sterile clinical environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpLPWMp5ni9UuzL2tBaoHZ-jlT83lWkeGGWGWHlPyIpGlm1G_vd8paS7y7ymKJzm2YGzD-LEswcZRblvNNA_U-6fbM6G_d23UKvvLB5RphxT0JSqZj4iLZA--wyaeLxV3sEc3aponkwEGFGF_wS766L6_uROCGkslCdPxuhUWoElmtQVlO7A2r7H-HyG2a5nB_r_e7cTUbVcy34AgYGU8QfmGTqC1dVwO-0iH0kUqZCEsERbgXwhQ9UKbHMBZlMDGpy9NfJkTztkQF')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200" data-alt="Detailed close-up photo of medical inventory barcodes being scanned, blue and green accent colors, modern healthcare warehouse setting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBrDM0r44nGRxWyMwupyrwU8JoQUaP79G6PNzho4wCllo1MNyxQYrHDB6jeOSJoWl7c485e4jQDv3Lga85kldWHaEL8LSQGPEaFeIkKQjx8XHqxHdpqMy2ORJf8SomEUohl9jgzrgAjDEONl_GA6Mhoohpr7_4J86KIawRXsewL2mfgHwZ-B8TzHf3MLlmrL4U512f9cNq7drJ2GFyrpAminQgHrw3cI_h9Z6nVvWVs83sXnWkIxQDoC0PRi63BFf-gq41xb-T6Z-9h')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold bg-error-container text-on-error-container">+15</div>
+</div>
+</div>
+<!-- KPI Card 4 -->
+<div class="glass-card p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined" data-icon="request_quote">request_quote</span>
+</div>
+<span class="text-on-surface-variant font-label-md text-label-md">Pending</span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase mb-1">Pending Requisitions</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-md">114</span>
+<span class="text-outline text-body-sm">requests</span>
+</div>
+<div class="mt-4 h-12 flex items-center justify-between gap-1">
+<div class="flex-1 bg-surface-container rounded h-full relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary/40 h-2/3"></div>
+</div>
+<div class="flex-1 bg-surface-container rounded h-full relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary/40 h-1/2"></div>
+</div>
+<div class="flex-1 bg-surface-container rounded h-full relative overflow-hidden">
+<div class="absolute bottom-0 w-full bg-primary h-5/6"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Middle Section: Bento Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- RFID Activity Feed (Left 2 Columns) -->
+<div class="lg:col-span-2 glass-card rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Live RFID Activity</h3>
+<div class="flex items-center gap-2 text-primary font-label-md">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                            Streaming live data
+                        </div>
+</div>
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<tr>
+<th class="px-6 py-4">Asset ID</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Location</th>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4 text-right">Handler</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">ML-9928-RT</span>
+<span class="text-xs text-outline">Surgical Maleta C</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded">In Stock</span>
+</td>
+<td class="px-6 py-4 text-body-sm">Main Warehouse A</td>
+<td class="px-6 py-4 text-body-sm font-data-mono">14:22:11</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-body-sm">Dr. Aris</span>
+<div class="w-6 h-6 rounded-full bg-slate-300" data-alt="A professional headshot of a female doctor in her 40s wearing a white lab coat, clean studio lighting, medical office background, high resolution photography." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0CiGZ4AI4pPTMAbW2pAugstv8vTyL9Qqq3YqUmZc36puSI7KOS9fSor1jVQrnIeLmHO2C7KgPi67KAmKKXiKOsobl3f_WVwFHw1Rtr6DX520-T-AM5-WfoSyRfI8hL7pKfXWtLlG_qKvnhGV3zCEdwAWUXb8NNvlBwGYS715TZMXRbYV6Mnwb8pCCn1pin-g3wcrlSgkcwhvnZJ_tZkB73zxWxvLjdq61Z-cYJaQUuq360f6mMxXzq1MWNo-DVsQoeQ4E9U7LQKBI')"></div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">BT-1120-GH</span>
+<span class="text-xs text-outline">Plasma Unit 12</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase rounded">In Transit</span>
+</td>
+<td class="px-6 py-4 text-body-sm">Bay 4 → OR-3</td>
+<td class="px-6 py-4 text-body-sm font-data-mono">14:21:55</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-body-sm">Logistics Bot-4</span>
+<div class="w-6 h-6 rounded-full bg-primary-container flex items-center justify-center text-[10px] text-white">RB</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">IN-7741-SS</span>
+<span class="text-xs text-outline">Intravenous Pack</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded">In Use</span>
+</td>
+<td class="px-6 py-4 text-body-sm">Patient Room 302</td>
+<td class="px-6 py-4 text-body-sm font-data-mono">14:18:02</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-body-sm">Nurse Chen</span>
+<div class="w-6 h-6 rounded-full bg-slate-300" data-alt="Close up portrait of a smiling male nurse with short hair wearing blue medical scrubs, standing in a bright hospital hallway, soft professional bokeh lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAdOzJqKH3tf7JQISBJL8qd5RlBVB599cllGdpdJ5tYmd9b_cw4_brgjrYONqEAc7HQo2ppD9nqZz89KF0-RC43Feb9nDpguWN1yFmr0bj99ikoCHpAheL1XCCgJOMg31zYMdjXs5DK6tf_XCZq9THee4ADoUiNReBYGdzUceInOqYwCH8KTXjKxqmIkUv8w4KnZ9Fe4e3ZkSxfJ32Dzj91Uq5zjWBk1RefdRCnPXY6hLtZEuEBuWMbwL_PnJ79mICvTPVXmNjuH9Hw')"></div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">ML-0021-RT</span>
+<span class="text-xs text-outline">Orthopedic Maleta</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold uppercase rounded">Low Stock</span>
+</td>
+<td class="px-6 py-4 text-body-sm">Sanitation Dock</td>
+<td class="px-6 py-4 text-body-sm font-data-mono">14:15:44</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-body-sm">M. Rodriguez</span>
+<div class="w-6 h-6 rounded-full bg-slate-300" data-alt="A portrait of a male warehouse worker in a high-visibility vest standing in a modern distribution center, bright natural lighting, professional cinematography." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBXUBMZ6EeEba0RhxZ_Bt2tx-sCdYPixQS8zDawCqObYy5Ij5iki0uZimlP3fCKp59dhiRyQ1akvoCCx_tr3XVZLqhNvlYGFVAWJBJ1K0sdmX6WRu3pPBMcT2j_-xR6Gq4ElojCVgOZpO_C2rUBTDNm2nP_IIxItVQSSw5nOFsKR-QpzVM_ZUyRGUlkatdRUREEAF8KmSFf-fhOuAhdHmnNudB6upfr7jgjsG3EQDsUNn98f6OKwKGqF3vFxholpjENow1SAHiq2Do1')"></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Right Column: Visual Summary -->
+<div class="space-y-gutter">
+<!-- Zone Visualization -->
+<div class="glass-card rounded-xl p-6 shadow-sm">
+<h3 class="font-headline-sm text-headline-sm mb-4">Inventory Distribution</h3>
+<div class="relative aspect-square rounded-full border-8 border-surface-container flex items-center justify-center overflow-hidden">
+<!-- Simulated donut chart segment -->
+<div class="absolute inset-0 border-[20px] border-primary rounded-full" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);"></div>
+<div class="absolute inset-0 border-[20px] border-tertiary rounded-full" style="clip-path: polygon(50% 50%, 0% 50%, 0% 0%, 50% 0%);"></div>
+<div class="z-10 text-center">
+<span class="block text-headline-lg font-bold">84%</span>
+<span class="text-outline text-label-md uppercase">Utilization</span>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-body-sm">Clinical Zones</span>
+</div>
+<span class="font-bold">62%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-body-sm">Logistics Dock</span>
+</div>
+<span class="font-bold">22%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="text-body-sm">Maintenance</span>
+</div>
+<span class="font-bold">16%</span>
+</div>
+</div>
+</div>
+<!-- System Status -->
+<div class="bg-inverse-surface text-inverse-on-surface rounded-xl p-6 shadow-sm overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="font-headline-sm text-headline-sm mb-2">Gate Signal Strength</h3>
+<p class="text-surface-variant text-body-sm mb-4">All 24 RFID gates operating at peak efficiency.</p>
+<div class="flex items-end gap-1 h-12">
+<div class="flex-1 bg-primary h-[80%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[90%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[85%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[95%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[70%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[80%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[90%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[85%] rounded-t-sm"></div>
+</div>
+</div>
+<!-- Micro-interaction animation background -->
+<div class="absolute -right-10 -bottom-10 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="sensors">sensors</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Map/Requisition Tracking -->
+<div class="glass-card rounded-xl p-8 flex flex-col md:flex-row gap-8">
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm mb-2">Facility Flow Map</h3>
+<p class="text-on-surface-variant text-body-md mb-6">Real-time heat-map of asset movement within the North Wing.</p>
+<div class="aspect-video w-full rounded-xl overflow-hidden relative border border-outline-variant">
+<div class="absolute inset-0 bg-slate-100" data-alt="A clean, minimalist 3D architectural floor plan of a modern hospital ward, rendered in isometric perspective. Soft neutral colors with glowing green paths indicating logistics flow and red nodes for high-traffic zones. High-end architectural visualization style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCbmoPgTFd6jhrbwBPLEhxhKG0pSuVAsW4Cj-BV71WobsZ5LeX0LQTD3qxbviNgcopEZC9g25A99Bq-ClX8LlDbiQMd41z9LsGHYfgecPdIGo9nSqTBni53gdJ4AVDL2yU5brODseMx_2WG3O2g5x_inynAvokKqaspOew1IMjJw2fbuseAE8hm1BnuNNnFxFh8LQttMSL7I0WF5ZLAcqw74asHKB1XpUcrCH6azk-7ZIJtOcW0dMlV8Ppnwwj2BfuO6cDLt5GS6gzy')"></div>
+<!-- Overlay Radar Pings -->
+<div class="absolute top-1/4 left-1/3 w-6 h-6 rounded-full bg-primary/20 radar-pulse flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="absolute bottom-1/3 right-1/4 w-6 h-6 rounded-full bg-tertiary/20 radar-pulse flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-80 space-y-6">
+<h3 class="font-headline-sm text-headline-sm">Open Requisitions</h3>
+<div class="space-y-4">
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<span class="font-bold text-on-surface">#REQ-4022</span>
+<span class="text-xs font-data-mono">2m ago</span>
+</div>
+<p class="text-body-sm mb-3">5x Emergency Maletas for ER Dept.</p>
+<div class="w-full h-1 bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary w-1/3 rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] text-outline uppercase font-bold">Stage: Picking</span>
+<span class="text-[10px] text-primary font-bold">Assigned</span>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<span class="font-bold text-on-surface">#REQ-4019</span>
+<span class="text-xs font-data-mono">15m ago</span>
+</div>
+<p class="text-body-sm mb-3">Sterile Gown Bulk Inventory (Box of 50)</p>
+<div class="w-full h-1 bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary w-2/3 rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] text-outline uppercase font-bold">Stage: Dispatch</span>
+<span class="text-[10px] text-primary font-bold">Moving</span>
+</div>
+</div>
+<button class="w-full py-3 text-center text-primary font-label-md border-2 border-dashed border-primary/30 rounded-xl hover:bg-primary/5 transition-all">
+                            View All Requisitions
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for mode toggle
+        document.querySelectorAll('.mode-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mode-toggle-btn').forEach(b => b.classList.remove('bg-white', 'shadow-sm', 'text-primary'));
+                this.classList.add('bg-white', 'shadow-sm', 'text-primary');
+            });
+        });
+
+        // Simulating live data update micro-interactions
+        setInterval(() => {
+            const rows = document.querySelectorAll('tbody tr');
+            const randomRow = rows[Math.floor(Math.random() * rows.length)];
+            randomRow.classList.add('bg-primary-container/10');
+            setTimeout(() => {
+                randomRow.classList.remove('bg-primary-container/10');
+            }, 1000);
+        }, 3000);
+    </script>
+</body></html>

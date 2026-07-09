@@ -32,3 +32,19 @@ class User(AbstractBaseUser, PermissionsMixin, IndexedTimeStampedModel):
 
     def __str__(self):
         return self.email
+
+    @property
+    def primary_membership(self):
+        from organizations.utils import get_user_organization
+
+        return get_user_organization(self)
+
+    @property
+    def organization(self):
+        membership = self.primary_membership
+        return membership.organization if membership else None
+
+    @property
+    def role(self):
+        membership = self.primary_membership
+        return membership.role if membership else None

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID - Maleta Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline": "#707a6d",
+                        "on-secondary-container": "#32713b",
+                        "surface": "#f9f9f9",
+                        "secondary": "#2b6b35",
+                        "on-primary-fixed": "#002106",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#aef3af",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#a6f5a8",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#19662a",
+                        "primary-container": "#368040",
+                        "tertiary-fixed-dim": "#95d1d1",
+                        "on-secondary-fixed-variant": "#0e5220",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c0c9bb",
+                        "inverse-primary": "#8bd88e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "tertiary": "#246262",
+                        "tertiary-fixed": "#b1eeed",
+                        "surface-container-low": "#f4f3f3",
+                        "surface-tint": "#206c2f",
+                        "primary-fixed-dim": "#8bd88e",
+                        "on-secondary-fixed": "#002107",
+                        "on-primary-container": "#e3ffde",
+                        "on-surface-variant": "#40493e",
+                        "inverse-surface": "#2f3131",
+                        "on-primary-fixed-variant": "#00531b",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "on-tertiary-fixed": "#002020",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#aef3af",
+                        "surface-container": "#eeeeed",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#3f7b7b",
+                        "on-tertiary-fixed-variant": "#074f4f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d9fffe",
+                        "secondary-fixed-dim": "#93d695"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .radar-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.05); }
+        }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #19662a, transparent);
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface shadow-sm flex flex-col py-6 z-50 border-r border-outline-variant">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Panoptes</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Clinical &amp; Logistics</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<!-- Active State: Maletas -->
+<a class="flex items-center gap-3 px-6 py-3 border-l-4 border-primary bg-surface-container-high text-primary font-bold transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-outline-variant space-y-1">
+<a class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar Shell -->
+<header class="flex justify-between items-center h-16 px-gutter w-[calc(100%-16rem)] sticky top-0 z-40 ml-64 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Panoptes RFID</span>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<div class="flex gap-4">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Inventory</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">sensors</span>
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+                New Scan
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-container-padding">
+<!-- Header Info Zone -->
+<div class="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-stack-md">
+<div>
+<nav class="flex items-center gap-2 mb-2 text-on-surface-variant">
+<span class="font-label-md text-label-md">Maletas</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-label-md text-label-md text-primary">Kit Builder</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Cardiac Kit Checklist</h2>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined text-[18px]">local_hospital</span>
+<span class="font-label-md text-label-md">Destination: St. Jude Medical</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined text-[18px]">engineering</span>
+<span class="font-label-md text-label-md">Technician: Alex Rivera</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full text-secondary font-bold">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-md text-label-md">ETD: 14:30 Today</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-72">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Kit Completion</span>
+<span class="font-headline-sm text-headline-sm text-primary">78%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[78%] transition-all duration-500 shadow-[0_0_8px_rgba(43,107,53,0.3)]"></div>
+</div>
+</div>
+</div>
+<!-- Split View Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg items-start">
+<!-- Left: Active Scan Zone -->
+<section class="lg:col-span-7 space-y-stack-md">
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant relative overflow-hidden shadow-sm">
+<div class="scan-line"></div>
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 bg-secondary rounded-full radar-pulse"></div>
+<h3 class="font-headline-sm text-headline-sm">Active RFID Scan</h3>
+</div>
+<span class="font-label-md text-label-md text-secondary bg-secondary-container px-3 py-1 rounded-full">Reader: ZONE_4_SOUTH</span>
+</div>
+<!-- Scan Feed Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Detected Item Card -->
+<div class="flex items-start gap-4 p-4 bg-surface rounded-lg border-2 border-primary-container animate-in fade-in slide-in-from-left duration-300">
+<div class="p-2 bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined">straighten</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold">PTCA Dilatation Catheter</h4>
+<span class="font-data-mono text-[10px] bg-surface-container-highest px-1">#RFID-9902</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Qty: 2 detected</p>
+<div class="mt-2 flex items-center gap-1 text-[12px] text-secondary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified
+                                </div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 bg-surface rounded-lg border border-outline-variant">
+<div class="p-2 bg-surface-container-highest text-on-surface-variant rounded-lg">
+<span class="material-symbols-outlined">monitor_heart</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold">Standard Stent Pack</h4>
+<span class="font-data-mono text-[10px] bg-surface-container-highest px-1">#RFID-1024</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Qty: 5 detected</p>
+<div class="mt-2 flex items-center gap-1 text-[12px] text-secondary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified
+                                </div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 bg-surface rounded-lg border border-outline-variant">
+<div class="p-2 bg-surface-container-highest text-on-surface-variant rounded-lg">
+<span class="material-symbols-outlined">medication</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold">Heparin 5000 Units</h4>
+<span class="font-data-mono text-[10px] bg-surface-container-highest px-1">#RFID-5521</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Exp: 12/2025</p>
+<div class="mt-2 flex items-center gap-1 text-[12px] text-secondary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Verified
+                                </div>
+</div>
+</div>
+<!-- Pulse Placeholder for next item -->
+<div class="flex items-center justify-center p-4 bg-surface rounded-lg border border-dashed border-outline-variant opacity-60">
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined animate-bounce">sensors</span>
+<span class="font-label-md text-label-md">Awaiting next tag...</span>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex justify-between mb-4">
+<h4 class="font-label-md text-label-md text-on-surface-variant">Warehouse Map Reference</h4>
+<span class="text-secondary font-label-md text-label-md">Bin 42A - Area C</span>
+</div>
+<div class="h-48 w-full rounded-lg overflow-hidden border border-outline-variant relative grayscale hover:grayscale-0 transition-all duration-500 cursor-crosshair">
+<div class="absolute inset-0 bg-[url('placeholder')] bg-cover bg-center" data-alt="A blueprint architectural map of a large medical warehouse with rows of shelving units and highlighted zones in green. Professional, technical, blueprint aesthetic in light mode colors."></div>
+<div class="absolute top-1/4 left-1/3 w-8 h-8 bg-primary/20 rounded-full border-2 border-primary radar-pulse"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Checklist Zone -->
+<section class="lg:col-span-5">
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm h-full">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-sm text-headline-sm">Procedure Checklist</h3>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant">Items Verified</p>
+<p class="font-headline-sm text-headline-sm">14 / 18</p>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Checklist Category -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded mb-3 uppercase tracking-wider">Surgical Essentials</p>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 bg-secondary-container/20 border border-secondary-container rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md font-semibold">Sterile Drapes (Set of 4)</span>
+</div>
+<span class="font-data-mono text-label-md">4/4</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-secondary-container/20 border border-secondary-container rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md font-semibold">Gown Packs (XL/L)</span>
+</div>
+<span class="font-data-mono text-label-md">2/2</span>
+</div>
+</div>
+</div>
+<!-- Checklist Category (Incomplete) -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-3 py-1 rounded mb-3 uppercase tracking-wider">Cardiac Specialized</p>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 bg-surface border border-outline-variant rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">circle</span>
+<span class="font-body-md text-body-md">Guidewire J-Tip 0.035</span>
+</div>
+<span class="font-data-mono text-label-md text-error">0/2</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface border border-outline-variant rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">circle</span>
+<span class="font-body-md text-body-md">Sheath Introducer 6F</span>
+</div>
+<span class="font-data-mono text-label-md text-error">0/1</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-secondary-container/20 border border-secondary-container rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md font-semibold">Contrast Medium (300mg/ml)</span>
+</div>
+<span class="font-data-mono text-label-md">3/3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Zone -->
+<div class="mt-stack-lg pt-6 border-t border-outline-variant">
+<div class="p-4 rounded-lg bg-surface-container-high mb-6 border-l-4 border-primary">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<div>
+<h4 class="font-label-md text-label-md font-bold">Safety Note</h4>
+<p class="text-body-sm text-on-surface-variant">Verify lot numbers for Guidewires match clinical requirements for St. Jude Medical site protocols.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 border border-primary text-primary px-6 py-3 rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]">pause</span>
+                                Save Progress
+                            </button>
+<button class="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-label-md text-label-md shadow-md hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                                Finalize &amp; Ship
+                            </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Micro-interaction: Active Scan Feed Simulation
+        document.addEventListener('DOMContentLoaded', () => {
+            const feed = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2');
+            
+            // Randomly flash the scanning reader to show activity
+            setInterval(() => {
+                const scanner = document.querySelector('.scan-line');
+                scanner.style.opacity = Math.random() > 0.5 ? '1' : '0.3';
+            }, 500);
+
+            // Simple hover effect for checklist items
+            const items = document.querySelectorAll('.space-y-2 > div');
+            items.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.classList.add('translate-x-2');
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.classList.remove('translate-x-2');
+                });
+            });
+        });
+    </script>
+</body></html>

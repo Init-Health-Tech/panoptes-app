@@ -24,6 +24,10 @@ STORAGES = {
 
 AUTH_PASSWORD_VALIDATORS = []  # allow easy passwords only on local
 
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
 # Celery
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="")
 CELERY_TASK_ALWAYS_EAGER = True

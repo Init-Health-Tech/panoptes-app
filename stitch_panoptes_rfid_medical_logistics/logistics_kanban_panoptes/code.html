@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID - Requisitions &amp; Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "outline": "#707a6d",
+                    "on-secondary-container": "#32713b",
+                    "surface": "#f9f9f9",
+                    "secondary": "#2b6b35",
+                    "on-primary-fixed": "#002106",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#aef3af",
+                    "on-background": "#1a1c1c",
+                    "primary-fixed": "#a6f5a8",
+                    "surface-dim": "#dadad9",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary": "#19662a",
+                    "primary-container": "#368040",
+                    "tertiary-fixed-dim": "#95d1d1",
+                    "on-secondary-fixed-variant": "#0e5220",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c0c9bb",
+                    "inverse-primary": "#8bd88e",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f1f1f0",
+                    "tertiary": "#246262",
+                    "tertiary-fixed": "#b1eeed",
+                    "surface-container-low": "#f4f3f3",
+                    "surface-tint": "#206c2f",
+                    "primary-fixed-dim": "#8bd88e",
+                    "on-secondary-fixed": "#002107",
+                    "on-primary-container": "#e3ffde",
+                    "on-surface-variant": "#40493e",
+                    "inverse-surface": "#2f3131",
+                    "on-primary-fixed-variant": "#00531b",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-high": "#e8e8e7",
+                    "on-tertiary-fixed": "#002020",
+                    "background": "#f9f9f9",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#aef3af",
+                    "surface-container": "#eeeeed",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-container": "#3f7b7b",
+                    "on-tertiary-fixed-variant": "#074f4f",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#d9fffe",
+                    "secondary-fixed-dim": "#93d695"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "data-mono": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #F8FAFC; color: #1a1c1c; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .kanban-column { min-height: calc(100vh - 280px); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .tonal-elevation { box-shadow: 0px 1px 3px rgba(15, 17, 17, 0.05), 0px 10px 15px -3px rgba(15, 17, 17, 0.05); }
+    </style>
+</head>
+<body class="font-body-md overflow-hidden h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface dark:bg-inverse-surface shadow-sm flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary leading-tight">Panoptes</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline">Clinical &amp; Logistics</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-surface-container-high dark:bg-secondary-container text-primary dark:text-on-secondary-container font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="warehouse">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-1">
+<button class="w-full py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 mb-4 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Scan
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant">
+<div class="flex items-center gap-6">
+<h2 class="font-headline-sm text-headline-sm font-extrabold text-primary dark:text-inverse-primary tracking-tight">Panoptes RFID</h2>
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-outline">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full w-64 focus:ring-2 focus:ring-primary/20 text-body-sm transition-all" placeholder="Search logistics, IDs, patients..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-primary dark:text-inverse-primary border-b-2 border-primary pb-1" href="#">Inventory</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+<div class="flex gap-4 border-l border-outline-variant pl-6">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="sensors">sensors</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary relative" data-icon="notifications">notifications
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto p-gutter bg-surface-container-lowest scrollbar-hide">
+<!-- Summary Header -->
+<div class="mb-stack-lg flex items-center justify-between">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-1">Requisitions &amp; Logistics</h1>
+<p class="text-body-sm text-outline">Manage hospital inventory movement and real-time replenishment.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-primary/5 rounded-xl px-6 py-3 border border-primary/10 flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-primary">12</p>
+<p class="font-label-md text-label-md text-outline uppercase tracking-tight">Active Deliveries</p>
+</div>
+</div>
+<div class="bg-error/5 rounded-xl px-6 py-3 border border-error/10 flex items-center gap-4">
+<div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="priority_high">priority_high</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-error">4</p>
+<p class="font-label-md text-label-md text-outline uppercase tracking-tight">High Priority</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Kanban Board -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+<!-- Requested Column -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2 py-1 border-b border-outline-variant">
+<h3 class="font-label-md text-label-md uppercase text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                            Requested
+                        </h3>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-[10px] font-bold">3</span>
+</div>
+<div class="flex flex-col gap-4 kanban-column">
+<!-- Card 1 -->
+<div class="bg-white p-4 rounded-xl tonal-elevation border border-transparent hover:border-primary/20 transition-all cursor-grab active:cursor-grabbing group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-data-mono text-data-mono text-primary">REQ-9012</span>
+<span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded uppercase tracking-wider">Urgent</span>
+</div>
+<div class="space-y-2 mb-4">
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="warehouse">warehouse</span>
+<span class="text-on-surface">Central Warehouse B</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="hospital">festival</span>
+<span class="text-on-surface">St. Jude Medical Center</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px] font-bold text-outline">
+<span>Inventory Allocation</span>
+<span>20%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-amber-500 h-full w-[20%]"></div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-4 rounded-xl tonal-elevation border border-transparent hover:border-primary/20 transition-all cursor-grab group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-data-mono text-data-mono text-primary">REQ-9015</span>
+<span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded uppercase tracking-wider">Routine</span>
+</div>
+<div class="space-y-2 mb-4">
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="warehouse">warehouse</span>
+<span class="text-on-surface">Secondary Hub</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="clinic_f">blind</span>
+<span class="text-on-surface">North General Clinic</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px] font-bold text-outline">
+<span>Inventory Allocation</span>
+<span>5%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[5%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Approved Column -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2 py-1 border-b border-outline-variant">
+<h3 class="font-label-md text-label-md uppercase text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                            Approved
+                        </h3>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-[10px] font-bold">2</span>
+</div>
+<div class="flex flex-col gap-4 kanban-column">
+<div class="bg-white p-4 rounded-xl tonal-elevation border border-transparent hover:border-primary/20 transition-all cursor-grab active:cursor-grabbing group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-data-mono text-data-mono text-primary">REQ-8944</span>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase tracking-wider">Stat</span>
+</div>
+<div class="space-y-2 mb-4">
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="warehouse">warehouse</span>
+<span class="text-on-surface">Main Logistics Hub</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="emergency">emergency</span>
+<span class="text-on-surface">Trauma Unit - City Gen</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px] font-bold text-outline">
+<span>Picking Progress</span>
+<span>85%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[85%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- In Transit Column -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2 py-1 border-b border-outline-variant">
+<h3 class="font-label-md text-label-md uppercase text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                            In Transit
+                        </h3>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-[10px] font-bold">4</span>
+</div>
+<div class="flex flex-col gap-4 kanban-column">
+<div class="bg-white rounded-xl tonal-elevation border-t-4 border-tertiary overflow-hidden hover:border-primary/20 transition-all cursor-grab">
+<div class="p-4 border-b border-outline-variant bg-tertiary/5 flex justify-between items-center">
+<span class="font-data-mono text-data-mono text-tertiary">TRK-2241</span>
+<div class="flex items-center text-tertiary">
+<span class="material-symbols-outlined text-[16px] animate-pulse" data-icon="sensors">sensors</span>
+<span class="text-[10px] font-bold ml-1">Live Tracking</span>
+</div>
+</div>
+<div class="p-4">
+<div class="h-24 w-full rounded-lg mb-4 bg-cover bg-center" data-alt="A detailed aerial view map showing a stylized tracking route with a green vehicle icon moving through city grid lines. The map uses a minimalist, modern light-mode aesthetic with teal and soft gray tones. Data overlays showing speed and estimated arrival time are visible in the corner of the map frame." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwOktJ2_hUcVxg5R9TwNZiWG0VWOKVU2xJEcIq1tdVKbEqvO-_zbSO2ELCxpPwBoDccH6p6rZYl55RmauSTlILNtTYdOwxeLiMIVNWRwvhthdAiRoggl548T6mhjXXflp62RKPvFI7svr-bqWRIU4WcXJ57VQHUJ5xXhZ87Yo0TzgDZ3GOJ2yGZPhiAQgckJp7AK-Ls175dxlPzhZH3ipjB5NVFNKYI5ZhNSfIPcsn-CQgAddlRe6ZC1zN08CBr3VOctqpUuOXm5vn')"></div>
+<div class="space-y-2 mb-4">
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-tertiary" data-icon="local_shipping">local_shipping</span>
+<span class="text-on-surface font-semibold">Route A-12 • En Route</span>
+</div>
+<div class="flex items-center justify-between text-[11px] text-outline px-7">
+<span>ETA: 14:30</span>
+<span>Dist: 4.2 km</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl tonal-elevation border border-transparent hover:border-primary/20 transition-all cursor-grab active:cursor-grabbing group">
+<div class="flex justify-between items-start mb-3">
+<span class="font-data-mono text-data-mono text-primary">REQ-8812</span>
+<span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded uppercase tracking-wider">Regular</span>
+</div>
+<div class="space-y-2 mb-4">
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="warehouse">warehouse</span>
+<span class="text-on-surface">Regional Supply</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="home_health">home_health</span>
+<span class="text-on-surface">Home Care Dispatch</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[40%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Delivered Column -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2 py-1 border-b border-outline-variant">
+<h3 class="font-label-md text-label-md uppercase text-on-surface-variant flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                            Delivered
+                        </h3>
+<span class="bg-surface-container-highest px-2 py-0.5 rounded text-[10px] font-bold">18 (Today)</span>
+</div>
+<div class="flex flex-col gap-4 kanban-column">
+<div class="bg-white p-4 rounded-xl tonal-elevation border border-transparent opacity-75 hover:opacity-100 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="font-data-mono text-data-mono text-outline">REQ-8710</span>
+<span class="flex items-center gap-1 text-primary text-[10px] font-bold uppercase">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span>
+                                    Verified
+                                </span>
+</div>
+<div class="space-y-1 mb-3">
+<p class="text-body-sm font-semibold">St. Mary's Surgical Wing</p>
+<p class="text-[11px] text-outline">Received by Nurse K. Miller • 09:12 AM</p>
+</div>
+<div class="flex gap-1">
+<div class="w-6 h-6 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="inventory">inventory</span>
+</div>
+<div class="w-6 h-6 rounded bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="package">package</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+</main>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.tonal-elevation').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

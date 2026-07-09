@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID - Inicio de Sesión</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline": "#707a6d",
+                        "on-secondary-container": "#32713b",
+                        "surface": "#f9f9f9",
+                        "secondary": "#2b6b35",
+                        "on-primary-fixed": "#002106",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#aef3af",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#a6f5a8",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#19662a",
+                        "primary-container": "#368040",
+                        "tertiary-fixed-dim": "#95d1d1",
+                        "on-secondary-fixed-variant": "#0e5220",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c0c9bb",
+                        "inverse-primary": "#8bd88e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "tertiary": "#246262",
+                        "tertiary-fixed": "#b1eeed",
+                        "surface-container-low": "#f4f3f3",
+                        "surface-tint": "#206c2f",
+                        "primary-fixed-dim": "#8bd88e",
+                        "on-secondary-fixed": "#002107",
+                        "on-primary-container": "#e3ffde",
+                        "on-surface-variant": "#40493e",
+                        "inverse-surface": "#2f3131",
+                        "on-primary-fixed-variant": "#00531b",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "on-tertiary-fixed": "#002020",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#aef3af",
+                        "surface-container": "#eeeeed",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#3f7b7b",
+                        "on-tertiary-fixed-variant": "#074f4f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d9fffe",
+                        "secondary-fixed-dim": "#93d695"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for better clinical look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #19662a; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex items-center justify-center relative overflow-hidden">
+<!-- Background Layer with Detailed Image -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center brightness-[0.85] saturate-[0.8]" data-alt="A high-tech clinical environment featuring a sharp focus on a sterile medical storage cabinet equipped with integrated RFID scanners. The scene is bathed in cool, professional lighting with deep navy shadows and soft forest green highlights reflecting off brushed steel surfaces. Floating digital data overlays suggest real-time tracking, maintaining a minimalist yet highly sophisticated medical technology aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoGQ6lWAyJpYCrQLKJOZ83HbD1SIAmm9mDlrxO525GA7dEouHchQJf_yRSQS9CpHtrGR0iNm5-JIUnMWiYmSvDuKxe5PWKaTkhAukdUp4hzmtUtmUKty65QcUjuxndD41fT41m33lml9Lxt848OWzvd7v4jU8TY--ptoQ_Qb8YK1eIWbPJDDuv7vCTNICK1gFuP7RzHQ8GUEXiJdrZXkbWdj4EZoKN45MLzI6TUalNp6SxpXQhRoJ5gEaSJIk6_XicLNnXC9WE562U')"></div>
+<div class="absolute inset-0 bg-gradient-to-tr from-[#002106]/40 to-transparent"></div>
+</div>
+<!-- Main Content Container -->
+<main class="relative z-10 w-full max-w-md px-6 fade-in">
+<!-- Top Branding Section -->
+<div class="flex flex-col items-center mb-10">
+<div class="bg-white/90 p-4 rounded-xl shadow-lg mb-4">
+<!-- Panoptes Logo Representation -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">sensors</span>
+<span class="font-headline-md text-headline-md font-extrabold text-primary tracking-tight">Panoptes</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-white/90 tracking-widest uppercase">Clinical &amp; Logistics Intelligence</p>
+</div>
+<!-- Login Card -->
+<div class="glass-panel rounded-xl shadow-2xl p-8 md:p-10 border border-outline-variant/30">
+<div class="mb-8">
+<h1 class="font-headline-sm text-headline-sm text-on-surface mb-1">Bienvenido</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Acceda a su terminal de gestión RFID</p>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Language Selector -->
+<div class="flex justify-end gap-3 mb-2">
+<button class="font-label-md text-label-md text-primary border-b-2 border-primary" id="lang-es" onclick="toggleLanguage('es')" type="button">ES</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" id="lang-en" onclick="toggleLanguage('en')" type="button">EN</button>
+</div>
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant" for="username">Usuario</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">account_circle</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md" id="username" placeholder="Ingrese su usuario" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="block font-label-md text-label-md text-on-surface-variant" for="password">Contraseña</label>
+<a class="font-label-md text-label-md text-primary hover:underline" href="#">¿Olvidó su contraseña?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">lock</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md text-body-md" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center">
+<input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" id="remember" type="checkbox"/>
+<label class="ml-2 font-body-sm text-body-sm text-on-surface-variant" for="remember">Recordar sesión en este equipo</label>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary hover:bg-primary-container text-white font-headline-sm text-headline-sm py-4 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+<span id="login-text">Iniciar Sesión</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+<div class="mt-10 pt-6 border-t border-outline-variant/30 flex flex-col items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Powered by</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">INIT Health Tech</span>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">verified_user</span>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">encrypted</span>
+<span class="material-symbols-outlined text-on-surface-variant text-xl">security</span>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-8 text-center space-y-2">
+<p class="font-label-md text-label-md text-white/60">© 2024 Panoptes RFID Ecosystem. Todos los derechos reservados.</p>
+<div class="flex justify-center gap-6">
+<a class="font-label-md text-label-md text-white/40 hover:text-white transition-colors" href="#">Seguridad</a>
+<a class="font-label-md text-label-md text-white/40 hover:text-white transition-colors" href="#">Privacidad</a>
+<a class="font-label-md text-label-md text-white/40 hover:text-white transition-colors" href="#">Soporte</a>
+</div>
+</footer>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        const translations = {
+            es: {
+                welcome: "Bienvenido",
+                subtitle: "Acceda a su terminal de gestión RFID",
+                user: "Usuario",
+                userPlaceholder: "Ingrese su usuario",
+                pass: "Contraseña",
+                passPlaceholder: "••••••••",
+                forgot: "¿Olvidó su contraseña?",
+                remember: "Recordar sesión en este equipo",
+                login: "Iniciar Sesión"
+            },
+            en: {
+                welcome: "Welcome Back",
+                subtitle: "Access your RFID management terminal",
+                user: "Username",
+                userPlaceholder: "Enter your username",
+                pass: "Password",
+                passPlaceholder: "••••••••",
+                forgot: "Forgot password?",
+                remember: "Remember me on this device",
+                login: "Sign In"
+            }
+        };
+
+        function toggleLanguage(lang) {
+            const content = translations[lang];
+            
+            // UI Updates
+            document.querySelector('h1').innerText = content.welcome;
+            document.querySelector('p.text-on-surface-variant').innerText = content.subtitle;
+            document.querySelectorAll('label')[0].innerText = content.user;
+            document.getElementById('username').placeholder = content.userPlaceholder;
+            document.querySelectorAll('label')[1].innerText = content.pass;
+            document.getElementById('password').placeholder = content.passPlaceholder;
+            document.querySelector('a.text-primary').innerText = content.forgot;
+            document.querySelector('label[for="remember"]').innerText = content.remember;
+            document.getElementById('login-text').innerText = content.login;
+
+            // Button Highlight Logic
+            const esBtn = document.getElementById('lang-es');
+            const enBtn = document.getElementById('lang-en');
+
+            if(lang === 'es') {
+                esBtn.className = "font-label-md text-label-md text-primary border-b-2 border-primary";
+                enBtn.className = "font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors";
+            } else {
+                enBtn.className = "font-label-md text-label-md text-primary border-b-2 border-primary";
+                esBtn.className = "font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors";
+            }
+        }
+
+        // Simple input focus effects
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('.material-symbols-outlined').style.color = '#19662a';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('.material-symbols-outlined').style.color = '#707a6d';
+            });
+        });
+    </script>
+</body></html>

@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { redirectDocument } from 'react-router';
 
 import { usersList } from '@/js/api';
+import { loginRedirectUrl } from '@/js/utils/auth';
 
 export async function usersLoader({ request }: { request: Request }) {
   const url = new URL(request.url);
@@ -17,7 +18,7 @@ export async function usersLoader({ request }: { request: Request }) {
     if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
       const url = new URL(request.url);
       const next = url.pathname + url.search + url.hash;
-      throw redirectDocument(`/admin/login/?next=${encodeURIComponent(next)}`);
+      throw redirectDocument(loginRedirectUrl(next));
     }
     throw error;
   }

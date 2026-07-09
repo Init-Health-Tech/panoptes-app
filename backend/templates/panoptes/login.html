@@ -1,0 +1,94 @@
+{% extends "panoptes/base_public.html" %}
+
+{% block title %}Panoptes RFID — Inicio de sesión{% endblock %}
+
+{% block body_class %}panoptes-login{% endblock %}
+
+{% block content %}
+<main class="panoptes-login__shell panoptes-fade-in">
+  <div class="panoptes-login__brand">
+    <div class="panoptes-login__brand-badge">
+      {% include "panoptes/includes/brand_logo.html" %}
+    </div>
+    <p class="panoptes-login__tagline">Clinical &amp; Logistics Intelligence</p>
+  </div>
+
+  <div class="panoptes-login__card panoptes-glass">
+    <h1>Bienvenido</h1>
+    <p>Acceda a su terminal de gestión RFID</p>
+
+    {% if form.errors %}
+    <p class="panoptes-error" role="alert">
+      <span class="material-symbols-outlined">error</span>
+      Credenciales incorrectas. Verifique su correo y contraseña.
+    </p>
+    {% endif %}
+
+    <form method="post" action="{% url 'common:login' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <div class="panoptes-field">
+        <label class="panoptes-label" for="id_username">Correo electrónico</label>
+        <div class="panoptes-input-wrap">
+          <span class="material-symbols-outlined">account_circle</span>
+          <input
+            class="panoptes-input"
+            id="id_username"
+            name="username"
+            type="email"
+            autocomplete="username"
+            placeholder="demo@init.health"
+            required
+            autofocus
+            value="{{ form.username.value|default:'' }}"
+          />
+        </div>
+      </div>
+
+      <div class="panoptes-field">
+        <label class="panoptes-label" for="id_password">Contraseña</label>
+        <div class="panoptes-input-wrap">
+          <span class="material-symbols-outlined">lock</span>
+          <input
+            class="panoptes-input"
+            id="id_password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            required
+          />
+        </div>
+      </div>
+
+      <label class="panoptes-checkbox-row">
+        <input type="checkbox" name="remember" />
+        Recordar sesión en este equipo
+      </label>
+
+      <button class="panoptes-btn panoptes-btn--primary panoptes-btn--block" type="submit">
+        Iniciar sesión
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </form>
+
+    <div class="panoptes-login__divider">
+      <div class="panoptes-login__powered">
+        <span>Powered by</span>
+        <strong>INIT Health Tech</strong>
+      </div>
+      <div class="panoptes-login__trust">
+        <span class="material-symbols-outlined">verified_user</span>
+        <span class="material-symbols-outlined">encrypted</span>
+        <span class="material-symbols-outlined">security</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="panoptes-login__footer">
+    <p>¿No tiene cuenta? Use las credenciales demo del entorno local.</p>
+    <p><a href="{% url 'common:landing' %}" style="color: rgba(255,255,255,0.75);">← Volver al inicio</a></p>
+  </footer>
+</main>
+{% endblock %}

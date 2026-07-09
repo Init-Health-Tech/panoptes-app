@@ -1,0 +1,3873 @@
+openapi: 3.0.3
+info:
+  title: Panoptes API
+  version: 0.1.0
+  description: RFID medical and logistics control platform for INIT Health Tech
+paths:
+  /api/active-modules/:
+    get:
+      operationId: active_modules_retrieve
+      tags:
+      - active-modules
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveModules'
+          description: ''
+  /api/clients/:
+    get:
+      operationId: clients_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClientList'
+          description: ''
+    post:
+      operationId: clients_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+          description: ''
+  /api/clients/{id}/:
+    get:
+      operationId: clients_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+          description: ''
+    put:
+      operationId: clients_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+          description: ''
+    patch:
+      operationId: clients_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+          description: ''
+    delete:
+      operationId: clients_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/doctors/:
+    get:
+      operationId: doctors_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - doctors
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorList'
+          description: ''
+    post:
+      operationId: doctors_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - doctors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+  /api/doctors/{id}/:
+    get:
+      operationId: doctors_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this doctor.
+        required: true
+      tags:
+      - doctors
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+    put:
+      operationId: doctors_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this doctor.
+        required: true
+      tags:
+      - doctors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+    patch:
+      operationId: doctors_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this doctor.
+        required: true
+      tags:
+      - doctors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctor'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+    delete:
+      operationId: doctors_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this doctor.
+        required: true
+      tags:
+      - doctors
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/inventory/dashboard-stats/:
+    get:
+      operationId: inventory_dashboard_stats_retrieve
+      tags:
+      - inventory
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/logistics/dashboard-stats/:
+    get:
+      operationId: logistics_dashboard_stats_retrieve
+      tags:
+      - logistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogisticsDashboardStats'
+          description: ''
+  /api/medical/dashboard-stats/:
+    get:
+      operationId: medical_dashboard_stats_retrieve
+      tags:
+      - medical
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalDashboardStats'
+          description: ''
+  /api/modules/{module_code}/probe/:
+    get:
+      operationId: modules_probe_retrieve
+      description: Verify that the caller's organization has a module enabled.
+      parameters:
+      - in: path
+        name: module_code
+        schema:
+          type: string
+        required: true
+      tags:
+      - modules
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  module:
+                    type: string
+          description: ''
+  /api/procedure-assignments/:
+    get:
+      operationId: procedure_assignments_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - procedure-assignments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProcedureAssignmentList'
+          description: ''
+    post:
+      operationId: procedure_assignments_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - procedure-assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcedureAssignment'
+          description: ''
+  /api/procedure-assignments/{id}/:
+    get:
+      operationId: procedure_assignments_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure assignment.
+        required: true
+      tags:
+      - procedure-assignments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcedureAssignment'
+          description: ''
+    put:
+      operationId: procedure_assignments_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure assignment.
+        required: true
+      tags:
+      - procedure-assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProcedureAssignment'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcedureAssignment'
+          description: ''
+    patch:
+      operationId: procedure_assignments_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure assignment.
+        required: true
+      tags:
+      - procedure-assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedureAssignment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedureAssignment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedureAssignment'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcedureAssignment'
+          description: ''
+    delete:
+      operationId: procedure_assignments_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure assignment.
+        required: true
+      tags:
+      - procedure-assignments
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/procedures/:
+    get:
+      operationId: procedures_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - procedures
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProcedureList'
+          description: ''
+    post:
+      operationId: procedures_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - procedures
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Procedure'
+          description: ''
+  /api/procedures/{id}/:
+    get:
+      operationId: procedures_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure.
+        required: true
+      tags:
+      - procedures
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Procedure'
+          description: ''
+    put:
+      operationId: procedures_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure.
+        required: true
+      tags:
+      - procedures
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Procedure'
+          description: ''
+    patch:
+      operationId: procedures_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure.
+        required: true
+      tags:
+      - procedures
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedure'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedure'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProcedure'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Procedure'
+          description: ''
+    delete:
+      operationId: procedures_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this procedure.
+        required: true
+      tags:
+      - procedures
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/products/:
+    get:
+      operationId: products_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductList'
+          description: ''
+    post:
+      operationId: products_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+  /api/products/{id}/:
+    get:
+      operationId: products_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product.
+        required: true
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+    put:
+      operationId: products_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product.
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+    patch:
+      operationId: products_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product.
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProduct'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+    delete:
+      operationId: products_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this product.
+        required: true
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/providers/:
+    get:
+      operationId: providers_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - providers
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProviderList'
+          description: ''
+    post:
+      operationId: providers_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Provider'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+  /api/providers/{id}/:
+    get:
+      operationId: providers_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this provider.
+        required: true
+      tags:
+      - providers
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    put:
+      operationId: providers_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this provider.
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Provider'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    patch:
+      operationId: providers_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this provider.
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProvider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProvider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProvider'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    delete:
+      operationId: providers_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this provider.
+        required: true
+      tags:
+      - providers
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/purchase-orders/:
+    get:
+      operationId: purchase_orders_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - purchase-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPurchaseOrderList'
+          description: ''
+    post:
+      operationId: purchase_orders_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - purchase-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+          description: ''
+  /api/purchase-orders/{id}/:
+    get:
+      operationId: purchase_orders_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this purchase order.
+        required: true
+      tags:
+      - purchase-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+          description: ''
+    put:
+      operationId: purchase_orders_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this purchase order.
+        required: true
+      tags:
+      - purchase-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrder'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+          description: ''
+    patch:
+      operationId: purchase_orders_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this purchase order.
+        required: true
+      tags:
+      - purchase-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPurchaseOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPurchaseOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPurchaseOrder'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+          description: ''
+    delete:
+      operationId: purchase_orders_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this purchase order.
+        required: true
+      tags:
+      - purchase-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/requisitions/:
+    get:
+      operationId: requisitions_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - requisitions
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRequisitionList'
+          description: ''
+    post:
+      operationId: requisitions_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - requisitions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Requisition'
+          description: ''
+  /api/requisitions/{id}/:
+    get:
+      operationId: requisitions_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this requisition.
+        required: true
+      tags:
+      - requisitions
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Requisition'
+          description: ''
+    put:
+      operationId: requisitions_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this requisition.
+        required: true
+      tags:
+      - requisitions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Requisition'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Requisition'
+          description: ''
+    patch:
+      operationId: requisitions_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this requisition.
+        required: true
+      tags:
+      - requisitions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRequisition'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRequisition'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRequisition'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Requisition'
+          description: ''
+    delete:
+      operationId: requisitions_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this requisition.
+        required: true
+      tags:
+      - requisitions
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/rest/rest-check/:
+    get:
+      operationId: rest_rest_check_retrieve
+      description: This endpoint checks if the REST API is working.
+      summary: Check REST API
+      tags:
+      - rest
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    message: This message comes from the backend. If you're seeing
+                      this, the REST API is working!
+                  summary: Successful Response
+          description: ''
+  /api/rfid-read-events/:
+    get:
+      operationId: rfid_read_events_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - rfid-read-events
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRFIDReadEventList'
+          description: ''
+  /api/rfid-read-events/{id}/:
+    get:
+      operationId: rfid_read_events_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rfid read event.
+        required: true
+      tags:
+      - rfid-read-events
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDReadEvent'
+          description: ''
+  /api/rfid-reads/:
+    post:
+      operationId: rfid_reads_create
+      tags:
+      - rfid-reads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RFIDReadWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RFIDReadWebhook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RFIDReadWebhook'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDTag'
+          description: ''
+  /api/rfid-tags/:
+    get:
+      operationId: rfid_tags_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: query
+        name: item_type
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: location
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - rfid-tags
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRFIDTagList'
+          description: ''
+    post:
+      operationId: rfid_tags_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - rfid-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDTag'
+          description: ''
+  /api/rfid-tags/{id}/:
+    get:
+      operationId: rfid_tags_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rfid tag.
+        required: true
+      tags:
+      - rfid-tags
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDTag'
+          description: ''
+    put:
+      operationId: rfid_tags_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rfid tag.
+        required: true
+      tags:
+      - rfid-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RFIDTag'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDTag'
+          description: ''
+    patch:
+      operationId: rfid_tags_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rfid tag.
+        required: true
+      tags:
+      - rfid-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRFIDTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRFIDTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRFIDTag'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFIDTag'
+          description: ''
+    delete:
+      operationId: rfid_tags_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this rfid tag.
+        required: true
+      tags:
+      - rfid-tags
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/sales-orders/:
+    get:
+      operationId: sales_orders_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - sales-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSalesOrderList'
+          description: ''
+    post:
+      operationId: sales_orders_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - sales-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+          description: ''
+  /api/sales-orders/{id}/:
+    get:
+      operationId: sales_orders_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sales order.
+        required: true
+      tags:
+      - sales-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+          description: ''
+    put:
+      operationId: sales_orders_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sales order.
+        required: true
+      tags:
+      - sales-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SalesOrder'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+          description: ''
+    patch:
+      operationId: sales_orders_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sales order.
+        required: true
+      tags:
+      - sales-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSalesOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSalesOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSalesOrder'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+          description: ''
+    delete:
+      operationId: sales_orders_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this sales order.
+        required: true
+      tags:
+      - sales-orders
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/supply-kits/:
+    get:
+      operationId: supply_kits_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - supply-kits
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSupplyKitList'
+          description: ''
+    post:
+      operationId: supply_kits_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/:
+    get:
+      operationId: supply_kits_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+    put:
+      operationId: supply_kits_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+    patch:
+      operationId: supply_kits_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSupplyKit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSupplyKit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSupplyKit'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+    delete:
+      operationId: supply_kits_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/supply-kits/{id}/add-tags/:
+    post:
+      operationId: supply_kits_add_tags_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/remove-tags/:
+    post:
+      operationId: supply_kits_remove_tags_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKit'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/technicians/:
+    get:
+      operationId: technicians_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - technicians
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTechnicianList'
+          description: ''
+    post:
+      operationId: technicians_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - technicians
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Technician'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Technician'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Technician'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+          description: ''
+  /api/technicians/{id}/:
+    get:
+      operationId: technicians_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this technician.
+        required: true
+      tags:
+      - technicians
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+          description: ''
+    put:
+      operationId: technicians_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this technician.
+        required: true
+      tags:
+      - technicians
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Technician'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Technician'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Technician'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+          description: ''
+    patch:
+      operationId: technicians_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this technician.
+        required: true
+      tags:
+      - technicians
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnician'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnician'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTechnician'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+          description: ''
+    delete:
+      operationId: technicians_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this technician.
+        required: true
+      tags:
+      - technicians
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/:
+    get:
+      operationId: users_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    ActiveModules:
+      type: object
+      properties:
+        modules:
+          type: array
+          items:
+            type: string
+        role:
+          type: string
+          nullable: true
+        organization:
+          allOf:
+          - $ref: '#/components/schemas/Organization'
+          nullable: true
+      required:
+      - modules
+      - organization
+      - role
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        business_name:
+          type: string
+          maxLength: 255
+        contact:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - business_name
+      - created
+      - id
+      - modified
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        specialty:
+          type: string
+          maxLength: 128
+        hospital:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - modified
+      - name
+    IndustryTypeEnum:
+      enum:
+      - clinical
+      - logistics
+      - mixed
+      type: string
+      description: |-
+        * `clinical` - Clínico / hospitalario
+        * `logistics` - Logístico / comercial
+        * `mixed` - Mixto
+    LogisticsDashboardStats:
+      type: object
+      properties:
+        pending_requisitions:
+          type: integer
+        requisitions_in_transit:
+          type: integer
+        open_sales_orders:
+          type: integer
+        open_purchase_orders:
+          type: integer
+      required:
+      - open_purchase_orders
+      - open_sales_orders
+      - pending_requisitions
+      - requisitions_in_transit
+    MedicalDashboardStats:
+      type: object
+      properties:
+        kits_in_transit:
+          type: integer
+        kits_assembling:
+          type: integer
+        active_procedures:
+          type: integer
+      required:
+      - active_procedures
+      - kits_assembling
+      - kits_in_transit
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          maxLength: 100
+          pattern: ^[-a-zA-Z0-9_]+$
+        industry_type:
+          $ref: '#/components/schemas/IndustryTypeEnum'
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - modified
+      - name
+      - slug
+    PaginatedClientList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+    PaginatedDoctorList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Doctor'
+    PaginatedProcedureAssignmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcedureAssignment'
+    PaginatedProcedureList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Procedure'
+    PaginatedProductList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    PaginatedProviderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Provider'
+    PaginatedPurchaseOrderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrder'
+    PaginatedRFIDReadEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RFIDReadEvent'
+    PaginatedRFIDTagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RFIDTag'
+    PaginatedRequisitionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Requisition'
+    PaginatedSalesOrderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesOrder'
+    PaginatedSupplyKitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyKit'
+    PaginatedTechnicianList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Technician'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedClient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        business_name:
+          type: string
+          maxLength: 255
+        contact:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedDoctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        specialty:
+          type: string
+          maxLength: 128
+        hospital:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProcedure:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure_type:
+          type: string
+          maxLength: 255
+        destination_hospital:
+          type: string
+          maxLength: 255
+        scheduled_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/ProcedureStatusEnum'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProcedureAssignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure:
+          type: integer
+        procedure_type:
+          type: string
+          readOnly: true
+        technician:
+          type: integer
+        technician_name:
+          type: string
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 64
+        name:
+          type: string
+          maxLength: 255
+        category:
+          type: string
+          maxLength: 128
+        unit:
+          type: string
+          maxLength: 32
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProvider:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        business_name:
+          type: string
+          maxLength: 255
+        contact:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedPurchaseOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider:
+          type: integer
+        provider_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status086Enum'
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        ordered_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedRFIDTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 128
+        item_type:
+          type: string
+          maxLength: 128
+        status:
+          $ref: '#/components/schemas/StatusBf9Enum'
+        last_location:
+          type: string
+          maxLength: 255
+        last_read_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedRequisition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        origin:
+          type: string
+          maxLength: 255
+        destination:
+          type: string
+          maxLength: 255
+        status:
+          $ref: '#/components/schemas/RequisitionStatusEnum'
+        requested_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequisitionLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSalesOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        client:
+          type: integer
+        client_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status086Enum'
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        ordered_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesOrderLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSupplyKit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 64
+        procedure:
+          type: integer
+          nullable: true
+        status:
+          $ref: '#/components/schemas/SupplyKitStatusEnum'
+        destination_hospital:
+          type: string
+          maxLength: 255
+        shipped_at:
+          type: string
+          format: date-time
+          nullable: true
+        tag_codes:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        tag_count:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedTechnician:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        is_active:
+          type: boolean
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_staff:
+          type: boolean
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+    Procedure:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure_type:
+          type: string
+          maxLength: 255
+        destination_hospital:
+          type: string
+          maxLength: 255
+        scheduled_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/ProcedureStatusEnum'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - destination_hospital
+      - id
+      - modified
+      - procedure_type
+      - scheduled_date
+    ProcedureAssignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure:
+          type: integer
+        procedure_type:
+          type: string
+          readOnly: true
+        technician:
+          type: integer
+        technician_name:
+          type: string
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - doctor
+      - doctor_name
+      - id
+      - modified
+      - procedure
+      - procedure_type
+      - role
+      - technician
+      - technician_name
+    ProcedureStatusEnum:
+      enum:
+      - scheduled
+      - in_preparation
+      - in_transit
+      - completed
+      - cancelled
+      type: string
+      description: |-
+        * `scheduled` - Programado
+        * `in_preparation` - En preparación
+        * `in_transit` - En tránsito
+        * `completed` - Completado
+        * `cancelled` - Cancelado
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 64
+        name:
+          type: string
+          maxLength: 255
+        category:
+          type: string
+          maxLength: 128
+        unit:
+          type: string
+          maxLength: 32
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - modified
+      - name
+      - sku
+    Provider:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        business_name:
+          type: string
+          maxLength: 255
+        contact:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - business_name
+      - created
+      - id
+      - modified
+    PurchaseOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider:
+          type: integer
+        provider_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status086Enum'
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        ordered_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - modified
+      - provider
+      - provider_name
+    PurchaseOrderLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: integer
+        product_sku:
+          type: string
+          readOnly: true
+        product_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        line_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - id
+      - line_total
+      - product
+      - product_name
+      - product_sku
+      - quantity
+      - unit_price
+    RFIDReadEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tag:
+          type: integer
+        tag_code:
+          type: string
+          readOnly: true
+        timestamp:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 255
+        reader_source:
+          type: string
+          maxLength: 255
+        event_type:
+          type: string
+          maxLength: 64
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - event_type
+      - id
+      - modified
+      - tag
+      - tag_code
+    RFIDReadWebhook:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 128
+        location:
+          type: string
+          maxLength: 255
+        reader_source:
+          type: string
+          maxLength: 255
+        event_type:
+          type: string
+          maxLength: 64
+        timestamp:
+          type: string
+          format: date-time
+        item_type:
+          type: string
+          maxLength: 128
+        status:
+          $ref: '#/components/schemas/StatusBf9Enum'
+      required:
+      - code
+      - event_type
+    RFIDTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 128
+        item_type:
+          type: string
+          maxLength: 128
+        status:
+          $ref: '#/components/schemas/StatusBf9Enum'
+        last_location:
+          type: string
+          maxLength: 255
+        last_read_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created
+      - id
+      - last_read_at
+      - modified
+    Requisition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        origin:
+          type: string
+          maxLength: 255
+        destination:
+          type: string
+          maxLength: 255
+        status:
+          $ref: '#/components/schemas/RequisitionStatusEnum'
+        requested_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequisitionLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - destination
+      - id
+      - modified
+      - origin
+    RequisitionLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: integer
+        product_sku:
+          type: string
+          readOnly: true
+        product_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+      required:
+      - id
+      - product
+      - product_name
+      - product_sku
+      - quantity
+    RequisitionStatusEnum:
+      enum:
+      - solicitada
+      - aprobada
+      - en_transito
+      - entregada
+      type: string
+      description: |-
+        * `solicitada` - Solicitada
+        * `aprobada` - Aprobada
+        * `en_transito` - En tránsito
+        * `entregada` - Entregada
+    RoleEnum:
+      enum:
+      - lead_technician
+      - assistant
+      - supervisor
+      type: string
+      description: |-
+        * `lead_technician` - Técnico principal
+        * `assistant` - Asistente
+        * `supervisor` - Supervisor
+    SalesOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        client:
+          type: integer
+        client_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status086Enum'
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        ordered_at:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesOrderLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - client
+      - client_name
+      - created
+      - id
+      - modified
+    SalesOrderLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: integer
+        product_sku:
+          type: string
+          readOnly: true
+        product_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        line_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - id
+      - line_total
+      - product
+      - product_name
+      - product_sku
+      - quantity
+      - unit_price
+    Status086Enum:
+      enum:
+      - borrador
+      - confirmada
+      - en_transito
+      - entregada
+      - cancelada
+      type: string
+      description: |-
+        * `borrador` - Borrador
+        * `confirmada` - Confirmada
+        * `en_transito` - En tránsito
+        * `entregada` - Entregada
+        * `cancelada` - Cancelada
+    StatusBf9Enum:
+      enum:
+      - en_stock
+      - en_transito
+      - en_uso
+      - dado_de_baja
+      type: string
+      description: |-
+        * `en_stock` - En stock
+        * `en_transito` - En tránsito
+        * `en_uso` - En uso
+        * `dado_de_baja` - Dado de baja
+    SupplyKit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 64
+        procedure:
+          type: integer
+          nullable: true
+        status:
+          $ref: '#/components/schemas/SupplyKitStatusEnum'
+        destination_hospital:
+          type: string
+          maxLength: 255
+        shipped_at:
+          type: string
+          format: date-time
+          nullable: true
+        tag_codes:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        tag_count:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created
+      - id
+      - modified
+      - name
+      - tag_codes
+      - tag_count
+    SupplyKitStatusEnum:
+      enum:
+      - armando
+      - lista
+      - en_transito
+      - entregada
+      - usada
+      type: string
+      description: |-
+        * `armando` - Armando
+        * `lista` - Lista
+        * `en_transito` - En tránsito
+        * `entregada` - Entregada
+        * `usada` - Usada
+    Technician:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - modified
+      - name
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        is_active:
+          type: boolean
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_staff:
+          type: boolean
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - created
+      - email
+      - id
+      - modified
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

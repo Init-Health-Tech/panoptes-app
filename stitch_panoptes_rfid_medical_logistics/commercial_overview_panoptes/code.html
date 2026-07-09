@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes | Sales &amp; Purchases Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "outline": "#707a6d",
+                        "on-secondary-container": "#32713b",
+                        "surface": "#f9f9f9",
+                        "secondary": "#2b6b35",
+                        "on-primary-fixed": "#002106",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-container": "#aef3af",
+                        "on-background": "#1a1c1c",
+                        "primary-fixed": "#a6f5a8",
+                        "surface-dim": "#dadad9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#19662a",
+                        "primary-container": "#368040",
+                        "tertiary-fixed-dim": "#95d1d1",
+                        "on-secondary-fixed-variant": "#0e5220",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c0c9bb",
+                        "inverse-primary": "#8bd88e",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "tertiary": "#246262",
+                        "tertiary-fixed": "#b1eeed",
+                        "surface-container-low": "#f4f3f3",
+                        "surface-tint": "#206c2f",
+                        "primary-fixed-dim": "#8bd88e",
+                        "on-secondary-fixed": "#002107",
+                        "on-primary-container": "#e3ffde",
+                        "on-surface-variant": "#40493e",
+                        "inverse-surface": "#2f3131",
+                        "on-primary-fixed-variant": "#00531b",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "on-tertiary-fixed": "#002020",
+                        "background": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#aef3af",
+                        "surface-container": "#eeeeed",
+                        "on-surface": "#1a1c1c",
+                        "tertiary-container": "#3f7b7b",
+                        "on-tertiary-fixed-variant": "#074f4f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#d9fffe",
+                        "secondary-fixed-dim": "#93d695"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #f8fafc; /* Canvas Level 0 */
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-shadow {
+            box-shadow: 0px 1px 3px rgba(15, 17, 17, 0.05), 0px 10px 15px -3px rgba(15, 17, 17, 0.05);
+        }
+        .glass-header {
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface dark:bg-inverse-surface shadow-sm flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">sensors</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary leading-tight">Panoptes</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Clinical &amp; Logistics</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<!-- Active State for current context -->
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-surface-container-high dark:bg-secondary-container text-primary dark:text-on-secondary-container font-bold transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-1 border-t border-outline-variant pt-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Scan
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors mt-4" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Container -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant glass-header">
+<div class="flex items-center gap-8 flex-1">
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary shrink-0">Panoptes RFID</h2>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-body-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search orders, clients..." type="text"/>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6 px-8">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-primary dark:text-inverse-primary border-b-2 border-primary pb-1 transition-opacity opacity-100" href="#">Inventory</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">sensors</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+                    notifications
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">account_circle</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-container-padding flex-1 space-y-stack-lg">
+<!-- Page Header Section -->
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<h1 class="font-headline-lg text-headline-lg tracking-tight">Order Management</h1>
+<p class="text-on-surface-variant font-body-md">Real-time clinical logistics and financial tracking.</p>
+</div>
+<div class="flex gap-stack-sm">
+<button class="bg-surface border border-outline-variant px-4 py-2.5 rounded-lg flex items-center gap-2 font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">file_download</span>
+                        Export CSV
+                    </button>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+                        Create New Order
+                    </button>
+</div>
+</div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-white p-6 rounded-xl custom-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md">TOTAL REVENUE (MTD)</span>
+<span class="material-symbols-outlined text-primary">trending_up</span>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md">$142,850.00</h3>
+<p class="text-secondary text-label-md flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12.5% vs last month
+                        </p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl custom-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md">PENDING DISPATCH</span>
+<span class="material-symbols-outlined text-tertiary">local_shipping</span>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md">24</h3>
+<p class="text-on-surface-variant text-label-md mt-1">8 Priority Shipments</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl custom-shadow border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md">PURCHASE ALLOCATION</span>
+<span class="material-symbols-outlined text-outline">payments</span>
+</div>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md">$68,200.00</h3>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-tertiary h-full w-[65%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl custom-shadow border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden">
+<div class="relative z-10 flex flex-col h-full justify-between">
+<span class="text-on-surface-variant font-label-md">SYSTEM HEALTH</span>
+<div class="mt-4">
+<h3 class="font-headline-md text-headline-md">Optimal</h3>
+<p class="text-secondary text-label-md flex items-center gap-1 mt-1">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span> RFID Network Active
+                            </p>
+</div>
+</div>
+<div class="absolute -bottom-4 -right-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">radar</span>
+</div>
+</div>
+</div>
+<!-- Main Data Section -->
+<div class="bg-white rounded-xl custom-shadow border border-outline-variant/30 overflow-hidden flex flex-col min-h-[500px]">
+<!-- Tab Switching -->
+<div class="flex border-b border-outline-variant bg-surface-container-lowest">
+<button class="px-8 py-4 font-label-md text-label-md text-primary border-b-2 border-primary bg-primary/5 transition-all">
+                        Sales Orders
+                    </button>
+<button class="px-8 py-4 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all border-b-2 border-transparent">
+                        Purchase Orders
+                    </button>
+<div class="flex-1"></div>
+<div class="flex items-center px-6 gap-2">
+<span class="text-label-md text-outline">Filter By:</span>
+<select class="bg-transparent border-none focus:ring-0 font-label-md text-label-md text-on-surface pr-8">
+<option>All Statuses</option>
+<option>Completed</option>
+<option>Pending</option>
+<option>Canceled</option>
+</select>
+</div>
+</div>
+<!-- Table Content -->
+<div class="flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Order #</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Client/Provider</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider text-right">Total Amount</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase tracking-wider text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline opacity-40">drag_indicator</span>
+<span class="font-data-mono text-data-mono font-bold">SO-88219</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">MH</div>
+<div>
+<p class="font-body-md font-semibold">Mayo Health Clinic</p>
+<p class="text-label-md text-on-surface-variant/70">Central Warehouse</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-data-mono text-data-mono">$12,450.00</td>
+<td class="px-6 py-5 text-on-surface-variant font-body-sm">Oct 24, 2023</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-secondary-container text-on-secondary-container border border-secondary/20">
+                                        Completed
+                                    </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline opacity-40">drag_indicator</span>
+<span class="font-data-mono text-data-mono font-bold">SO-88220</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary/10 flex items-center justify-center text-tertiary font-bold text-xs">SJ</div>
+<div>
+<p class="font-body-md font-semibold">St. Jude Medical</p>
+<p class="text-label-md text-on-surface-variant/70">Radiology Dept.</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-data-mono text-data-mono">$4,120.50</td>
+<td class="px-6 py-5 text-on-surface-variant font-body-sm">Oct 25, 2023</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-amber-100 text-amber-800 border border-amber-200">
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline opacity-40">drag_indicator</span>
+<span class="font-data-mono text-data-mono font-bold">SO-88221</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs">GP</div>
+<div>
+<p class="font-body-md font-semibold">General Pharma Co.</p>
+<p class="text-label-md text-on-surface-variant/70">Procurement</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-data-mono text-data-mono">$1,200.00</td>
+<td class="px-6 py-5 text-on-surface-variant font-body-sm">Oct 26, 2023</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-error-container text-on-error-container border border-error/20">
+                                        Canceled
+                                    </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline opacity-40">drag_indicator</span>
+<span class="font-data-mono text-data-mono font-bold">SO-88222</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs">CH</div>
+<div>
+<p class="font-body-md font-semibold">City Heart Institute</p>
+<p class="text-label-md text-on-surface-variant/70">ICU Supply Chain</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-data-mono text-data-mono">$8,990.00</td>
+<td class="px-6 py-5 text-on-surface-variant font-body-sm">Oct 26, 2023</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-secondary-container text-on-secondary-container border border-secondary/20">
+                                        Completed
+                                    </span>
+</td>
+<td class="px-6 py-5 text-center">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<p class="text-label-md text-on-surface-variant">Showing 1-10 of 245 results</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-white font-label-md flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors font-label-md">2</button>
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors font-label-md">3</button>
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Assistant Area (Micro-interactions) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="p-6 rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/20 flex gap-4 items-start">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-primary">Logistics Insight</h4>
+<p class="text-body-md text-on-surface-variant mt-1">Based on current clinical maleta turnover, we recommend restocking <span class="font-bold text-primary">Surgical Kit A-12</span> within the next 48 hours to avoid pending order delays.</p>
+<button class="mt-4 text-primary font-label-md underline underline-offset-4 hover:opacity-80">View Restock Plan</button>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-gradient-to-br from-tertiary/5 to-transparent border border-tertiary/20 flex gap-4 items-start">
+<div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-tertiary">RFID Integrity</h4>
+<p class="text-body-md text-on-surface-variant mt-1">Scanner zone 4 (Warehouse B) detected 3 signal drops in the last hour. Calibration may be required for high-density metallic shelving.</p>
+<button class="mt-4 text-tertiary font-label-md underline underline-offset-4 hover:opacity-80">Run Diagnostics</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Tab switching micro-interaction
+        const tabs = document.querySelectorAll('button[class*="px-8 py-4"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary', 'border-primary', 'bg-primary/5');
+                    t.classList.add('text-on-surface-variant', 'border-transparent');
+                });
+                tab.classList.add('text-primary', 'border-primary', 'bg-primary/5');
+                tab.classList.remove('text-on-surface-variant', 'border-transparent');
+            });
+        });
+
+        // Search highlight micro-interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

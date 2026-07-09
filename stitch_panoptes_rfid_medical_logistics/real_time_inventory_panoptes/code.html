@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panoptes RFID - Real-time Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "outline": "#707a6d",
+                    "on-secondary-container": "#32713b",
+                    "surface": "#f9f9f9",
+                    "secondary": "#2b6b35",
+                    "on-primary-fixed": "#002106",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-container": "#aef3af",
+                    "on-background": "#1a1c1c",
+                    "primary-fixed": "#a6f5a8",
+                    "surface-dim": "#dadad9",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary": "#19662a",
+                    "primary-container": "#368040",
+                    "tertiary-fixed-dim": "#95d1d1",
+                    "on-secondary-fixed-variant": "#0e5220",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c0c9bb",
+                    "inverse-primary": "#8bd88e",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f1f1f0",
+                    "tertiary": "#246262",
+                    "tertiary-fixed": "#b1eeed",
+                    "surface-container-low": "#f4f3f3",
+                    "surface-tint": "#206c2f",
+                    "primary-fixed-dim": "#8bd88e",
+                    "on-secondary-fixed": "#002107",
+                    "on-primary-container": "#e3ffde",
+                    "on-surface-variant": "#40493e",
+                    "inverse-surface": "#2f3131",
+                    "on-primary-fixed-variant": "#00531b",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-high": "#e8e8e7",
+                    "on-tertiary-fixed": "#002020",
+                    "background": "#f9f9f9",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#aef3af",
+                    "surface-container": "#eeeeed",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-container": "#3f7b7b",
+                    "on-tertiary-fixed-variant": "#074f4f",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#d9fffe",
+                    "secondary-fixed-dim": "#93d695"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "data-mono": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c0c9bb;
+            border-radius: 10px;
+        }
+        .status-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface shadow-sm flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sensors</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Panoptes</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Clinical &amp; Logistics</p>
+</div>
+</div>
+</div>
+<!-- Mode Toggle -->
+<div class="px-4 mb-6">
+<div class="bg-surface-container-low p-1 rounded-lg flex">
+<button class="flex-1 py-1.5 rounded-md text-label-md font-label-md bg-white shadow-sm text-primary">Logistics</button>
+<button class="flex-1 py-1.5 rounded-md text-label-md font-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">Clinical</button>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active State Logic: Inventory is current page -->
+<a class="flex items-center gap-3 px-4 py-3 border-l-4 border-primary bg-surface-container-high text-primary font-bold transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label-md text-label-md">Maletas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-label-md text-label-md">Warehouse</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-md text-label-md">Pallets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<button class="w-full mb-4 bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Scan
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center h-16 px-8 w-full sticky top-0 z-40 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-8">
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary">Panoptes RFID</h2>
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search inventory, tags, or locations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Inventory</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+</nav>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Body -->
+<div class="p-8 flex-1 bg-background">
+<!-- Information Zoning: Header & KPIs -->
+<div class="mb-8">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Real-time Inventory View</h3>
+<p class="text-on-surface-variant font-body-sm">Monitoring 1,284 RFID-tagged assets across 12 facilities</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+                            Export CSV
+                        </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                            Force Rescan
+                        </button>
+</div>
+</div>
+<!-- KPI Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container/50 rounded-lg text-secondary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<span class="text-on-secondary-container font-label-md text-[10px] uppercase bg-secondary-container px-2 py-0.5 rounded-full">+2.4%</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-tight">In Stock</p>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold">942</h4>
+<div class="mt-4 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-container/50 rounded-lg text-tertiary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<span class="text-on-tertiary-fixed-variant font-label-md text-[10px] uppercase bg-tertiary-fixed px-2 py-0.5 rounded-full">Active</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-tight">In Transit</p>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold">156</h4>
+<div class="mt-4 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-1/4 rounded-full"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-container/20 rounded-lg text-primary">
+<span class="material-symbols-outlined">medical_information</span>
+</div>
+<span class="text-on-primary-fixed-variant font-label-md text-[10px] uppercase bg-primary-fixed px-2 py-0.5 rounded-full">In Use</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-tight">Clinical Use</p>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold">186</h4>
+<div class="mt-4 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/5 rounded-full"></div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-error-container/50 rounded-lg text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="text-on-error-container font-label-md text-[10px] uppercase bg-error-container px-2 py-0.5 rounded-full">Critical</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-tight">Low Stock Alerts</p>
+<h4 class="font-headline-md text-headline-md text-on-surface font-bold">12</h4>
+<div class="mt-4 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-1/6 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Layout: Main Table + Filter Sidebar -->
+<div class="flex gap-8 items-start">
+<!-- Filter Sidebar -->
+<aside class="w-72 flex-shrink-0 bg-white border border-outline-variant rounded-xl p-6 shadow-sm sticky top-24">
+<div class="flex items-center justify-between mb-6">
+<h5 class="font-headline-sm text-headline-sm text-[16px] font-bold">Filters</h5>
+<button class="text-primary font-label-md text-label-md hover:underline">Clear all</button>
+</div>
+<div class="space-y-8">
+<!-- Type Selector -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Asset Type</p>
+<div class="space-y-2">
+<label class="flex items-center gap-3 group cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface group-hover:text-primary transition-colors">Logistics Mode</span>
+</label>
+<label class="flex items-center gap-3 group cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface group-hover:text-primary transition-colors">Clinical Mode</span>
+</label>
+</div>
+</div>
+<!-- Category -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Category</p>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-body-sm focus:ring-primary focus:border-primary">
+<option>All Categories</option>
+<option>Surgical Kits</option>
+<option>Patient Monitors</option>
+<option>Warehouse Pallets</option>
+<option>RFID Transponders</option>
+</select>
+</div>
+<!-- Location -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Location</p>
+<div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+<label class="flex items-center gap-3 group cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Warehouse A</span>
+</label>
+<label class="flex items-center gap-3 group cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Hospital Central</span>
+</label>
+<label class="flex items-center gap-3 group cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">ER North Wing</span>
+</label>
+<label class="flex items-center gap-3 group cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Pharmacy Depot</span>
+</label>
+<label class="flex items-center gap-3 group cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Trauma Center B</span>
+</label>
+</div>
+</div>
+<!-- Signal Strength Range -->
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Signal Strength</p>
+<input class="w-full accent-primary" type="range"/>
+<div class="flex justify-between text-[10px] text-on-surface-variant mt-2 font-label-md">
+<span>Low</span>
+<span>Excellent</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Data Table Section -->
+<div class="flex-1 bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Item Name</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">SKU/Tag ID</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Location</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Status</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase">Last Scan</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Cardiology Kit #422</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface-variant">RF-A92-001X</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+<span class="font-body-sm text-body-sm">Hospital Central</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-secondary-container text-on-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                            In Stock
+                                        </span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">2 mins ago</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">View Details</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">package_2</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Standard Pallet P-8</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface-variant">WL-881-Z99</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">local_shipping</span>
+<span class="font-body-sm text-body-sm">In Transit</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5 status-pulse"></span>
+                                            In Transit
+                                        </span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">14 mins ago</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">View Details</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">monitor_heart</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Vitals Monitor Pro</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface-variant">MD-VI-202</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">bed</span>
+<span class="font-body-sm text-body-sm">ER North Wing</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-container text-on-primary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container mr-1.5"></span>
+                                            In Use
+                                        </span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Just now</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">View Details</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">vaccines</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Cold-Storage Insulin Vials</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface-variant">PH-INS-121</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">ac_unit</span>
+<span class="font-body-sm text-body-sm">Pharmacy Depot</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-secondary-container text-on-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                            In Stock
+                                        </span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">42 mins ago</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">View Details</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group border-b-0">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Hazmat Suit Case B</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface-variant">HZ-X10-911</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">warehouse</span>
+<span class="font-body-sm text-body-sm">Warehouse A</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline mr-1.5"></span>
+                                            Scanning...
+                                        </span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Searching...</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">View Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination -->
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<span class="text-label-md font-label-md text-on-surface-variant">Showing 1 to 5 of 1,284 assets</span>
+<div class="flex gap-2">
+<button class="p-2 bg-white border border-outline-variant rounded hover:bg-surface-container-high transition-colors text-on-surface-variant disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded font-label-md text-label-md">1</button>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded font-label-md text-label-md hover:bg-surface-container-high transition-colors">2</button>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded font-label-md text-label-md hover:bg-surface-container-high transition-colors">3</button>
+<span class="px-2 py-1 text-on-surface-variant">...</span>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded font-label-md text-label-md hover:bg-surface-container-high transition-colors">257</button>
+<button class="p-2 bg-white border border-outline-variant rounded hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Scanning Overlay Notification (Floating Micro-interaction) -->
+<div class="fixed bottom-8 right-8 bg-inverse-surface text-inverse-on-surface px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 border border-outline-variant/20 transform translate-y-24 opacity-0 transition-all duration-500 ease-out z-[60]" id="scan-notif">
+<div class="relative">
+<span class="material-symbols-outlined text-primary-fixed status-pulse">sensors</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">RFID Scan in Progress</p>
+<p class="text-[10px] opacity-70">Zone 4 (Warehouse A) - High Density</p>
+</div>
+<div class="w-24 h-1.5 bg-surface-variant/30 rounded-full overflow-hidden ml-4">
+<div class="h-full bg-primary-fixed w-0 transition-all duration-3000" id="scan-progress"></div>
+</div>
+</div>
+<script>
+        // Simple Micro-interaction for Scan Notification
+        window.onload = () => {
+            setTimeout(() => {
+                const notif = document.getElementById('scan-notif');
+                const progress = document.getElementById('scan-progress');
+                notif.classList.remove('translate-y-24', 'opacity-0');
+                
+                let w = 0;
+                const interval = setInterval(() => {
+                    w += 2;
+                    progress.style.width = w + '%';
+                    if(w >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            notif.classList.add('translate-y-24', 'opacity-0');
+                        }, 2000);
+                    }
+                }, 100);
+            }, 3000);
+        };
+    </script>
+</body></html>

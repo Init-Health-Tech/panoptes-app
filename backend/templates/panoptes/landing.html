@@ -1,0 +1,75 @@
+{% extends "panoptes/base_public.html" %}
+
+{% block title %}Panoptes RFID — Clinical & Logistics Intelligence{% endblock %}
+
+{% block body_class %}panoptes-landing{% endblock %}
+
+{% block content %}
+<header class="panoptes-landing__nav panoptes-fade-in">
+  {% include "panoptes/includes/brand_logo.html" with light=True %}
+  <a class="panoptes-btn panoptes-btn--secondary" href="{% url 'common:login' %}">
+    Iniciar sesión
+    <span class="material-symbols-outlined">login</span>
+  </a>
+</header>
+
+<section class="panoptes-landing__hero panoptes-fade-in">
+  <p class="panoptes-landing__eyebrow">
+    <span class="panoptes-radar">
+      <span class="material-symbols-outlined filled">sensors</span>
+    </span>
+    INIT Health Tech
+  </p>
+  <h1 class="panoptes-landing__title">Visibilidad total de activos médicos en tiempo real</h1>
+  <p class="panoptes-landing__subtitle">
+    Panoptes unifica inventario RFID, maletas quirúrgicas y logística hospitalaria en una sola
+    plataforma multi-tenant. Diseñada para coordinadores clínicos que necesitan precisión y control.
+  </p>
+  <div class="panoptes-landing__actions">
+    <a class="panoptes-btn panoptes-btn--primary" href="{% url 'common:login' %}">
+      Entrar a la plataforma
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+    {% if user.is_authenticated %}
+    <a class="panoptes-btn panoptes-btn--secondary" href="/">
+      Ir al dashboard
+      <span class="material-symbols-outlined">dashboard</span>
+    </a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="panoptes-landing__grid panoptes-fade-in">
+  <article class="panoptes-feature">
+    <div class="panoptes-feature__icon">
+      <span class="material-symbols-outlined">sensors</span>
+    </div>
+    <h3>Inventario RFID</h3>
+    <p>Seguimiento de tags, ubicaciones y estados en tiempo real con alertas de stock y tránsito.</p>
+  </article>
+  <article class="panoptes-feature">
+    <div class="panoptes-feature__icon">
+      <span class="material-symbols-outlined">medical_services</span>
+    </div>
+    <h3>Operación clínica</h3>
+    <p>Maletas, procedimientos y directorio médico conectados al flujo de suministros hospitalarios.</p>
+  </article>
+  <article class="panoptes-feature">
+    <div class="panoptes-feature__icon">
+      <span class="material-symbols-outlined">local_shipping</span>
+    </div>
+    <h3>Logística integrada</h3>
+    <p>Catálogos, requisiciones y órdenes comerciales con visibilidad kanban entre almacenes y hospitales.</p>
+  </article>
+</section>
+
+<footer class="panoptes-landing__footer">
+  <span>© {% now "Y" %} Panoptes RFID · INIT Health Tech</span>
+  <div class="panoptes-landing__footer-links">
+    <a href="{% url 'common:login' %}">Acceso</a>
+    <span class="material-symbols-outlined" title="Seguridad">verified_user</span>
+    <span class="material-symbols-outlined" title="Cifrado">encrypted</span>
+    <span class="material-symbols-outlined" title="Cumplimiento">security</span>
+  </div>
+</footer>
+{% endblock %}

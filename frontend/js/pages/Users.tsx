@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from 'react-router';
 
 import { PaginatedUserList } from '@/js/api';
-import { TopNav } from '@/js/components';
+import { AppLayout } from '@/js/components';
 import { makeLink } from '@/js/utils';
 
 const Users = () => {
@@ -11,16 +11,13 @@ const Users = () => {
   const next = makeLink(data.next);
 
   return (
-    <>
-      <TopNav />
-      <section className="mx-auto max-w-3xl px-4">
-        <h1 className="mt-4 mb-3 font-semibold text-slate-950">Users</h1>
+    <AppLayout subtitle="Usuarios del sistema" title="Usuarios">
 
-        <ul className="bg-white rounded-xl border border-zinc-300">
+        <ul className="panoptes-card divide-y divide-outline-variant/30 overflow-hidden">
           {data?.results?.map((u) => (
             <li
               key={u.id}
-              className="px-4 py-3 text-sm text-slate-900 border-t border-zinc-200 first:border-t-0 hover:bg-slate-50"
+              className="px-4 py-3 text-sm text-on-surface hover:bg-secondary-container/20"
             >
               {u.email}
             </li>
@@ -28,7 +25,7 @@ const Users = () => {
         </ul>
 
         <div className="mt-3 flex items-center justify-between text-sm">
-          <span className="text-slate-600">
+          <span className="text-on-surface-variant">
             {data?.results?.length} on this page • {data.count} total
           </span>
 
@@ -36,14 +33,14 @@ const Users = () => {
             {!prev ? (
               <span
                 aria-disabled="true"
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-white bg-emerald-600 border border-transparent opacity-45 pointer-events-none"
+                className="panoptes-btn-primary opacity-45 pointer-events-none"
                 tabIndex={-1}
               >
                 ← Previous
               </span>
             ) : (
               <Link
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/45"
+                className="panoptes-btn-primary"
                 to={prev}
               >
                 ← Previous
@@ -53,14 +50,14 @@ const Users = () => {
             {!next ? (
               <span
                 aria-disabled="true"
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-white bg-emerald-600 border border-transparent opacity-45 pointer-events-none"
+                className="panoptes-btn-primary opacity-45 pointer-events-none"
                 tabIndex={-1}
               >
                 Next →
               </span>
             ) : (
               <Link
-                className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-white bg-emerald-600 hover:bg-emerald-700 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/45"
+                className="panoptes-btn-primary"
                 to={next}
               >
                 Next →
@@ -68,8 +65,7 @@ const Users = () => {
             )}
           </div>
         </div>
-      </section>
-    </>
+    </AppLayout>
   );
 };
 

@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Panoptes RFID{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Plataforma RFID multi-tenant para inventario clínico y logística médica.{% endblock %}" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="{% static 'panoptes/css/public.css' %}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="panoptes-public {% block body_class %}{% endblock %}">
+  {% block background %}
+  <div class="panoptes-bg-layer" aria-hidden="true">
+    <div
+      class="panoptes-bg-image"
+      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoGQ6lWAyJpYCrQLKJOZ83HbD1SIAmm9mDlrxO525GA7dEouHchQJf_yRSQS9CpHtrGR0iNm5-JIUnMWiYmSvDuKxe5PWKaTkhAukdUp4hzmtUtmUKty65QcUjuxndD41fT41m33lml9Lxt848OWzvd7v4jU8TY--ptoQ_Qb8YK1eIWbPJDDuv7vCTNICK1gFuP7RzHQ8GUEXiJdrZXkbWdj4EZoKN45MLzI6TUalNp6SxpXQhRoJ5gEaSJIk6_XicLNnXC9WE562U');"
+    ></div>
+    <div class="panoptes-bg-gradient"></div>
+  </div>
+  {% endblock %}
+
+  <div class="panoptes-page">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
