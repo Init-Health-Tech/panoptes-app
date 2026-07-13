@@ -86,7 +86,7 @@ class SupplyKitViewSetTest(MedicalTestMixin, TestCaseUtils, APITestCase):
         create_response = self.auth_client.post(
             reverse("supply-kit-list"),
             {
-                "name": "Maleta QX-01",
+                "name": "Instrumental QX-01",
                 "code": "MK-001",
                 "status": SupplyKitStatus.ARMANDO,
                 "destination_hospital": "Hospital Norte",
@@ -110,6 +110,62 @@ class SupplyKitViewSetTest(MedicalTestMixin, TestCaseUtils, APITestCase):
             format="json",
         )
         self.assertResponse400(invalid_response)
+
+    def test_dispatch_hospital_return_and_warehouse_flow(self):
+        tag = baker.make(
+            RFIDTag,
+            organization=self.organization,
+            code="TAG-FLOW-1",
+            item_type="Stent",
+        )
+        technician = baker.make(Technician, organization=self.organization, is_active=True)
+        kit = baker.make(
+            SupplyKit,
+            organization=self.organization,
+            code="MK-FLOW",
+            status=SupplyKitStatus.LISTA,
+        )
+        SupplyKitTag.objects.create(organization=self.organization, supply_kit=kit, tag=tag)
+
+        dispatch = self.auth_client.post(
+            reverse("supply-kit-assign-dispatch", kwargs={"pk": kit.id}),
+            {
+                "transporter_name": "Transportes INIT",
+                "assigned_technician": technician.id,
+            },
+            format="json",
+        )
+        self.assertResponse200(dispatch)
+        self.assertEqual(dispatch.data["status"], SupplyKitStatus.EN_TRANSITO)
+        self.assertEqual(dispatch.data["transporter_name"], "Transportes INIT")
+        self.assertEqual(dispatch.data["assigned_technician"], technician.id)
+
+        arrival = self.auth_client.post(
+            reverse("supply-kit-confirm-hospital-arrival", kwargs={"pk": kit.id}),
+            format="json",
+        )
+        self.assertResponse200(arrival)
+        self.assertEqual(arrival.data["status"], SupplyKitStatus.ENTREGADA)
+        self.assertIsNotNone(arrival.data["hospital_arrived_at"])
+
+        checklist = [
+            {"code": "TAG-FLOW-1", "item_type": "Stent", "checked": True},
+        ]
+        checklist_response = self.auth_client.post(
+            reverse("supply-kit-update-return-checklist", kwargs={"pk": kit.id}),
+            {"items": checklist},
+            format="json",
+        )
+        self.assertResponse200(checklist_response)
+        self.assertEqual(checklist_response.data["status"], SupplyKitStatus.RETORNANDO)
+
+        warehouse = self.auth_client.post(
+            reverse("supply-kit-confirm-warehouse-return", kwargs={"pk": kit.id}),
+            format="json",
+        )
+        self.assertResponse200(warehouse)
+        self.assertEqual(warehouse.data["status"], SupplyKitStatus.DEVUELTA)
+        self.assertIsNotNone(warehouse.data["warehouse_confirmed_at"])
 
     def test_filter_supply_kits_by_status(self):
         baker.make(
@@ -139,17 +195,21 @@ class ProcedureViewSetTest(MedicalTestMixin, TestCaseUtils, APITestCase):
         self.setUp_medical_org(modules=["medical_supplies", "medical_kits", "medical_staff"])
 
     def test_create_procedure(self):
+        doctor = baker.make(Doctor, organization=self.organization, name="Dr. Test")
         response = self.auth_client.post(
             reverse("procedure-list"),
             {
                 "procedure_type": "Angioplastia",
                 "destination_hospital": "Santa Fe",
                 "scheduled_date": "2026-08-15",
+                "doctor": doctor.id,
                 "status": "scheduled",
             },
             format="json",
         )
         self.assertResponse201(response)
+        self.assertEqual(response.data["doctor"], doctor.id)
+        self.assertEqual(response.data["doctor_name"], "Dr. Test")
 
     def test_kits_only_org_cannot_access_doctors(self):
         OrganizationModule.objects.filter(

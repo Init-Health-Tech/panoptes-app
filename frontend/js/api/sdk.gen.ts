@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActiveModulesRetrieveData, ActiveModulesRetrieveResponses, ClientsCreateData, ClientsCreateResponses, ClientsDestroyData, ClientsDestroyResponses, ClientsListData, ClientsListResponses, ClientsPartialUpdateData, ClientsPartialUpdateResponses, ClientsRetrieveData, ClientsRetrieveResponses, ClientsUpdateData, ClientsUpdateResponses, DoctorsCreateData, DoctorsCreateResponses, DoctorsDestroyData, DoctorsDestroyResponses, DoctorsListData, DoctorsListResponses, DoctorsPartialUpdateData, DoctorsPartialUpdateResponses, DoctorsRetrieveData, DoctorsRetrieveResponses, DoctorsUpdateData, DoctorsUpdateResponses, InventoryDashboardStatsRetrieveData, InventoryDashboardStatsRetrieveResponses, LogisticsDashboardStatsRetrieveData, LogisticsDashboardStatsRetrieveResponses, MedicalDashboardStatsRetrieveData, MedicalDashboardStatsRetrieveResponses, ModulesProbeRetrieveData, ModulesProbeRetrieveResponses, ProcedureAssignmentsCreateData, ProcedureAssignmentsCreateResponses, ProcedureAssignmentsDestroyData, ProcedureAssignmentsDestroyResponses, ProcedureAssignmentsListData, ProcedureAssignmentsListResponses, ProcedureAssignmentsPartialUpdateData, ProcedureAssignmentsPartialUpdateResponses, ProcedureAssignmentsRetrieveData, ProcedureAssignmentsRetrieveResponses, ProcedureAssignmentsUpdateData, ProcedureAssignmentsUpdateResponses, ProceduresCreateData, ProceduresCreateResponses, ProceduresDestroyData, ProceduresDestroyResponses, ProceduresListData, ProceduresListResponses, ProceduresPartialUpdateData, ProceduresPartialUpdateResponses, ProceduresRetrieveData, ProceduresRetrieveResponses, ProceduresUpdateData, ProceduresUpdateResponses, ProductsCreateData, ProductsCreateResponses, ProductsDestroyData, ProductsDestroyResponses, ProductsListData, ProductsListResponses, ProductsPartialUpdateData, ProductsPartialUpdateResponses, ProductsRetrieveData, ProductsRetrieveResponses, ProductsUpdateData, ProductsUpdateResponses, ProvidersCreateData, ProvidersCreateResponses, ProvidersDestroyData, ProvidersDestroyResponses, ProvidersListData, ProvidersListResponses, ProvidersPartialUpdateData, ProvidersPartialUpdateResponses, ProvidersRetrieveData, ProvidersRetrieveResponses, ProvidersUpdateData, ProvidersUpdateResponses, PurchaseOrdersCreateData, PurchaseOrdersCreateResponses, PurchaseOrdersDestroyData, PurchaseOrdersDestroyResponses, PurchaseOrdersListData, PurchaseOrdersListResponses, PurchaseOrdersPartialUpdateData, PurchaseOrdersPartialUpdateResponses, PurchaseOrdersRetrieveData, PurchaseOrdersRetrieveResponses, PurchaseOrdersUpdateData, PurchaseOrdersUpdateResponses, RequisitionsCreateData, RequisitionsCreateResponses, RequisitionsDestroyData, RequisitionsDestroyResponses, RequisitionsListData, RequisitionsListResponses, RequisitionsPartialUpdateData, RequisitionsPartialUpdateResponses, RequisitionsRetrieveData, RequisitionsRetrieveResponses, RequisitionsUpdateData, RequisitionsUpdateResponses, RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, RfidReadEventsListData, RfidReadEventsListResponses, RfidReadEventsRetrieveData, RfidReadEventsRetrieveResponses, RfidReadsCreateData, RfidReadsCreateResponses, RfidTagsCreateData, RfidTagsCreateResponses, RfidTagsDestroyData, RfidTagsDestroyResponses, RfidTagsListData, RfidTagsListResponses, RfidTagsPartialUpdateData, RfidTagsPartialUpdateResponses, RfidTagsRetrieveData, RfidTagsRetrieveResponses, RfidTagsUpdateData, RfidTagsUpdateResponses, SalesOrdersCreateData, SalesOrdersCreateResponses, SalesOrdersDestroyData, SalesOrdersDestroyResponses, SalesOrdersListData, SalesOrdersListResponses, SalesOrdersPartialUpdateData, SalesOrdersPartialUpdateResponses, SalesOrdersRetrieveData, SalesOrdersRetrieveResponses, SalesOrdersUpdateData, SalesOrdersUpdateResponses, SupplyKitsAddTagsCreateData, SupplyKitsAddTagsCreateResponses, SupplyKitsCreateData, SupplyKitsCreateResponses, SupplyKitsDestroyData, SupplyKitsDestroyResponses, SupplyKitsListData, SupplyKitsListResponses, SupplyKitsPartialUpdateData, SupplyKitsPartialUpdateResponses, SupplyKitsRemoveTagsCreateData, SupplyKitsRemoveTagsCreateResponses, SupplyKitsRetrieveData, SupplyKitsRetrieveResponses, SupplyKitsUpdateData, SupplyKitsUpdateResponses, TechniciansCreateData, TechniciansCreateResponses, TechniciansDestroyData, TechniciansDestroyResponses, TechniciansListData, TechniciansListResponses, TechniciansPartialUpdateData, TechniciansPartialUpdateResponses, TechniciansRetrieveData, TechniciansRetrieveResponses, TechniciansUpdateData, TechniciansUpdateResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
+import type { ActiveModulesRetrieveData, ActiveModulesRetrieveResponses, ClientsCreateData, ClientsCreateResponses, ClientsDestroyData, ClientsDestroyResponses, ClientsListData, ClientsListResponses, ClientsPartialUpdateData, ClientsPartialUpdateResponses, ClientsRetrieveData, ClientsRetrieveResponses, ClientsUpdateData, ClientsUpdateResponses, DoctorsCreateData, DoctorsCreateResponses, DoctorsDestroyData, DoctorsDestroyResponses, DoctorsListData, DoctorsListResponses, DoctorsPartialUpdateData, DoctorsPartialUpdateResponses, DoctorsRetrieveData, DoctorsRetrieveResponses, DoctorsUpdateData, DoctorsUpdateResponses, FulfillmentPlansListData, FulfillmentPlansListResponses, FulfillmentPlansRetrieveData, FulfillmentPlansRetrieveResponses, HospitalSitesCreateData, HospitalSitesCreateResponses, HospitalSitesDestroyData, HospitalSitesDestroyResponses, HospitalSitesListData, HospitalSitesListResponses, HospitalSitesPartialUpdateData, HospitalSitesPartialUpdateResponses, HospitalSitesRetrieveData, HospitalSitesRetrieveResponses, HospitalSitesUpdateData, HospitalSitesUpdateResponses, InstrumentalDashboardStatsRetrieveData, InstrumentalDashboardStatsRetrieveResponses, InstrumentalHandheldScansCreateData, InstrumentalHandheldScansCreateResponses, InstrumentCatalogCreateData, InstrumentCatalogCreateResponses, InstrumentCatalogDestroyData, InstrumentCatalogDestroyResponses, InstrumentCatalogListData, InstrumentCatalogListResponses, InstrumentCatalogPartialUpdateData, InstrumentCatalogPartialUpdateResponses, InstrumentCatalogRetrieveData, InstrumentCatalogRetrieveResponses, InstrumentCatalogUpdateData, InstrumentCatalogUpdateResponses, InstrumentPriceContractsCreateData, InstrumentPriceContractsCreateResponses, InstrumentPriceContractsDestroyData, InstrumentPriceContractsDestroyResponses, InstrumentPriceContractsListData, InstrumentPriceContractsListResponses, InstrumentPriceContractsPartialUpdateData, InstrumentPriceContractsPartialUpdateResponses, InstrumentPriceContractsRetrieveData, InstrumentPriceContractsRetrieveResponses, InstrumentPriceContractsUpdateData, InstrumentPriceContractsUpdateResponses, InstrumentProcedureRequestsAcceptQuotationCreateData, InstrumentProcedureRequestsAcceptQuotationCreateResponses, InstrumentProcedureRequestsCreateData, InstrumentProcedureRequestsCreateQuotationCreateData, InstrumentProcedureRequestsCreateQuotationCreateResponses, InstrumentProcedureRequestsCreateResponses, InstrumentProcedureRequestsDestroyData, InstrumentProcedureRequestsDestroyResponses, InstrumentProcedureRequestsListData, InstrumentProcedureRequestsListResponses, InstrumentProcedureRequestsPartialUpdateData, InstrumentProcedureRequestsPartialUpdateResponses, InstrumentProcedureRequestsPlanFulfillmentCreateData, InstrumentProcedureRequestsPlanFulfillmentCreateResponses, InstrumentProcedureRequestsRetrieveData, InstrumentProcedureRequestsRetrieveResponses, InstrumentProcedureRequestsSubmitCreateData, InstrumentProcedureRequestsSubmitCreateResponses, InstrumentProcedureRequestsUpdateData, InstrumentProcedureRequestsUpdateResponses, InstrumentQuotationsListData, InstrumentQuotationsListResponses, InstrumentQuotationsRetrieveData, InstrumentQuotationsRetrieveResponses, InventoryDashboardStatsRetrieveData, InventoryDashboardStatsRetrieveResponses, LogisticsDashboardStatsRetrieveData, LogisticsDashboardStatsRetrieveResponses, MaterialDispatchesListData, MaterialDispatchesListResponses, MaterialDispatchesRetrieveData, MaterialDispatchesRetrieveResponses, MedicalDashboardStatsRetrieveData, MedicalDashboardStatsRetrieveResponses, ModulesProbeRetrieveData, ModulesProbeRetrieveResponses, ProcedureAssignmentsCreateData, ProcedureAssignmentsCreateResponses, ProcedureAssignmentsDestroyData, ProcedureAssignmentsDestroyResponses, ProcedureAssignmentsListData, ProcedureAssignmentsListResponses, ProcedureAssignmentsPartialUpdateData, ProcedureAssignmentsPartialUpdateResponses, ProcedureAssignmentsRetrieveData, ProcedureAssignmentsRetrieveResponses, ProcedureAssignmentsUpdateData, ProcedureAssignmentsUpdateResponses, ProceduresCreateData, ProceduresCreateResponses, ProceduresDestroyData, ProceduresDestroyResponses, ProceduresListData, ProceduresListResponses, ProceduresPartialUpdateData, ProceduresPartialUpdateResponses, ProceduresRetrieveData, ProceduresRetrieveResponses, ProceduresUpdateData, ProceduresUpdateResponses, ProductsCreateData, ProductsCreateResponses, ProductsDestroyData, ProductsDestroyResponses, ProductsListData, ProductsListResponses, ProductsPartialUpdateData, ProductsPartialUpdateResponses, ProductsRetrieveData, ProductsRetrieveResponses, ProductsUpdateData, ProductsUpdateResponses, ProvidersCreateData, ProvidersCreateResponses, ProvidersDestroyData, ProvidersDestroyResponses, ProvidersListData, ProvidersListResponses, ProvidersPartialUpdateData, ProvidersPartialUpdateResponses, ProvidersRetrieveData, ProvidersRetrieveResponses, ProvidersUpdateData, ProvidersUpdateResponses, ProximityScheduleLinksCreateData, ProximityScheduleLinksCreateResponses, ProximityScheduleLinksDestroyData, ProximityScheduleLinksDestroyResponses, ProximityScheduleLinksListData, ProximityScheduleLinksListResponses, ProximityScheduleLinksPartialUpdateData, ProximityScheduleLinksPartialUpdateResponses, ProximityScheduleLinksRetrieveData, ProximityScheduleLinksRetrieveResponses, ProximityScheduleLinksUpdateData, ProximityScheduleLinksUpdateResponses, PurchaseOrdersCreateData, PurchaseOrdersCreateResponses, PurchaseOrdersDestroyData, PurchaseOrdersDestroyResponses, PurchaseOrdersListData, PurchaseOrdersListResponses, PurchaseOrdersPartialUpdateData, PurchaseOrdersPartialUpdateResponses, PurchaseOrdersRetrieveData, PurchaseOrdersRetrieveResponses, PurchaseOrdersUpdateData, PurchaseOrdersUpdateResponses, RequisitionsCreateData, RequisitionsCreateResponses, RequisitionsDestroyData, RequisitionsDestroyResponses, RequisitionsListData, RequisitionsListResponses, RequisitionsPartialUpdateData, RequisitionsPartialUpdateResponses, RequisitionsRetrieveData, RequisitionsRetrieveResponses, RequisitionsUpdateData, RequisitionsUpdateResponses, RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, RfidReadEventsListData, RfidReadEventsListResponses, RfidReadEventsRetrieveData, RfidReadEventsRetrieveResponses, RfidReadsCreateData, RfidReadsCreateResponses, RfidTagsCreateData, RfidTagsCreateResponses, RfidTagsDestroyData, RfidTagsDestroyResponses, RfidTagsListData, RfidTagsListResponses, RfidTagsPartialUpdateData, RfidTagsPartialUpdateResponses, RfidTagsRetrieveData, RfidTagsRetrieveResponses, RfidTagsUpdateData, RfidTagsUpdateResponses, SalesOrdersCreateData, SalesOrdersCreateResponses, SalesOrdersDestroyData, SalesOrdersDestroyResponses, SalesOrdersListData, SalesOrdersListResponses, SalesOrdersPartialUpdateData, SalesOrdersPartialUpdateResponses, SalesOrdersRetrieveData, SalesOrdersRetrieveResponses, SalesOrdersUpdateData, SalesOrdersUpdateResponses, SupplyKitsAddTagsCreateData, SupplyKitsAddTagsCreateResponses, SupplyKitsAssignDispatchCreateData, SupplyKitsAssignDispatchCreateResponses, SupplyKitsConfirmHospitalArrivalCreateData, SupplyKitsConfirmHospitalArrivalCreateResponses, SupplyKitsConfirmWarehouseReturnCreateData, SupplyKitsConfirmWarehouseReturnCreateResponses, SupplyKitsCreateData, SupplyKitsCreateResponses, SupplyKitsDestroyData, SupplyKitsDestroyResponses, SupplyKitsListData, SupplyKitsListResponses, SupplyKitsPartialUpdateData, SupplyKitsPartialUpdateResponses, SupplyKitsRemoveTagsCreateData, SupplyKitsRemoveTagsCreateResponses, SupplyKitsRetrieveData, SupplyKitsRetrieveResponses, SupplyKitsUpdateData, SupplyKitsUpdateResponses, SupplyKitsUpdateReturnChecklistCreateData, SupplyKitsUpdateReturnChecklistCreateResponses, TechniciansCreateData, TechniciansCreateResponses, TechniciansDestroyData, TechniciansDestroyResponses, TechniciansListData, TechniciansListResponses, TechniciansPartialUpdateData, TechniciansPartialUpdateResponses, TechniciansRetrieveData, TechniciansRetrieveResponses, TechniciansUpdateData, TechniciansUpdateResponses, TransportVehiclesCreateData, TransportVehiclesCreateResponses, TransportVehiclesDestroyData, TransportVehiclesDestroyResponses, TransportVehiclesListData, TransportVehiclesListResponses, TransportVehiclesPartialUpdateData, TransportVehiclesPartialUpdateResponses, TransportVehiclesRetrieveData, TransportVehiclesRetrieveResponses, TransportVehiclesUpdateData, TransportVehiclesUpdateResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -271,6 +271,664 @@ export const doctorsUpdate = <ThrowOnError extends boolean = false>(options: Opt
     });
 };
 
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const fulfillmentPlansList = <ThrowOnError extends boolean = false>(options?: Options<FulfillmentPlansListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<FulfillmentPlansListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/fulfillment-plans/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const fulfillmentPlansRetrieve = <ThrowOnError extends boolean = false>(options: Options<FulfillmentPlansRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<FulfillmentPlansRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/fulfillment-plans/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesList = <ThrowOnError extends boolean = false>(options?: Options<HospitalSitesListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<HospitalSitesListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesCreate = <ThrowOnError extends boolean = false>(options: Options<HospitalSitesCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<HospitalSitesCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesDestroy = <ThrowOnError extends boolean = false>(options: Options<HospitalSitesDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<HospitalSitesDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesRetrieve = <ThrowOnError extends boolean = false>(options: Options<HospitalSitesRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<HospitalSitesRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<HospitalSitesPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<HospitalSitesPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const hospitalSitesUpdate = <ThrowOnError extends boolean = false>(options: Options<HospitalSitesUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<HospitalSitesUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/hospital-sites/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogList = <ThrowOnError extends boolean = false>(options?: Options<InstrumentCatalogListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InstrumentCatalogListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentCatalogCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentCatalogCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogDestroy = <ThrowOnError extends boolean = false>(options: Options<InstrumentCatalogDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<InstrumentCatalogDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogRetrieve = <ThrowOnError extends boolean = false>(options: Options<InstrumentCatalogRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<InstrumentCatalogRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentCatalogPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<InstrumentCatalogPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentCatalogUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentCatalogUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<InstrumentCatalogUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-catalog/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsList = <ThrowOnError extends boolean = false>(options?: Options<InstrumentPriceContractsListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InstrumentPriceContractsListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentPriceContractsCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentPriceContractsCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsDestroy = <ThrowOnError extends boolean = false>(options: Options<InstrumentPriceContractsDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<InstrumentPriceContractsDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsRetrieve = <ThrowOnError extends boolean = false>(options: Options<InstrumentPriceContractsRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<InstrumentPriceContractsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentPriceContractsPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<InstrumentPriceContractsPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentPriceContractsUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentPriceContractsUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<InstrumentPriceContractsUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-price-contracts/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsList = <ThrowOnError extends boolean = false>(options?: Options<InstrumentProcedureRequestsListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InstrumentProcedureRequestsListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentProcedureRequestsCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsDestroy = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<InstrumentProcedureRequestsDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsRetrieve = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<InstrumentProcedureRequestsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<InstrumentProcedureRequestsPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsUpdate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<InstrumentProcedureRequestsUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsAcceptQuotationCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsAcceptQuotationCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentProcedureRequestsAcceptQuotationCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/accept-quotation/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsCreateQuotationCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsCreateQuotationCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentProcedureRequestsCreateQuotationCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/create-quotation/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsPlanFulfillmentCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsPlanFulfillmentCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentProcedureRequestsPlanFulfillmentCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/plan-fulfillment/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentProcedureRequestsSubmitCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentProcedureRequestsSubmitCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentProcedureRequestsSubmitCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-procedure-requests/{id}/submit/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentQuotationsList = <ThrowOnError extends boolean = false>(options?: Options<InstrumentQuotationsListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InstrumentQuotationsListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-quotations/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const instrumentQuotationsRetrieve = <ThrowOnError extends boolean = false>(options: Options<InstrumentQuotationsRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<InstrumentQuotationsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrument-quotations/{id}/',
+        ...options
+    });
+};
+
+export const instrumentalDashboardStatsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<InstrumentalDashboardStatsRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InstrumentalDashboardStatsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrumental/dashboard-stats/',
+        ...options
+    });
+};
+
+export const instrumentalHandheldScansCreate = <ThrowOnError extends boolean = false>(options: Options<InstrumentalHandheldScansCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InstrumentalHandheldScansCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/instrumental/handheld-scans/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
 export const inventoryDashboardStatsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<InventoryDashboardStatsRetrieveData, ThrowOnError>) => {
     return (options?.client ?? client).get<InventoryDashboardStatsRetrieveResponses, unknown, ThrowOnError>({
         security: [
@@ -296,6 +954,42 @@ export const logisticsDashboardStatsRetrieve = <ThrowOnError extends boolean = f
             }
         ],
         url: '/api/logistics/dashboard-stats/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const materialDispatchesList = <ThrowOnError extends boolean = false>(options?: Options<MaterialDispatchesListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<MaterialDispatchesListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/material-dispatches/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const materialDispatchesRetrieve = <ThrowOnError extends boolean = false>(options: Options<MaterialDispatchesRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<MaterialDispatchesRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/material-dispatches/{id}/',
         ...options
     });
 };
@@ -801,6 +1495,125 @@ export const providersUpdate = <ThrowOnError extends boolean = false>(options: O
             }
         ],
         url: '/api/providers/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksList = <ThrowOnError extends boolean = false>(options?: Options<ProximityScheduleLinksListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<ProximityScheduleLinksListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksCreate = <ThrowOnError extends boolean = false>(options: Options<ProximityScheduleLinksCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<ProximityScheduleLinksCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksDestroy = <ThrowOnError extends boolean = false>(options: Options<ProximityScheduleLinksDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<ProximityScheduleLinksDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksRetrieve = <ThrowOnError extends boolean = false>(options: Options<ProximityScheduleLinksRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<ProximityScheduleLinksRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<ProximityScheduleLinksPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<ProximityScheduleLinksPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const proximityScheduleLinksUpdate = <ThrowOnError extends boolean = false>(options: Options<ProximityScheduleLinksUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<ProximityScheduleLinksUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/proximity-schedule-links/{id}/',
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -1495,6 +2308,64 @@ export const supplyKitsAddTagsCreate = <ThrowOnError extends boolean = false>(op
 };
 
 /**
+ * Assign transporter + technician and mark kit as in transit.
+ */
+export const supplyKitsAssignDispatchCreate = <ThrowOnError extends boolean = false>(options: Options<SupplyKitsAssignDispatchCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<SupplyKitsAssignDispatchCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/supply-kits/{id}/assign-dispatch/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Technician confirms material arrived at hospital.
+ */
+export const supplyKitsConfirmHospitalArrivalCreate = <ThrowOnError extends boolean = false>(options: Options<SupplyKitsConfirmHospitalArrivalCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<SupplyKitsConfirmHospitalArrivalCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/supply-kits/{id}/confirm-hospital-arrival/',
+        ...options
+    });
+};
+
+/**
+ * Warehouse confirms returned material.
+ */
+export const supplyKitsConfirmWarehouseReturnCreate = <ThrowOnError extends boolean = false>(options: Options<SupplyKitsConfirmWarehouseReturnCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<SupplyKitsConfirmWarehouseReturnCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/supply-kits/{id}/confirm-warehouse-return/',
+        ...options
+    });
+};
+
+/**
  * Filter querysets and assign organization on create for tenant-scoped models.
  */
 export const supplyKitsRemoveTagsCreate = <ThrowOnError extends boolean = false>(options: Options<SupplyKitsRemoveTagsCreateData, ThrowOnError>) => {
@@ -1508,6 +2379,28 @@ export const supplyKitsRemoveTagsCreate = <ThrowOnError extends boolean = false>
             }
         ],
         url: '/api/supply-kits/{id}/remove-tags/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Technician updates return-to-warehouse checklist.
+ */
+export const supplyKitsUpdateReturnChecklistCreate = <ThrowOnError extends boolean = false>(options: Options<SupplyKitsUpdateReturnChecklistCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<SupplyKitsUpdateReturnChecklistCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/supply-kits/{id}/update-return-checklist/',
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -1627,6 +2520,125 @@ export const techniciansUpdate = <ThrowOnError extends boolean = false>(options:
             }
         ],
         url: '/api/technicians/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesList = <ThrowOnError extends boolean = false>(options?: Options<TransportVehiclesListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<TransportVehiclesListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesCreate = <ThrowOnError extends boolean = false>(options: Options<TransportVehiclesCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<TransportVehiclesCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesDestroy = <ThrowOnError extends boolean = false>(options: Options<TransportVehiclesDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<TransportVehiclesDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesRetrieve = <ThrowOnError extends boolean = false>(options: Options<TransportVehiclesRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<TransportVehiclesRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<TransportVehiclesPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<TransportVehiclesPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const transportVehiclesUpdate = <ThrowOnError extends boolean = false>(options: Options<TransportVehiclesUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<TransportVehiclesUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/transport-vehicles/{id}/',
         ...options,
         headers: {
             'Content-Type': 'application/json',

@@ -18,7 +18,9 @@ class SupplyKitStatus(models.TextChoices):
     ARMANDO = "armando", _("Armando")
     LISTA = "lista", _("Lista")
     EN_TRANSITO = "en_transito", _("En tránsito")
-    ENTREGADA = "entregada", _("Entregada")
+    ENTREGADA = "entregada", _("Entregada en hospital")
+    RETORNANDO = "retornando", _("Retornando a almacén")
+    DEVUELTA = "devuelta", _("Confirmada en almacén")
     USADA = "usada", _("Usada")
 
 
@@ -56,6 +58,14 @@ class Procedure(OrganizationModel):
     procedure_type = models.CharField(max_length=255)
     destination_hospital = models.CharField(max_length=255)
     scheduled_date = models.DateField()
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="procedures",
+        help_text=_("Doctor que ocupará el instrumental en el procedimiento."),
+    )
     status = models.CharField(
         max_length=32,
         choices=ProcedureStatus.choices,
@@ -125,6 +135,17 @@ class SupplyKit(OrganizationModel):
     )
     destination_hospital = models.CharField(max_length=255, blank=True)
     shipped_at = models.DateTimeField(null=True, blank=True)
+    assigned_technician = models.ForeignKey(
+        Technician,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_supply_kits",
+    )
+    transporter_name = models.CharField(max_length=255, blank=True)
+    hospital_arrived_at = models.DateTimeField(null=True, blank=True)
+    return_checklist = models.JSONField(default=list, blank=True)
+    warehouse_confirmed_at = models.DateTimeField(null=True, blank=True)
     tags = models.ManyToManyField(
         "inventory.RFIDTag",
         through="SupplyKitTag",
@@ -142,6 +163,19 @@ class SupplyKit(OrganizationModel):
 
     def __str__(self):
         return f"{self.code} — {self.name}"
+
+    def build_return_checklist(self):
+        """Initialize checklist from current RFID tags if empty."""
+        if self.return_checklist:
+            return self.return_checklist
+        return [
+            {
+                "code": tag.code,
+                "item_type": tag.item_type or "",
+                "checked": False,
+            }
+            for tag in self.tags.all()
+        ]
 
 
 class SupplyKitTag(OrganizationModel):

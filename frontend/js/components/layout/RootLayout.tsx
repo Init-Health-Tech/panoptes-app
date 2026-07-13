@@ -1,5 +1,6 @@
 import { Outlet, useLoaderData } from 'react-router';
 
+import { DemoExpiredGate } from '@/js/components/layout/DemoExpiredGate';
 import { ModulesContext } from '@/js/context/ModulesContext';
 import type { ActiveModules } from '@/js/types/modules';
 
@@ -8,7 +9,9 @@ export function RootLayout() {
 
   return (
     <ModulesContext.Provider value={modules}>
-      <Outlet />
+      <DemoExpiredGate>
+        <Outlet />
+      </DemoExpiredGate>
     </ModulesContext.Provider>
   );
 }

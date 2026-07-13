@@ -1,10 +1,17 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from inventory.custody import custody_payload_for_tag, get_open_custody
 from inventory.models import RFIDReadEvent, RFIDTag, RFIDTagStatus
 
 
 class RFIDTagSerializer(serializers.ModelSerializer):
+    is_available = serializers.SerializerMethodField()
+    custody_type = serializers.SerializerMethodField()
+    custody_id = serializers.SerializerMethodField()
+    custody_label = serializers.SerializerMethodField()
+    custody_status = serializers.SerializerMethodField()
+
     class Meta:
         model = RFIDTag
         fields = [  # noqa: RUF012
@@ -14,10 +21,45 @@ class RFIDTagSerializer(serializers.ModelSerializer):
             "status",
             "last_location",
             "last_read_at",
+            "is_available",
+            "custody_type",
+            "custody_id",
+            "custody_label",
+            "custody_status",
             "created",
             "modified",
         ]
-        read_only_fields = ("last_read_at", "created", "modified")
+        read_only_fields = (
+            "last_read_at",
+            "is_available",
+            "custody_type",
+            "custody_id",
+            "custody_label",
+            "custody_status",
+            "created",
+            "modified",
+        )
+
+    def _custody(self, obj):
+        cache = self.context.setdefault("_custody_cache", {})
+        if obj.id not in cache:
+            cache[obj.id] = custody_payload_for_tag(obj)
+        return cache[obj.id]
+
+    def get_is_available(self, obj):
+        return self._custody(obj)["is_available"]
+
+    def get_custody_type(self, obj):
+        return self._custody(obj)["custody_type"]
+
+    def get_custody_id(self, obj):
+        return self._custody(obj)["custody_id"]
+
+    def get_custody_label(self, obj):
+        return self._custody(obj)["custody_label"]
+
+    def get_custody_status(self, obj):
+        return self._custody(obj)["custody_status"]
 
 
 class RFIDReadEventSerializer(serializers.ModelSerializer):
@@ -71,7 +113,8 @@ class RFIDReadWebhookSerializer(serializers.Serializer):
         if not created:
             if validated_data.get("item_type"):
                 tag.item_type = validated_data["item_type"]
-            if status:
+            # Do not let webhook override status while tag is in open custody.
+            if status and get_open_custody(tag) is None:
                 tag.status = status
             if location:
                 tag.last_location = location

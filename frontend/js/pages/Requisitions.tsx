@@ -1,23 +1,87 @@
-import { Form, Link, useLoaderData, useSearchParams } from 'react-router';
+import { Form, Link, useLoaderData, useRevalidator, useSearchParams } from 'react-router';
+import { useState } from 'react';
 
-import type { PaginatedRequisitionList } from '@/js/api';
+import {
+  requisitionsCreate,
+  requisitionsPartialUpdate,
+  type PaginatedRequisitionList,
+  type Product,
+  type Requisition,
+} from '@/js/api';
 import { AppLayout } from '@/js/components/layout/AppLayout';
+import { EditFormPanel } from '@/js/components/ui/EditFormPanel';
+import { FormField } from '@/js/components/ui/FormField';
+import { FormPanel } from '@/js/components/ui/FormPanel';
+import { Input } from '@/js/components/ui/Input';
+import { Select } from '@/js/components/ui/Select';
 import { KitStatusBadge } from '@/js/components/ui/KitStatusBadge';
 import { REQUISITION_STATUS_LABELS } from '@/js/types/logistics';
 import { makeLink } from '@/js/utils';
 
 type RequisitionsLoaderData = PaginatedRequisitionList & {
   filters: { status: string };
+  products: Product[];
 };
 
 const KANBAN_COLUMNS = ['solicitada', 'aprobada', 'en_transito', 'entregada'] as const;
 
+function RequisitionStatusEdit({ req, onSaved }: { req: Requisition; onSaved: () => void }) {
+  const [status, setStatus] = useState(req.status ?? 'solicitada');
+
+  const handleUpdate = async () => {
+    await requisitionsPartialUpdate({
+      path: { id: req.id },
+      body: { status },
+      throwOnError: true,
+    });
+    onSaved();
+  };
+
+  return (
+    <EditFormPanel onSubmit={handleUpdate} onSuccess={onSaved} title={`REQ #${req.id}`}>
+      <FormField htmlFor={`req-status-${req.id}`} label="Estado">
+        <Select id={`req-status-${req.id}`} onChange={(e) => setStatus(e.target.value as typeof status)} value={status}>
+          {Object.entries(REQUISITION_STATUS_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </Select>
+      </FormField>
+    </EditFormPanel>
+  );
+}
+
 const Requisitions = () => {
   const data = useLoaderData<RequisitionsLoaderData>();
+  const revalidator = useRevalidator();
   const [searchParams] = useSearchParams();
   const activeStatus = data.filters.status;
   const prev = makeLink(data.previous);
   const next = makeLink(data.next);
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
+  const [productId, setProductId] = useState('');
+  const [quantity, setQuantity] = useState('1');
+
+  const refresh = () => revalidator.revalidate();
+
+  const handleCreate = async () => {
+    await requisitionsCreate({
+      body: {
+        origin,
+        destination,
+        status: 'solicitada',
+        lines: [{ product: Number(productId), quantity: Number(quantity) }],
+      },
+      throwOnError: true,
+    });
+    setOrigin('');
+    setDestination('');
+    setProductId('');
+    setQuantity('1');
+    refresh();
+  };
 
   const grouped = KANBAN_COLUMNS.reduce(
     (acc, status) => {
@@ -28,10 +92,36 @@ const Requisitions = () => {
   );
 
   return (
-    <AppLayout
-      subtitle="Requisiciones de envío entre ubicaciones"
-      title="Requisiciones"
-    >
+    <AppLayout subtitle="Requisiciones de envío entre ubicaciones" title="Requisiciones">
+      <FormPanel onSubmit={handleCreate} onSuccess={refresh} submitLabel="Crear requisición" title="Nueva requisición">
+        <FormField htmlFor="req-origin" label="Origen">
+          <Input id="req-origin" onChange={(e) => setOrigin(e.target.value)} required value={origin} />
+        </FormField>
+        <FormField htmlFor="req-dest" label="Destino">
+          <Input id="req-dest" onChange={(e) => setDestination(e.target.value)} required value={destination} />
+        </FormField>
+        <FormField htmlFor="req-product" label="Producto">
+          <Select id="req-product" onChange={(e) => setProductId(e.target.value)} required value={productId}>
+            <option value="">Seleccionar…</option>
+            {data.products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.sku} — {p.name}
+              </option>
+            ))}
+          </Select>
+        </FormField>
+        <FormField htmlFor="req-qty" label="Cantidad">
+          <Input
+            id="req-qty"
+            min={1}
+            onChange={(e) => setQuantity(e.target.value)}
+            required
+            type="number"
+            value={quantity}
+          />
+        </FormField>
+      </FormPanel>
+
       <Form className="panoptes-card mb-6 flex flex-wrap items-end gap-4 p-4" method="get">
         <div className="min-w-[200px] flex-1">
           <label className="mb-1 block text-xs font-semibold uppercase text-on-surface-variant">
@@ -70,7 +160,10 @@ const Requisitions = () => {
                     key={req.id}
                     className="rounded-lg border border-outline-variant/30 bg-surface-container-low p-3"
                   >
-                    <p className="text-xs font-semibold text-primary">REQ #{req.id}</p>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-xs font-semibold text-primary">REQ #{req.id}</p>
+                      <RequisitionStatusEdit onSaved={refresh} req={req} />
+                    </div>
                     <p className="mt-1 text-sm font-medium">
                       {req.origin} → {req.destination}
                     </p>
@@ -96,6 +189,7 @@ const Requisitions = () => {
                 <th className="panoptes-table-header">Destino</th>
                 <th className="panoptes-table-header">Estado</th>
                 <th className="panoptes-table-header">Líneas</th>
+                <th className="panoptes-table-header w-16"></th>
               </tr>
             </thead>
             <tbody>
@@ -108,6 +202,9 @@ const Requisitions = () => {
                     <KitStatusBadge labels={REQUISITION_STATUS_LABELS} status={req.status ?? 'solicitada'} />
                   </td>
                   <td className="px-4 py-3">{req.lines?.length ?? 0}</td>
+                  <td className="px-4 py-3">
+                    <RequisitionStatusEdit onSaved={refresh} req={req} />
+                  </td>
                 </tr>
               ))}
             </tbody>

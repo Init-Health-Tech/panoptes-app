@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { redirectDocument } from 'react-router';
 
-import { rfidTagsList } from '@/js/api';
+import { rfidReadEventsList, rfidTagsList, rfidTagsRetrieve } from '@/js/api';
 import { loginRedirectUrl } from '@/js/utils/auth';
 
 export async function inventoryLoader({ request }: { request: Request }) {
@@ -27,5 +27,38 @@ export async function inventoryLoader({ request }: { request: Request }) {
       throw redirectDocument(loginRedirectUrl(next));
     }
     throw error;
+  }
+}
+
+export async function inventoryDetailLoader({
+  request,
+  params,
+}: {
+  request: Request;
+  params: { tagId?: string };
+}) {
+  const tagId = Number(params.tagId);
+  if (!tagId) {
+    throw new Response('Not Found', { status: 404 });
+  }
+
+  try {
+    const [tagResponse, eventsResponse] = await Promise.all([
+      rfidTagsRetrieve({ path: { id: tagId }, throwOnError: true }),
+      rfidReadEventsList({
+        query: { limit: 50, offset: 0, tag: tagId } as { limit?: number; offset?: number },
+        throwOnError: true,
+      }),
+    ]);
+    return {
+      tag: tagResponse.data,
+      events: eventsResponse.data,
+    };
+  } catch (error) {
+    if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
+      const url = new URL(request.url);
+      throw redirectDocument(loginRedirectUrl(url.pathname + url.search));
+    }
+    throw new Response('Not Found', { status: 404 });
   }
 }

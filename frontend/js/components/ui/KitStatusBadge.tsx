@@ -5,6 +5,8 @@ const STATUS_STYLES: Record<string, string> = {
   lista: 'bg-secondary-container/60 text-primary',
   en_transito: 'bg-blue-100 text-blue-800',
   entregada: 'bg-tertiary-container/30 text-tertiary',
+  retornando: 'bg-amber-100 text-amber-900',
+  devuelta: 'bg-emerald-100 text-emerald-900',
   usada: 'bg-surface-container text-on-surface-variant',
   scheduled: 'bg-secondary-container/40 text-primary',
   in_preparation: 'bg-warning/20 text-amber-800',

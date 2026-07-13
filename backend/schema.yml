@@ -346,6 +346,918 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/fulfillment-plans/:
+    get:
+      operationId: fulfillment_plans_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - fulfillment-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFulfillmentPlanList'
+          description: ''
+  /api/fulfillment-plans/{id}/:
+    get:
+      operationId: fulfillment_plans_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this fulfillment plan.
+        required: true
+      tags:
+      - fulfillment-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FulfillmentPlan'
+          description: ''
+  /api/hospital-sites/:
+    get:
+      operationId: hospital_sites_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - hospital-sites
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHospitalSiteList'
+          description: ''
+    post:
+      operationId: hospital_sites_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - hospital-sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalSite'
+          description: ''
+  /api/hospital-sites/{id}/:
+    get:
+      operationId: hospital_sites_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hospital site.
+        required: true
+      tags:
+      - hospital-sites
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalSite'
+          description: ''
+    put:
+      operationId: hospital_sites_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hospital site.
+        required: true
+      tags:
+      - hospital-sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HospitalSite'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalSite'
+          description: ''
+    patch:
+      operationId: hospital_sites_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hospital site.
+        required: true
+      tags:
+      - hospital-sites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalSite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalSite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalSite'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalSite'
+          description: ''
+    delete:
+      operationId: hospital_sites_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this hospital site.
+        required: true
+      tags:
+      - hospital-sites
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/instrument-catalog/:
+    get:
+      operationId: instrument_catalog_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - instrument-catalog
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstrumentCatalogItemList'
+          description: ''
+    post:
+      operationId: instrument_catalog_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - instrument-catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentCatalogItem'
+          description: ''
+  /api/instrument-catalog/{id}/:
+    get:
+      operationId: instrument_catalog_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument catalog item.
+        required: true
+      tags:
+      - instrument-catalog
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentCatalogItem'
+          description: ''
+    put:
+      operationId: instrument_catalog_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument catalog item.
+        required: true
+      tags:
+      - instrument-catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentCatalogItem'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentCatalogItem'
+          description: ''
+    patch:
+      operationId: instrument_catalog_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument catalog item.
+        required: true
+      tags:
+      - instrument-catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentCatalogItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentCatalogItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentCatalogItem'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentCatalogItem'
+          description: ''
+    delete:
+      operationId: instrument_catalog_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument catalog item.
+        required: true
+      tags:
+      - instrument-catalog
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/instrument-price-contracts/:
+    get:
+      operationId: instrument_price_contracts_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - instrument-price-contracts
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstrumentPriceContractList'
+          description: ''
+    post:
+      operationId: instrument_price_contracts_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - instrument-price-contracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentPriceContract'
+          description: ''
+  /api/instrument-price-contracts/{id}/:
+    get:
+      operationId: instrument_price_contracts_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument price contract.
+        required: true
+      tags:
+      - instrument-price-contracts
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentPriceContract'
+          description: ''
+    put:
+      operationId: instrument_price_contracts_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument price contract.
+        required: true
+      tags:
+      - instrument-price-contracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentPriceContract'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentPriceContract'
+          description: ''
+    patch:
+      operationId: instrument_price_contracts_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument price contract.
+        required: true
+      tags:
+      - instrument-price-contracts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentPriceContract'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentPriceContract'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentPriceContract'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentPriceContract'
+          description: ''
+    delete:
+      operationId: instrument_price_contracts_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument price contract.
+        required: true
+      tags:
+      - instrument-price-contracts
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/instrument-procedure-requests/:
+    get:
+      operationId: instrument_procedure_requests_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstrumentProcedureRequestList'
+          description: ''
+    post:
+      operationId: instrument_procedure_requests_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - instrument-procedure-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentProcedureRequest'
+          description: ''
+  /api/instrument-procedure-requests/{id}/:
+    get:
+      operationId: instrument_procedure_requests_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentProcedureRequest'
+          description: ''
+    put:
+      operationId: instrument_procedure_requests_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InstrumentProcedureRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentProcedureRequest'
+          description: ''
+    patch:
+      operationId: instrument_procedure_requests_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentProcedureRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentProcedureRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInstrumentProcedureRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentProcedureRequest'
+          description: ''
+    delete:
+      operationId: instrument_procedure_requests_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/instrument-procedure-requests/{id}/accept-quotation/:
+    post:
+      operationId: instrument_procedure_requests_accept_quotation_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentQuotation'
+          description: ''
+  /api/instrument-procedure-requests/{id}/create-quotation/:
+    post:
+      operationId: instrument_procedure_requests_create_quotation_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentQuotation'
+          description: ''
+  /api/instrument-procedure-requests/{id}/plan-fulfillment/:
+    post:
+      operationId: instrument_procedure_requests_plan_fulfillment_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FulfillmentPlanCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FulfillmentPlanCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FulfillmentPlanCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FulfillmentPlan'
+          description: ''
+  /api/instrument-procedure-requests/{id}/submit/:
+    post:
+      operationId: instrument_procedure_requests_submit_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument procedure
+          request.
+        required: true
+      tags:
+      - instrument-procedure-requests
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentProcedureRequest'
+          description: ''
+  /api/instrument-quotations/:
+    get:
+      operationId: instrument_quotations_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - instrument-quotations
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInstrumentQuotationList'
+          description: ''
+  /api/instrument-quotations/{id}/:
+    get:
+      operationId: instrument_quotations_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this instrument quotation.
+        required: true
+      tags:
+      - instrument-quotations
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentQuotation'
+          description: ''
+  /api/instrumental/dashboard-stats/:
+    get:
+      operationId: instrumental_dashboard_stats_retrieve
+      tags:
+      - instrumental
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstrumentalDashboardStats'
+          description: ''
+  /api/instrumental/handheld-scans/:
+    post:
+      operationId: instrumental_handheld_scans_create
+      tags:
+      - instrumental
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HandheldScan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HandheldScan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HandheldScan'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HandheldScanEvent'
+          description: ''
   /api/inventory/dashboard-stats/:
     get:
       operationId: inventory_dashboard_stats_retrieve
@@ -369,6 +1281,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LogisticsDashboardStats'
+          description: ''
+  /api/material-dispatches/:
+    get:
+      operationId: material_dispatches_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - material-dispatches
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaterialDispatchList'
+          description: ''
+  /api/material-dispatches/{id}/:
+    get:
+      operationId: material_dispatches_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material dispatch.
+        required: true
+      tags:
+      - material-dispatches
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialDispatch'
           description: ''
   /api/medical/dashboard-stats/:
     get:
@@ -1063,6 +2027,170 @@ paths:
         required: true
       tags:
       - providers
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/proximity-schedule-links/:
+    get:
+      operationId: proximity_schedule_links_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - proximity-schedule-links
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProximityScheduleLinkList'
+          description: ''
+    post:
+      operationId: proximity_schedule_links_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - proximity-schedule-links
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProximityScheduleLink'
+          description: ''
+  /api/proximity-schedule-links/{id}/:
+    get:
+      operationId: proximity_schedule_links_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this proximity schedule link.
+        required: true
+      tags:
+      - proximity-schedule-links
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProximityScheduleLink'
+          description: ''
+    put:
+      operationId: proximity_schedule_links_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this proximity schedule link.
+        required: true
+      tags:
+      - proximity-schedule-links
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProximityScheduleLink'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProximityScheduleLink'
+          description: ''
+    patch:
+      operationId: proximity_schedule_links_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this proximity schedule link.
+        required: true
+      tags:
+      - proximity-schedule-links
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProximityScheduleLink'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProximityScheduleLink'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProximityScheduleLink'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProximityScheduleLink'
+          description: ''
+    delete:
+      operationId: proximity_schedule_links_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this proximity schedule link.
+        required: true
+      tags:
+      - proximity-schedule-links
       security:
       - cookieAuth: []
       responses:
@@ -2035,14 +3163,92 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
         required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/assign-dispatch/:
+    post:
+      operationId: supply_kits_assign_dispatch_create
+      description: Assign transporter + technician and mark kit as in transit.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKitDispatch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKitDispatch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKitDispatch'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/confirm-hospital-arrival/:
+    post:
+      operationId: supply_kits_confirm_hospital_arrival_create
+      description: Technician confirms material arrived at hospital.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/confirm-warehouse-return/:
+    post:
+      operationId: supply_kits_confirm_warehouse_return_create
+      description: Warehouse confirms returned material.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
       security:
       - cookieAuth: []
       responses:
@@ -2070,13 +3276,47 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SupplyKit'
+              $ref: '#/components/schemas/SupplyKitTagAction'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyKit'
+          description: ''
+  /api/supply-kits/{id}/update-return-checklist/:
+    post:
+      operationId: supply_kits_update_return_checklist_create
+      description: Technician updates return-to-warehouse checklist.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this supply kit.
+        required: true
+      tags:
+      - supply-kits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyKitReturnChecklist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SupplyKitReturnChecklist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SupplyKitReturnChecklist'
         required: true
       security:
       - cookieAuth: []
@@ -2246,6 +3486,170 @@ paths:
         required: true
       tags:
       - technicians
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/transport-vehicles/:
+    get:
+      operationId: transport_vehicles_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - transport-vehicles
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransportVehicleList'
+          description: ''
+    post:
+      operationId: transport_vehicles_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - transport-vehicles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportVehicle'
+          description: ''
+  /api/transport-vehicles/{id}/:
+    get:
+      operationId: transport_vehicles_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transport vehicle.
+        required: true
+      tags:
+      - transport-vehicles
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportVehicle'
+          description: ''
+    put:
+      operationId: transport_vehicles_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transport vehicle.
+        required: true
+      tags:
+      - transport-vehicles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TransportVehicle'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportVehicle'
+          description: ''
+    patch:
+      operationId: transport_vehicles_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transport vehicle.
+        required: true
+      tags:
+      - transport-vehicles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTransportVehicle'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTransportVehicle'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTransportVehicle'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportVehicle'
+          description: ''
+    delete:
+      operationId: transport_vehicles_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this transport vehicle.
+        required: true
+      tags:
+      - transport-vehicles
       security:
       - cookieAuth: []
       responses:
@@ -2478,6 +3882,197 @@ components:
       - id
       - modified
       - name
+    EventTypeEnum:
+      enum:
+      - load_departure
+      - hospital_arrival
+      - hospital_departure
+      - return_arrival
+      - crcao_validation
+      type: string
+      description: |-
+        * `load_departure` - Salida de almacén
+        * `hospital_arrival` - Llegada hospital
+        * `hospital_departure` - Salida hospital
+        * `return_arrival` - Retorno a almacén
+        * `crcao_validation` - Validación en almacén
+    FulfillmentPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        request:
+          type: integer
+        vehicle:
+          type: integer
+        vehicle_code:
+          type: string
+          readOnly: true
+        lead_technician:
+          type: integer
+        technician_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/FulfillmentPlanStatusEnum'
+        scheduled_departure:
+          type: string
+          format: date-time
+          nullable: true
+        scheduled_return:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+        dispatches:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialDispatch'
+          readOnly: true
+        procedure_type:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - dispatches
+      - id
+      - lead_technician
+      - modified
+      - procedure_type
+      - request
+      - technician_name
+      - vehicle
+      - vehicle_code
+    FulfillmentPlanCreate:
+      type: object
+      properties:
+        vehicle:
+          type: integer
+        lead_technician:
+          type: integer
+        scheduled_departure:
+          type: string
+          format: date-time
+          nullable: true
+        scheduled_return:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+      required:
+      - lead_technician
+      - vehicle
+    FulfillmentPlanStatusEnum:
+      enum:
+      - planning
+      - ready
+      - dispatched
+      - at_hospital
+      - returning
+      - validated
+      type: string
+      description: |-
+        * `planning` - Planificando
+        * `ready` - Listo
+        * `dispatched` - Despachado
+        * `at_hospital` - En hospital
+        * `returning` - Retornando
+        * `validated` - Validado
+    HandheldScan:
+      type: object
+      properties:
+        identifier:
+          type: string
+          maxLength: 128
+        event_type:
+          $ref: '#/components/schemas/EventTypeEnum'
+        hospital:
+          type: integer
+          nullable: true
+        handheld_id:
+          type: string
+          maxLength: 64
+        location_notes:
+          type: string
+          maxLength: 255
+      required:
+      - event_type
+      - identifier
+    HandheldScanEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        material_dispatch:
+          type: integer
+          nullable: true
+        identifier_used:
+          type: string
+          maxLength: 128
+        event_type:
+          $ref: '#/components/schemas/EventTypeEnum'
+        hospital:
+          type: integer
+          nullable: true
+        handheld_id:
+          type: string
+          maxLength: 64
+        location_notes:
+          type: string
+          maxLength: 255
+        scanned_at:
+          type: string
+          format: date-time
+      required:
+      - event_type
+      - id
+      - identifier_used
+    HospitalSite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 32
+        is_central:
+          type: boolean
+          description: Marca el almacén central de la organización.
+        city:
+          type: string
+          maxLength: 128
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created
+      - id
+      - modified
+      - name
     IndustryTypeEnum:
       enum:
       - clinical
@@ -2488,6 +4083,371 @@ components:
         * `clinical` - Clínico / hospitalario
         * `logistics` - Logístico / comercial
         * `mixed` - Mixto
+    InstrumentCatalogItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 128
+        name:
+          type: string
+          maxLength: 255
+        item_type:
+          $ref: '#/components/schemas/ItemTypeEnum'
+        description:
+          type: string
+        requires_sterilization:
+          type: boolean
+        default_unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+          description: Precio base si no hay contrato aplicable.
+        rfid_tag:
+          type: integer
+          nullable: true
+        rfid_code:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - id
+      - item_type
+      - modified
+      - name
+      - rfid_code
+      - sku
+    InstrumentContractLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        catalog_item:
+          type: integer
+        catalog_sku:
+          type: string
+          readOnly: true
+        catalog_name:
+          type: string
+          readOnly: true
+        catalog_item_type:
+          type: string
+          readOnly: true
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - catalog_item
+      - catalog_item_type
+      - catalog_name
+      - catalog_sku
+      - id
+      - unit_price
+    InstrumentPriceContract:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        doctor:
+          type: integer
+          nullable: true
+          description: Si se omite, el contrato aplica a cualquier doctor del hospital.
+        doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
+        hospital:
+          type: integer
+          nullable: true
+          description: Si se omite, el contrato aplica a cualquier hospital del doctor.
+        hospital_name:
+          type: string
+          readOnly: true
+          nullable: true
+        scope_label:
+          type: string
+          readOnly: true
+        valid_from:
+          type: string
+          format: date
+          nullable: true
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+        notes:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentContractLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - doctor_name
+      - hospital_name
+      - id
+      - modified
+      - name
+      - scope_label
+    InstrumentProcedureRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure:
+          type: integer
+        procedure_type:
+          type: string
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        destination_hospital:
+          type: integer
+        destination_hospital_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/InstrumentProcedureRequestStatusEnum'
+        notes:
+          type: string
+        scheduled_start:
+          type: string
+          format: date-time
+          nullable: true
+        scheduled_end:
+          type: string
+          format: date-time
+          nullable: true
+        estimated_out_hours:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        proximity_next_request:
+          type: integer
+          nullable: true
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentRequestLine'
+        quotation_status:
+          type: string
+          readOnly: true
+        fulfillment_status:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - destination_hospital
+      - destination_hospital_name
+      - doctor
+      - doctor_name
+      - fulfillment_status
+      - id
+      - modified
+      - procedure
+      - procedure_type
+      - quotation_status
+    InstrumentProcedureRequestStatusEnum:
+      enum:
+      - draft
+      - submitted
+      - quotation
+      - quotation_accepted
+      - fulfillment
+      - in_field
+      - returning
+      - validated
+      - completed
+      - cancelled
+      type: string
+      description: |-
+        * `draft` - Borrador
+        * `submitted` - Solicitada
+        * `quotation` - En cotización
+        * `quotation_accepted` - Cotización aceptada
+        * `fulfillment` - En asignación
+        * `in_field` - En campo
+        * `returning` - En retorno
+        * `validated` - Validado en almacén
+        * `completed` - Completado
+        * `cancelled` - Cancelado
+    InstrumentQuotation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        request:
+          type: integer
+        status:
+          $ref: '#/components/schemas/InstrumentQuotationStatusEnum'
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        notes:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        doctor_responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotationLine'
+          readOnly: true
+        request_status:
+          type: string
+          readOnly: true
+        procedure_type:
+          type: string
+          readOnly: true
+        doctor_name:
+          type: string
+          readOnly: true
+        hospital_name:
+          type: string
+          readOnly: true
+        applied_contract:
+          type: integer
+          nullable: true
+          description: Contrato principal usado al generar la cotización (si aplica).
+        applied_contract_name:
+          type: string
+          readOnly: true
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - applied_contract_name
+      - created
+      - doctor_name
+      - hospital_name
+      - id
+      - lines
+      - modified
+      - procedure_type
+      - request
+      - request_status
+    InstrumentQuotationStatusEnum:
+      enum:
+      - draft
+      - pending_doctor
+      - accepted
+      - rejected
+      type: string
+      description: |-
+        * `draft` - Borrador
+        * `pending_doctor` - Pendiente doctor
+        * `accepted` - Aceptada
+        * `rejected` - Rechazada
+    InstrumentRequestLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        catalog_item:
+          type: integer
+        catalog_sku:
+          type: string
+          readOnly: true
+        catalog_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        notes:
+          type: string
+          maxLength: 255
+      required:
+      - catalog_item
+      - catalog_name
+      - catalog_sku
+      - id
+    InstrumentalDashboardStats:
+      type: object
+      properties:
+        open_requests:
+          type: integer
+        pending_quotations:
+          type: integer
+        active_fulfillments:
+          type: integer
+        materials_in_field:
+          type: integer
+        materials_returning:
+          type: integer
+      required:
+      - active_fulfillments
+      - materials_in_field
+      - materials_returning
+      - open_requests
+      - pending_quotations
+    ItemTypeEnum:
+      enum:
+      - instrument
+      - equipment
+      - tray
+      type: string
+      description: |-
+        * `instrument` - Instrumental
+        * `equipment` - Equipo médico
+        * `tray` - Charola
     LogisticsDashboardStats:
       type: object
       properties:
@@ -2504,6 +4464,96 @@ components:
       - open_sales_orders
       - pending_requisitions
       - requisitions_in_transit
+    MaterialDispatch:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        catalog_item:
+          type: integer
+        catalog_sku:
+          type: string
+          readOnly: true
+        catalog_name:
+          type: string
+          readOnly: true
+        technician:
+          type: integer
+        technician_name:
+          type: string
+          readOnly: true
+        tray_code:
+          type: string
+          maxLength: 64
+        rfid_tag:
+          type: integer
+          nullable: true
+        rfid_code:
+          type: string
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 128
+        tracking_identifier:
+          type: string
+          readOnly: true
+        requires_sterilization:
+          type: boolean
+        sterilization_status:
+          $ref: '#/components/schemas/SterilizationStatusEnum'
+        status:
+          $ref: '#/components/schemas/MaterialDispatchStatusEnum'
+        current_hospital:
+          type: integer
+          nullable: true
+        loaded_at:
+          type: string
+          format: date-time
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - catalog_item
+      - catalog_name
+      - catalog_sku
+      - created
+      - id
+      - modified
+      - rfid_code
+      - technician
+      - technician_name
+      - tracking_identifier
+    MaterialDispatchStatusEnum:
+      enum:
+      - assigned
+      - sterilizing
+      - loaded
+      - in_transit
+      - at_hospital
+      - returning
+      - returned
+      - validated
+      type: string
+      description: |-
+        * `assigned` - Asignado
+        * `sterilizing` - Esterilizando
+        * `loaded` - Cargado
+        * `in_transit` - En tránsito
+        * `at_hospital` - En hospital
+        * `returning` - Retornando
+        * `returned` - Retornado
+        * `validated` - Validado
     MedicalDashboardStats:
       type: object
       properties:
@@ -2601,6 +4651,167 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Doctor'
+    PaginatedFulfillmentPlanList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FulfillmentPlan'
+    PaginatedHospitalSiteList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HospitalSite'
+    PaginatedInstrumentCatalogItemList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentCatalogItem'
+    PaginatedInstrumentPriceContractList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentPriceContract'
+    PaginatedInstrumentProcedureRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentProcedureRequest'
+    PaginatedInstrumentQuotationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentQuotation'
+    PaginatedMaterialDispatchList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialDispatch'
     PaginatedProcedureAssignmentList:
       type: object
       required:
@@ -2693,6 +4904,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Provider'
+    PaginatedProximityScheduleLinkList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProximityScheduleLink'
     PaginatedPurchaseOrderList:
       type: object
       required:
@@ -2854,6 +5088,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Technician'
+    PaginatedTransportVehicleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransportVehicle'
     PaginatedUserList:
       type: object
       required:
@@ -2922,6 +5179,184 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PatchedHospitalSite:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 32
+        is_central:
+          type: boolean
+          description: Marca el almacén central de la organización.
+        city:
+          type: string
+          maxLength: 128
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedInstrumentCatalogItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sku:
+          type: string
+          maxLength: 128
+        name:
+          type: string
+          maxLength: 255
+        item_type:
+          $ref: '#/components/schemas/ItemTypeEnum'
+        description:
+          type: string
+        requires_sterilization:
+          type: boolean
+        default_unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+          description: Precio base si no hay contrato aplicable.
+        rfid_tag:
+          type: integer
+          nullable: true
+        rfid_code:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedInstrumentPriceContract:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        doctor:
+          type: integer
+          nullable: true
+          description: Si se omite, el contrato aplica a cualquier doctor del hospital.
+        doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
+        hospital:
+          type: integer
+          nullable: true
+          description: Si se omite, el contrato aplica a cualquier hospital del doctor.
+        hospital_name:
+          type: string
+          readOnly: true
+          nullable: true
+        scope_label:
+          type: string
+          readOnly: true
+        valid_from:
+          type: string
+          format: date
+          nullable: true
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+        notes:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentContractLine'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedInstrumentProcedureRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        procedure:
+          type: integer
+        procedure_type:
+          type: string
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        destination_hospital:
+          type: integer
+        destination_hospital_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/InstrumentProcedureRequestStatusEnum'
+        notes:
+          type: string
+        scheduled_start:
+          type: string
+          format: date-time
+          nullable: true
+        scheduled_end:
+          type: string
+          format: date-time
+          nullable: true
+        estimated_out_hours:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        proximity_next_request:
+          type: integer
+          nullable: true
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentRequestLine'
+        quotation_status:
+          type: string
+          readOnly: true
+        fulfillment_status:
+          type: string
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
     PatchedProcedure:
       type: object
       properties:
@@ -2937,6 +5372,14 @@ components:
         scheduled_date:
           type: string
           format: date
+        doctor:
+          type: integer
+          nullable: true
+          description: Doctor que ocupará el instrumental en el procedimiento.
+        doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/ProcedureStatusEnum'
         created:
@@ -3024,6 +5467,30 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PatchedProximityScheduleLink:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        from_request:
+          type: integer
+        to_request:
+          type: integer
+        reuse_dispatch:
+          type: integer
+          nullable: true
+        minutes_between:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        notes:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
     PatchedPurchaseOrder:
       type: object
       properties:
@@ -3078,6 +5545,21 @@ components:
           format: date-time
           readOnly: true
           nullable: true
+        is_available:
+          type: string
+          readOnly: true
+        custody_type:
+          type: string
+          readOnly: true
+        custody_id:
+          type: string
+          readOnly: true
+        custody_label:
+          type: string
+          readOnly: true
+        custody_status:
+          type: string
+          readOnly: true
         created:
           type: string
           format: date-time
@@ -3162,6 +5644,14 @@ components:
         procedure:
           type: integer
           nullable: true
+        procedure_type:
+          type: string
+          readOnly: true
+          nullable: true
+        procedure_doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/SupplyKitStatusEnum'
         destination_hospital:
@@ -3170,11 +5660,39 @@ components:
         shipped_at:
           type: string
           format: date-time
+          readOnly: true
+          nullable: true
+        assigned_technician:
+          type: integer
+          nullable: true
+        assigned_technician_name:
+          type: string
+          readOnly: true
+          nullable: true
+        transporter_name:
+          type: string
+          maxLength: 255
+        hospital_arrived_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        return_checklist:
+          readOnly: true
+        warehouse_confirmed_at:
+          type: string
+          format: date-time
+          readOnly: true
           nullable: true
         tag_codes:
           type: array
           items:
             type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyKitTagDetail'
           readOnly: true
         tag_count:
           type: string
@@ -3196,6 +5714,40 @@ components:
         name:
           type: string
           maxLength: 255
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedTransportVehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 64
+        plate:
+          type: string
+          maxLength: 32
+        name:
+          type: string
+          maxLength: 255
+        transporter_name:
+          type: string
+          maxLength: 255
+        rfid_tag:
+          type: integer
+          nullable: true
+        rfid_code:
+          type: string
+          readOnly: true
         is_active:
           type: boolean
         created:
@@ -3255,6 +5807,14 @@ components:
         scheduled_date:
           type: string
           format: date
+        doctor:
+          type: integer
+          nullable: true
+          description: Doctor que ocupará el instrumental en el procedimiento.
+        doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/ProcedureStatusEnum'
         created:
@@ -3268,6 +5828,7 @@ components:
       required:
       - created
       - destination_hospital
+      - doctor_name
       - id
       - modified
       - procedure_type
@@ -3385,6 +5946,35 @@ components:
       - created
       - id
       - modified
+    ProximityScheduleLink:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        from_request:
+          type: integer
+        to_request:
+          type: integer
+        reuse_dispatch:
+          type: integer
+          nullable: true
+        minutes_between:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        notes:
+          type: string
+          maxLength: 255
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - from_request
+      - id
+      - to_request
     PurchaseOrder:
       type: object
       properties:
@@ -3439,9 +6029,8 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 1
-          format: int64
         unit_price:
           type: string
           format: decimal
@@ -3458,6 +6047,55 @@ components:
       - product_name
       - product_sku
       - quantity
+      - unit_price
+    QuotationLine:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        catalog_item:
+          type: integer
+        catalog_sku:
+          type: string
+          readOnly: true
+        catalog_name:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        requires_sterilization:
+          type: boolean
+        line_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        price_source:
+          type: string
+          description: 'Origen del precio: doctor_hospital, doctor, hospital, catalog,
+            default.'
+          maxLength: 32
+        applied_contract:
+          type: integer
+          nullable: true
+        applied_contract_name:
+          type: string
+          readOnly: true
+          nullable: true
+      required:
+      - applied_contract_name
+      - catalog_item
+      - catalog_name
+      - catalog_sku
+      - id
+      - line_total
       - unit_price
     RFIDReadEvent:
       type: object
@@ -3545,6 +6183,21 @@ components:
           format: date-time
           readOnly: true
           nullable: true
+        is_available:
+          type: string
+          readOnly: true
+        custody_type:
+          type: string
+          readOnly: true
+        custody_id:
+          type: string
+          readOnly: true
+        custody_label:
+          type: string
+          readOnly: true
+        custody_status:
+          type: string
+          readOnly: true
         created:
           type: string
           format: date-time
@@ -3556,7 +6209,12 @@ components:
       required:
       - code
       - created
+      - custody_id
+      - custody_label
+      - custody_status
+      - custody_type
       - id
+      - is_available
       - last_read_at
       - modified
     Requisition:
@@ -3610,9 +6268,8 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 1
-          format: int64
       required:
       - id
       - product
@@ -3631,6 +6288,18 @@ components:
         * `aprobada` - Aprobada
         * `en_transito` - En tránsito
         * `entregada` - Entregada
+    ReturnChecklistItem:
+      type: object
+      properties:
+        code:
+          type: string
+        item_type:
+          type: string
+        checked:
+          type: boolean
+      required:
+      - checked
+      - code
     RoleEnum:
       enum:
       - lead_technician
@@ -3695,9 +6364,8 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 1
-          format: int64
         unit_price:
           type: string
           format: decimal
@@ -3741,6 +6409,18 @@ components:
         * `en_transito` - En tránsito
         * `en_uso` - En uso
         * `dado_de_baja` - Dado de baja
+    SterilizationStatusEnum:
+      enum:
+      - not_required
+      - pending
+      - in_progress
+      - ready
+      type: string
+      description: |-
+        * `not_required` - No requiere
+        * `pending` - Pendiente
+        * `in_progress` - En proceso
+        * `ready` - Listo
     SupplyKit:
       type: object
       properties:
@@ -3756,6 +6436,14 @@ components:
         procedure:
           type: integer
           nullable: true
+        procedure_type:
+          type: string
+          readOnly: true
+          nullable: true
+        procedure_doctor_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/SupplyKitStatusEnum'
         destination_hospital:
@@ -3764,11 +6452,39 @@ components:
         shipped_at:
           type: string
           format: date-time
+          readOnly: true
+          nullable: true
+        assigned_technician:
+          type: integer
+          nullable: true
+        assigned_technician_name:
+          type: string
+          readOnly: true
+          nullable: true
+        transporter_name:
+          type: string
+          maxLength: 255
+        hospital_arrived_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        return_checklist:
+          readOnly: true
+        warehouse_confirmed_at:
+          type: string
+          format: date-time
+          readOnly: true
           nullable: true
         tag_codes:
           type: array
           items:
             type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyKitTagDetail'
           readOnly: true
         tag_count:
           type: string
@@ -3782,27 +6498,87 @@ components:
           format: date-time
           readOnly: true
       required:
+      - assigned_technician_name
       - code
       - created
+      - hospital_arrived_at
       - id
       - modified
       - name
+      - procedure_doctor_name
+      - procedure_type
+      - return_checklist
+      - shipped_at
       - tag_codes
       - tag_count
+      - tags
+      - warehouse_confirmed_at
+    SupplyKitDispatch:
+      type: object
+      properties:
+        transporter_name:
+          type: string
+          maxLength: 255
+        assigned_technician:
+          type: integer
+      required:
+      - assigned_technician
+      - transporter_name
+    SupplyKitReturnChecklist:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnChecklistItem'
+      required:
+      - items
     SupplyKitStatusEnum:
       enum:
       - armando
       - lista
       - en_transito
       - entregada
+      - retornando
+      - devuelta
       - usada
       type: string
       description: |-
         * `armando` - Armando
         * `lista` - Lista
         * `en_transito` - En tránsito
-        * `entregada` - Entregada
+        * `entregada` - Entregada en hospital
+        * `retornando` - Retornando a almacén
+        * `devuelta` - Confirmada en almacén
         * `usada` - Usada
+    SupplyKitTagAction:
+      type: object
+      properties:
+        tag_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - tag_ids
+    SupplyKitTagDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        item_type:
+          type: string
+        status:
+          type: string
+        last_location:
+          type: string
+      required:
+      - code
+      - id
+      - item_type
+      - last_location
+      - status
     Technician:
       type: object
       properties:
@@ -3827,6 +6603,47 @@ components:
       - id
       - modified
       - name
+    TransportVehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          maxLength: 64
+        plate:
+          type: string
+          maxLength: 32
+        name:
+          type: string
+          maxLength: 255
+        transporter_name:
+          type: string
+          maxLength: 255
+        rfid_tag:
+          type: integer
+          nullable: true
+        rfid_code:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created
+      - id
+      - modified
+      - name
+      - rfid_code
     User:
       type: object
       properties:

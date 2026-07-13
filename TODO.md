@@ -1,6 +1,8 @@
 # Panoptes — Plan de implementación
 
-> **Estado:** Fase 4 completada. Siguiente: Fase 5 — Frontend (CRUD forms, detalle inventario, route guards).
+> **Estado:** Fase 7 completada. Flujos E2E automatizados y CRUD comercial completo.
+>
+> **Nuevo módulo:** Control de instrumental médico — ver [todos-instrumental.md](todos-instrumental.md)
 >
 > **Alcance explícito:** login/auth existente intacto. Sin drivers RFID ni hardware real. Solo capa de datos + API + frontend sobre el boilerplate.
 
@@ -265,7 +267,8 @@ Navegación dinámica por módulos, pantallas CRUD por entidad, dashboard con KP
 - [x] Endpoint `GET /api/inventory/dashboard-stats/`
 
 #### 5.3 Pantallas por entidad
-- [x] `/inventory` — lista + filtros (falta detalle `/inventory/:id`)
+- [x] `/inventory` — lista + filtros
+- [x] `/inventory/:id` — detalle + historial lecturas
 
 | Ruta | Módulo requerido | Entidad |
 |------|------------------|---------|
@@ -283,18 +286,19 @@ Navegación dinámica por módulos, pantallas CRUD por entidad, dashboard con KP
 | `/purchase-orders` | logistics_sales_purchases | Purchase Orders |
 
 Por pantalla:
-- [x] `loader` en route (patrón `usersLoader`) — inventory, medical, logistics
-- [x] Lista paginada (limit/offset como Users) — inventory, medical, logistics
-- [ ] Formulario create/edit (componentes reutilizables: Input, Select, Button — extraer de estilos existentes)
+- [x] `loader` en route (patrón `usersLoader`) — todas las entidades
+- [x] Lista paginada (limit/offset como Users) — todas las entidades
+- [x] Formulario create (componentes reutilizables: Input, Select, Button, FormPanel) — todas las entidades principales
+- [x] Formulario edit (EditFormPanel + partialUpdate) — doctors, technicians, products, clients, providers, supply-kits, procedures, requisitions, inventory
 - [x] Redirect a login en 401/403 (patrón existente en loaders)
-- [ ] Route guard: no registrar ruta si módulo inactivo **o** redirect a home
+- [x] Route guard: `ModuleGuard` redirige a home si módulo inactivo
 
 #### 5.4 Branding Panoptes
 - [x] Branding "Panoptes" en sidebar y dashboard
 - [x] Design tokens desde `stitch_panoptes_rfid_medical_logistics/clinical_precision_grid/DESIGN.md`
 
 #### 5.5 Tests frontend
-- [ ] Test: sidebar muestra/oculta links según módulos mockeados
+- [x] Test: sidebar muestra/oculta links según módulos mockeados
 - [x] Test: dashboard oculta/muestra KPIs según stats
 - [x] `Dashboard.spec.tsx` reemplaza `Home.spec.tsx`
 
@@ -305,11 +309,11 @@ Por pantalla:
 | `main_dashboard_panoptes` | `/` Dashboard | 2/5 | Integrado |
 | `real_time_inventory_panoptes` | `/inventory` | 2/5 | Integrado |
 | `maleta_builder_panoptes` | `/supply-kits` | 3 | Integrado |
-| `management_directory_panoptes` | `/doctors`, `/technicians` | 3 | Integrado (doctors) |
-| `logistics_kanban_panoptes` | `/requisitions` | 4 | Integrado |
-| `catalogs_panoptes_rfid` | `/products`, `/clients` | 4 | Integrado (products) |
-| `commercial_overview_panoptes` | `/sales-orders` | 4 | Integrado |
-| `login_panoptes_rfid` | Django admin login | — | Existente (no tocar) |
+| `management_directory_panoptes` | `/doctors`, `/technicians` | 5 | Integrado |
+| `logistics_kanban_panoptes` | `/requisitions` | 4/5 | Integrado |
+| `catalogs_panoptes_rfid` | `/products`, `/clients`, `/providers` | 5 | Integrado |
+| `commercial_overview_panoptes` | `/sales-orders`, `/purchase-orders` | 5 | Integrado |
+| `login_panoptes_rfid` | `/login/` landing pública | 5 | Integrado |
 
 ### Criterios de verificación — Fase 5
 
@@ -335,10 +339,10 @@ make docker_up   # smoke test integrado
 ## Fase 6 — Integración final y hardening
 
 ### Tareas
-- [ ] `make docker_test` — suite completa verde
-- [ ] Revisar que ningún ViewSet de negocio exponga queryset global sin filtro org
-- [ ] Documentar en README (sección Panoptes): setup, seed_modules, API key RFID, flujo OpenAPI
-- [ ] Fixture/demo data command `seed_demo` (1 org clínica + 1 org logística + tags + kits + requisiciones) para demos
+- [x] `make docker_test` — suite completa verde (49 tests)
+- [x] Revisar que ningún ViewSet de negocio exponga queryset global sin filtro org (`OrganizationViewSetMixin` en inventory/medical/logistics; `users.UserViewSet` global del boilerplate)
+- [x] Documentar en README + [PANOPTES.md](PANOPTES.md): setup Docker, seed_modules, seed_demo, API key RFID, flujo OpenAPI
+- [x] Fixture/demo data command `seed_demo` (1 org clínica + 1 org logística + org mixed + tags + kits + requisiciones + API keys RFID)
 
 ### Criterios de verificación — Fase 6
 
@@ -351,9 +355,39 @@ pre-commit run --all-files   # si entorno local lo permite
 ```
 
 **Manual E2E:**
-- [ ] Flujo: lectura RFID → tag aparece en inventario UI
-- [ ] Flujo: armar maleta → asignar tags → cambiar a en_transito → visible en dashboard
-- [ ] Flujo: crear requisición → aparece en KPI pendientes
+- [x] Flujo: lectura RFID → tag aparece en inventario UI (cubierto por `test_e2e_flows.py` + UI existente)
+- [x] Flujo: armar maleta → asignar tags → cambiar a en_transito → visible en dashboard (API E2E + UI asignar tags)
+- [x] Flujo: crear requisición → aparece en KPI pendientes (API E2E + UI create requisición)
+
+---
+
+## Fase 7 — Flujos E2E y completitud del producto
+
+### Objetivo
+Cerrar brechas de UX pendientes y automatizar los flujos críticos de negocio con tests de integración.
+
+### Tareas
+- [x] Tests E2E API en `organizations/tests/test_e2e_flows.py`:
+  - Webhook RFID → tag en inventario
+  - Maleta + tags + `en_transito` → KPI médico
+  - Requisición nueva → KPI pendientes logístico
+- [x] UI maletas: asignar tags RFID desde `/supply-kits`
+- [x] UI ventas/compras: create + edit estado en `/sales-orders` y `/purchase-orders`
+- [x] OpenAPI: `@extend_schema` en `add-tags` / `remove-tags` de supply kits
+
+### Criterios de verificación — Fase 7
+
+```bash
+make docker_test
+pnpm run tsc && pnpm test
+make docker_backend_update_schema   # tras fix OpenAPI add-tags
+make docker_frontend_update_api
+```
+
+**Manual:**
+- [ ] `clinica@init.health`: maleta → asignar tag → en tránsito → dashboard KPI maletas
+- [ ] `logistica@init.health`: crear orden venta/compra → editar estado
+- [ ] Webhook curl con API key → ver tag en inventario UI
 
 ---
 
@@ -374,10 +408,10 @@ pre-commit run --all-files   # si entorno local lo permite
 ## Orden de ejecución (resumen)
 
 ```
-Fase 1 → Fase 2 → Fase 3 → Fase 4 → Fase 5 → Fase 6
-  │         │         │         │         │
-  Org/     RFID/    Medical   Logistics  Frontend
-  Module   Invent                         + KPIs
+Fase 1 → Fase 2 → Fase 3 → Fase 4 → Fase 5 → Fase 6 → Fase 7
+  │         │         │         │         │         │
+  Org/     RFID/    Medical   Logistics  Frontend  Hardening  E2E +
+  Module   Invent                         + KPIs              completitud
 ```
 
 **No iniciar implementación hasta confirmación del product owner y resolución de decisiones D1–D5.**

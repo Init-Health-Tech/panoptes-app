@@ -1,4 +1,11 @@
+{% load static %}
 <a class="panoptes-brand{% if light %} panoptes-brand--light{% endif %}" href="{% url 'common:landing' %}">
-  <span class="material-symbols-outlined panoptes-brand__icon filled">sensors</span>
+  <img
+    class="panoptes-brand__logo"
+    src="{% static 'panoptes/img/panoptes-logo.svg' %}"
+    width="40"
+    height="40"
+    alt="Panoptes"
+  />
   <span class="panoptes-brand__name">Panoptes</span>
 </a>

@@ -2,8 +2,11 @@ import { AxiosError } from 'axios';
 import { redirectDocument } from 'react-router';
 
 import {
+  clientsList,
   logisticsDashboardStatsRetrieve,
   productsList,
+  providersList,
+  purchaseOrdersList,
   requisitionsList,
   salesOrdersList,
 } from '@/js/api';
@@ -38,15 +41,22 @@ export async function requisitionsLoader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const status = url.searchParams.get('status') || undefined;
   try {
-    const response = await requisitionsList({
-      query: {
-        limit: Number(url.searchParams.get('limit') || 20),
-        offset: Number(url.searchParams.get('offset') || 0),
-        status,
-      },
-      throwOnError: true,
-    });
-    return { ...response.data, filters: { status: status ?? '' } };
+    const [requisitionsResponse, productsResponse] = await Promise.all([
+      requisitionsList({
+        query: {
+          limit: Number(url.searchParams.get('limit') || 20),
+          offset: Number(url.searchParams.get('offset') || 0),
+          status,
+        },
+        throwOnError: true,
+      }),
+      productsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+    ]);
+    return {
+      ...requisitionsResponse.data,
+      filters: { status: status ?? '' },
+      products: productsResponse.data.results ?? [],
+    };
   } catch (error) {
     return handleAuthError(error, request);
   }
@@ -55,15 +65,80 @@ export async function requisitionsLoader({ request }: { request: Request }) {
 export async function salesOrdersLoader({ request }: { request: Request }) {
   const url = new URL(request.url);
   try {
-    const response = await salesOrdersList({
+    const [ordersResponse, clientsResponse, productsResponse] = await Promise.all([
+      salesOrdersList({
+        query: {
+          limit: Number(url.searchParams.get('limit') || 20),
+          offset: Number(url.searchParams.get('offset') || 0),
+          status: url.searchParams.get('status') || undefined,
+        },
+        throwOnError: true,
+      }),
+      clientsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+      productsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+    ]);
+    return {
+      ...ordersResponse.data,
+      clients: clientsResponse.data.results ?? [],
+      products: productsResponse.data.results ?? [],
+    };
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function clientsLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const response = await clientsList({
       query: {
         limit: Number(url.searchParams.get('limit') || 20),
         offset: Number(url.searchParams.get('offset') || 0),
-        status: url.searchParams.get('status') || undefined,
       },
       throwOnError: true,
     });
     return response.data;
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function providersLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const response = await providersList({
+      query: {
+        limit: Number(url.searchParams.get('limit') || 20),
+        offset: Number(url.searchParams.get('offset') || 0),
+      },
+      throwOnError: true,
+    });
+    return response.data;
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function purchaseOrdersLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const [ordersResponse, providersResponse, productsResponse] = await Promise.all([
+      purchaseOrdersList({
+        query: {
+          limit: Number(url.searchParams.get('limit') || 20),
+          offset: Number(url.searchParams.get('offset') || 0),
+          status: url.searchParams.get('status') || undefined,
+        },
+        throwOnError: true,
+      }),
+      providersList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+      productsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+    ]);
+    return {
+      ...ordersResponse.data,
+      providers: providersResponse.data.results ?? [],
+      products: productsResponse.data.results ?? [],
+    };
   } catch (error) {
     return handleAuthError(error, request);
   }

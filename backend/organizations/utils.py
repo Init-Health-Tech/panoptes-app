@@ -21,3 +21,16 @@ def organization_has_active_module(organization, module_code: str) -> bool:
         is_active=True,
         module__code=module_code,
     ).exists()
+
+
+def organization_has_any_active_module(organization, module_codes) -> bool:
+    """True if the org has at least one of the given module codes active."""
+    if organization is None:
+        return False
+    codes = [module_codes] if isinstance(module_codes, str) else list(module_codes)
+    if not codes:
+        return False
+    return organization.organization_modules.filter(
+        is_active=True,
+        module__code__in=codes,
+    ).exists()

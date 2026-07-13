@@ -1,20 +1,32 @@
 from rest_framework.permissions import BasePermission
 
 from organizations.models import OrganizationRole
-from organizations.utils import get_user_organization, organization_has_active_module
+from organizations.utils import (
+    get_user_organization,
+    organization_has_any_active_module,
+)
 
 
-def has_module_and_role(module_code: str, allowed_roles=None):
+def has_module_and_role(module_code, allowed_roles=None):
     """Factory for a reusable DRF permission class (module + role gate).
+
+    ``module_code`` may be a string or a sequence of codes (any match grants access).
 
     Usage on a view::
 
         permission_classes = [IsAuthenticated, has_module_and_role("inventory_realtime")]
+        permission_classes = [
+            IsAuthenticated,
+            has_module_and_role(("medical_kits", "instrumental_control")),
+        ]
     """
     if allowed_roles is None:
         allowed_roles = OrganizationRole.all_values()
     else:
         allowed_roles = list(allowed_roles)
+
+    codes = (module_code,) if isinstance(module_code, str) else tuple(module_code)
+    label = "_".join(codes)
 
     class HasModuleAndRole(BasePermission):
         message = "Your organization does not have access to this module or your role is not permitted."
@@ -37,9 +49,9 @@ def has_module_and_role(module_code: str, allowed_roles=None):
             if membership.role not in allowed_roles:
                 return False
 
-            return organization_has_active_module(organization, module_code)
+            return organization_has_any_active_module(organization, codes)
 
-    HasModuleAndRole.__name__ = f"HasModuleAndRole_{module_code}"
+    HasModuleAndRole.__name__ = f"HasModuleAndRole_{label}"
     HasModuleAndRole.__qualname__ = HasModuleAndRole.__name__
     return HasModuleAndRole
 
@@ -76,7 +88,7 @@ def has_module_and_role_for_view(kwarg_name="module_code", allowed_roles=None):
             if membership.role not in allowed_roles:
                 return False
 
-            return organization_has_active_module(organization, module_code)
+            return organization_has_any_active_module(organization, module_code)
 
     HasModuleAndRoleForView.__name__ = f"HasModuleAndRoleForView_{kwarg_name}"
     HasModuleAndRoleForView.__qualname__ = HasModuleAndRoleForView.__name__

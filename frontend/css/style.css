@@ -35,8 +35,26 @@
 }
 
 @layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    --sidebar-offset: 16rem;
+  }
+
   body {
     @apply bg-surface text-on-surface font-sans antialiased;
+  }
+
+  /* Prefer comfortable tap targets on touch devices */
+  @media (pointer: coarse) {
+    button,
+    a,
+    [role='button'],
+    input,
+    select,
+    textarea {
+      touch-action: manipulation;
+    }
   }
 }
 
@@ -45,16 +63,34 @@
     @apply rounded-xl border border-outline-variant/40 bg-surface-container-lowest shadow-[var(--shadow-card)];
   }
 
+  .panoptes-card-interactive {
+    @apply rounded-xl border border-outline-variant/40 bg-surface-container-lowest shadow-[var(--shadow-card)] transition duration-200;
+  }
+
+  @media (pointer: fine) {
+    .panoptes-card-interactive:hover {
+      @apply border-primary/25 shadow-[0_4px_20px_-4px_rgba(25,102,42,0.12)];
+    }
+  }
+
   .panoptes-btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary transition hover:bg-primary-container;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition hover:bg-primary-container disabled:pointer-events-none disabled:opacity-50;
   }
 
   .panoptes-btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-secondary-container/40;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-secondary-container/40 disabled:pointer-events-none disabled:opacity-50;
   }
 
   .panoptes-input {
-    @apply w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-2 text-sm text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply w-full min-h-11 rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-base text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm;
+  }
+
+  .panoptes-workspace {
+    @apply mx-auto w-full max-w-[90rem];
+  }
+
+  .panoptes-toolbar {
+    @apply sticky top-0 z-10 -mx-4 mb-6 border-b border-outline-variant/30 bg-surface/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:rounded-xl lg:border lg:border-outline-variant/40 lg:bg-surface-container-lowest lg:px-5 lg:py-4 lg:shadow-[var(--shadow-card)] lg:backdrop-blur-none;
   }
 
   .panoptes-table-header {
@@ -75,6 +111,11 @@
 
   .status-pulse {
     animation: panoptes-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Horizontal scroll wrapper for dense tables on phones */
+  .panoptes-table-scroll {
+    @apply -mx-4 overflow-x-auto overscroll-x-contain px-4 sm:mx-0 sm:px-0;
   }
 }
 

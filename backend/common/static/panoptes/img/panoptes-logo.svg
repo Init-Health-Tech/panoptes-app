@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-label="Panoptes">
+  <defs>
+    <linearGradient id="panoptes-iris" x1="28" y1="28" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#368040"/>
+      <stop offset="0.55" stop-color="#19662a"/>
+      <stop offset="1" stop-color="#246262"/>
+    </linearGradient>
+  </defs>
+  <!-- Crosshair ring -->
+  <circle cx="64" cy="64" r="54" stroke="#19662a" stroke-width="2.5" stroke-dasharray="28 18" stroke-linecap="round"/>
+  <circle cx="64" cy="64" r="54" stroke="#368040" stroke-width="2.5" stroke-dasharray="28 18" stroke-dashoffset="23" stroke-linecap="round" opacity="0.9"/>
+  <!-- Crosshair ticks -->
+  <path d="M64 6v14M64 108v14M6 64h14M108 64h14" stroke="#0f3d18" stroke-width="3" stroke-linecap="round"/>
+  <path d="M64 8v10M64 110v10M8 64h10M110 64h10" stroke="#368040" stroke-width="2" stroke-linecap="round"/>
+  <!-- Eye outline -->
+  <path d="M18 64c12-22 30-34 46-34s34 12 46 34c-12 22-30 34-46 34S30 86 18 64Z" stroke="#0f3d18" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M22 64c11-19 27-29 42-29s31 10 42 29c-11 19-27 29-42 29S33 83 22 64Z" stroke="#19662a" stroke-width="2" opacity="0.7"/>
+  <!-- Iris -->
+  <circle cx="64" cy="64" r="26" fill="url(#panoptes-iris)"/>
+  <!-- Pupil -->
+  <circle cx="64" cy="64" r="16" fill="#0f3d18"/>
+  <!-- RFID icon -->
+  <g transform="translate(64 64)" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="-7" y="-7" width="14" height="14" rx="2"/>
+    <rect x="-4" y="-4" width="8" height="8" rx="1"/>
+    <circle cx="0" cy="0" r="1.2" fill="#ffffff" stroke="none"/>
+    <path d="M6 -2.5c1.6 1.2 1.6 3.8 0 5"/>
+    <path d="M8.5 -4.5c2.8 2.1 2.8 6.9 0 9"/>
+    <path d="M11 -6.5c4 3 4 10 0 13"/>
+  </g>
+</svg>

@@ -11,7 +11,7 @@ jest.mock('react-router', () => ({
 }));
 
 const mockModules: ActiveModules = {
-  modules: ['inventory_realtime'],
+  modules: ['inventory_realtime', 'instrumental_control'],
   role: 'admin',
   organization: {
     id: 1,
@@ -22,8 +22,24 @@ const mockModules: ActiveModules = {
   },
 };
 
-function renderDashboard(loaderData: { stats: Record<string, number> | null }) {
-  (useLoaderData as jest.Mock).mockReturnValue(loaderData);
+type DashboardLoaderData = {
+  stats: Record<string, number> | null;
+  medicalStats: Record<string, number> | null;
+  logisticsStats: Record<string, number> | null;
+  instrumentalStats: Record<string, number> | null;
+  charts: null;
+};
+
+const emptyLoaderData: DashboardLoaderData = {
+  stats: null,
+  medicalStats: null,
+  logisticsStats: null,
+  instrumentalStats: null,
+  charts: null,
+};
+
+function renderDashboard(loaderData: Partial<DashboardLoaderData> = {}) {
+  (useLoaderData as jest.Mock).mockReturnValue({ ...emptyLoaderData, ...loaderData });
 
   return render(
     <MemoryRouter>
@@ -36,7 +52,7 @@ function renderDashboard(loaderData: { stats: Record<string, number> | null }) {
 
 describe('Dashboard', () => {
   test('renders Panoptes branding and organization', () => {
-    renderDashboard({ stats: null });
+    renderDashboard();
 
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument();
     expect(screen.getByText('Panoptes RFID')).toBeInTheDocument();
@@ -56,5 +72,22 @@ describe('Dashboard', () => {
     expect(screen.getByText('Tags activos')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('En tránsito')).toBeInTheDocument();
+  });
+
+  test('renders instrumental KPIs when stats are available', () => {
+    renderDashboard({
+      instrumentalStats: {
+        open_requests: 2,
+        pending_quotations: 1,
+        active_fulfillments: 3,
+        materials_in_field: 4,
+        materials_returning: 1,
+      },
+    });
+
+    expect(screen.getByRole('heading', { name: 'Control de instrumental' })).toBeInTheDocument();
+    expect(screen.getByText('Solicitudes abiertas')).toBeInTheDocument();
+    expect(screen.getByText('Cotiz. pendientes')).toBeInTheDocument();
+    expect(screen.getByText('En hospital')).toBeInTheDocument();
   });
 });

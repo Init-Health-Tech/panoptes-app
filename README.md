@@ -1,7 +1,9 @@
-# Django React Boilerplate
+# Panoptes / Django React Boilerplate
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](code_of_conduct.md)
 [![License: MIT](https://img.shields.io/github/license/vintasoftware/django-react-boilerplate.svg)](LICENSE.txt)
+
+> **Panoptes** (INIT Health Tech): plataforma RFID multi-tenant. Setup, cuentas demo, webhook y OpenAPI → [PANOPTES.md](PANOPTES.md).
 
 ## About
 

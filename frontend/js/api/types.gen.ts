@@ -29,11 +29,227 @@ export type Doctor = {
 };
 
 /**
+ * * `load_departure` - Salida de almacén
+ * * `hospital_arrival` - Llegada hospital
+ * * `hospital_departure` - Salida hospital
+ * * `return_arrival` - Retorno a almacén
+ * * `crcao_validation` - Validación en almacén
+ */
+export type EventTypeEnum = 'load_departure' | 'hospital_arrival' | 'hospital_departure' | 'return_arrival' | 'crcao_validation';
+
+export type FulfillmentPlan = {
+    readonly id: number;
+    request: number;
+    vehicle: number;
+    readonly vehicle_code: string;
+    lead_technician: number;
+    readonly technician_name: string;
+    status?: FulfillmentPlanStatusEnum;
+    scheduled_departure?: string | null;
+    scheduled_return?: string | null;
+    notes?: string;
+    readonly dispatches: Array<MaterialDispatch>;
+    readonly procedure_type: string;
+    readonly created: string;
+    readonly modified: string;
+};
+
+export type FulfillmentPlanCreate = {
+    vehicle: number;
+    lead_technician: number;
+    scheduled_departure?: string | null;
+    scheduled_return?: string | null;
+    notes?: string;
+};
+
+/**
+ * * `planning` - Planificando
+ * * `ready` - Listo
+ * * `dispatched` - Despachado
+ * * `at_hospital` - En hospital
+ * * `returning` - Retornando
+ * * `validated` - Validado
+ */
+export type FulfillmentPlanStatusEnum = 'planning' | 'ready' | 'dispatched' | 'at_hospital' | 'returning' | 'validated';
+
+export type HandheldScan = {
+    identifier: string;
+    event_type: EventTypeEnum;
+    hospital?: number | null;
+    handheld_id?: string;
+    location_notes?: string;
+};
+
+export type HandheldScanEvent = {
+    readonly id: number;
+    material_dispatch?: number | null;
+    identifier_used: string;
+    event_type: EventTypeEnum;
+    hospital?: number | null;
+    handheld_id?: string;
+    location_notes?: string;
+    scanned_at?: string;
+};
+
+export type HospitalSite = {
+    readonly id: number;
+    name: string;
+    code: string;
+    /**
+     * Marca el almacén central de la organización.
+     */
+    is_central?: boolean;
+    city?: string;
+    is_active?: boolean;
+    readonly created: string;
+    readonly modified: string;
+};
+
+/**
  * * `clinical` - Clínico / hospitalario
  * * `logistics` - Logístico / comercial
  * * `mixed` - Mixto
  */
 export type IndustryTypeEnum = 'clinical' | 'logistics' | 'mixed';
+
+export type InstrumentCatalogItem = {
+    readonly id: number;
+    sku: string;
+    name: string;
+    item_type: ItemTypeEnum;
+    description?: string;
+    requires_sterilization?: boolean;
+    /**
+     * Precio base si no hay contrato aplicable.
+     */
+    default_unit_price?: string | null;
+    rfid_tag?: number | null;
+    readonly rfid_code: string;
+    is_active?: boolean;
+    readonly created: string;
+    readonly modified: string;
+};
+
+export type InstrumentContractLine = {
+    readonly id: number;
+    catalog_item: number;
+    readonly catalog_sku: string;
+    readonly catalog_name: string;
+    readonly catalog_item_type: string;
+    unit_price: string;
+};
+
+export type InstrumentPriceContract = {
+    readonly id: number;
+    name: string;
+    /**
+     * Si se omite, el contrato aplica a cualquier doctor del hospital.
+     */
+    doctor?: number | null;
+    readonly doctor_name: string | null;
+    /**
+     * Si se omite, el contrato aplica a cualquier hospital del doctor.
+     */
+    hospital?: number | null;
+    readonly hospital_name: string | null;
+    readonly scope_label: string;
+    valid_from?: string | null;
+    valid_to?: string | null;
+    is_active?: boolean;
+    notes?: string;
+    lines?: Array<InstrumentContractLine>;
+    readonly created: string;
+    readonly modified: string;
+};
+
+export type InstrumentProcedureRequest = {
+    readonly id: number;
+    procedure: number;
+    readonly procedure_type: string;
+    doctor: number;
+    readonly doctor_name: string;
+    destination_hospital: number;
+    readonly destination_hospital_name: string;
+    status?: InstrumentProcedureRequestStatusEnum;
+    notes?: string;
+    scheduled_start?: string | null;
+    scheduled_end?: string | null;
+    estimated_out_hours?: number;
+    proximity_next_request?: number | null;
+    lines?: Array<InstrumentRequestLine>;
+    readonly quotation_status: string;
+    readonly fulfillment_status: string;
+    readonly created: string;
+    readonly modified: string;
+};
+
+/**
+ * * `draft` - Borrador
+ * * `submitted` - Solicitada
+ * * `quotation` - En cotización
+ * * `quotation_accepted` - Cotización aceptada
+ * * `fulfillment` - En asignación
+ * * `in_field` - En campo
+ * * `returning` - En retorno
+ * * `validated` - Validado en almacén
+ * * `completed` - Completado
+ * * `cancelled` - Cancelado
+ */
+export type InstrumentProcedureRequestStatusEnum = 'draft' | 'submitted' | 'quotation' | 'quotation_accepted' | 'fulfillment' | 'in_field' | 'returning' | 'validated' | 'completed' | 'cancelled';
+
+export type InstrumentQuotation = {
+    readonly id: number;
+    request: number;
+    status?: InstrumentQuotationStatusEnum;
+    subtotal?: string;
+    notes?: string;
+    sent_at?: string | null;
+    doctor_responded_at?: string | null;
+    readonly lines: Array<QuotationLine>;
+    readonly request_status: string;
+    readonly procedure_type: string;
+    readonly doctor_name: string;
+    readonly hospital_name: string;
+    /**
+     * Contrato principal usado al generar la cotización (si aplica).
+     */
+    applied_contract?: number | null;
+    readonly applied_contract_name: string | null;
+    readonly created: string;
+    readonly modified: string;
+};
+
+/**
+ * * `draft` - Borrador
+ * * `pending_doctor` - Pendiente doctor
+ * * `accepted` - Aceptada
+ * * `rejected` - Rechazada
+ */
+export type InstrumentQuotationStatusEnum = 'draft' | 'pending_doctor' | 'accepted' | 'rejected';
+
+export type InstrumentRequestLine = {
+    readonly id: number;
+    catalog_item: number;
+    readonly catalog_sku: string;
+    readonly catalog_name: string;
+    quantity?: number;
+    notes?: string;
+};
+
+export type InstrumentalDashboardStats = {
+    open_requests: number;
+    pending_quotations: number;
+    active_fulfillments: number;
+    materials_in_field: number;
+    materials_returning: number;
+};
+
+/**
+ * * `instrument` - Instrumental
+ * * `equipment` - Equipo médico
+ * * `tray` - Charola
+ */
+export type ItemTypeEnum = 'instrument' | 'equipment' | 'tray';
 
 export type LogisticsDashboardStats = {
     pending_requisitions: number;
@@ -41,6 +257,40 @@ export type LogisticsDashboardStats = {
     open_sales_orders: number;
     open_purchase_orders: number;
 };
+
+export type MaterialDispatch = {
+    readonly id: number;
+    catalog_item: number;
+    readonly catalog_sku: string;
+    readonly catalog_name: string;
+    technician: number;
+    readonly technician_name: string;
+    tray_code?: string;
+    rfid_tag?: number | null;
+    readonly rfid_code: string;
+    sku?: string;
+    readonly tracking_identifier: string;
+    requires_sterilization?: boolean;
+    sterilization_status?: SterilizationStatusEnum;
+    status?: MaterialDispatchStatusEnum;
+    current_hospital?: number | null;
+    loaded_at?: string | null;
+    returned_at?: string | null;
+    readonly created: string;
+    readonly modified: string;
+};
+
+/**
+ * * `assigned` - Asignado
+ * * `sterilizing` - Esterilizando
+ * * `loaded` - Cargado
+ * * `in_transit` - En tránsito
+ * * `at_hospital` - En hospital
+ * * `returning` - Retornando
+ * * `returned` - Retornado
+ * * `validated` - Validado
+ */
+export type MaterialDispatchStatusEnum = 'assigned' | 'sterilizing' | 'loaded' | 'in_transit' | 'at_hospital' | 'returning' | 'returned' | 'validated';
 
 export type MedicalDashboardStats = {
     kits_in_transit: number;
@@ -76,6 +326,55 @@ export type PaginatedDoctorList = {
     results: Array<Doctor>;
 };
 
+export type PaginatedFulfillmentPlanList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<FulfillmentPlan>;
+};
+
+export type PaginatedHospitalSiteList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<HospitalSite>;
+};
+
+export type PaginatedInstrumentCatalogItemList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<InstrumentCatalogItem>;
+};
+
+export type PaginatedInstrumentPriceContractList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<InstrumentPriceContract>;
+};
+
+export type PaginatedInstrumentProcedureRequestList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<InstrumentProcedureRequest>;
+};
+
+export type PaginatedInstrumentQuotationList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<InstrumentQuotation>;
+};
+
+export type PaginatedMaterialDispatchList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<MaterialDispatch>;
+};
+
 export type PaginatedProcedureAssignmentList = {
     count: number;
     next?: string | null;
@@ -102,6 +401,13 @@ export type PaginatedProviderList = {
     next?: string | null;
     previous?: string | null;
     results: Array<Provider>;
+};
+
+export type PaginatedProximityScheduleLinkList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<ProximityScheduleLink>;
 };
 
 export type PaginatedPurchaseOrderList = {
@@ -153,6 +459,13 @@ export type PaginatedTechnicianList = {
     results: Array<Technician>;
 };
 
+export type PaginatedTransportVehicleList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<TransportVehicle>;
+};
+
 export type PaginatedUserList = {
     count: number;
     next?: string | null;
@@ -178,11 +491,92 @@ export type PatchedDoctor = {
     readonly modified?: string;
 };
 
+export type PatchedHospitalSite = {
+    readonly id?: number;
+    name?: string;
+    code?: string;
+    /**
+     * Marca el almacén central de la organización.
+     */
+    is_central?: boolean;
+    city?: string;
+    is_active?: boolean;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
+export type PatchedInstrumentCatalogItem = {
+    readonly id?: number;
+    sku?: string;
+    name?: string;
+    item_type?: ItemTypeEnum;
+    description?: string;
+    requires_sterilization?: boolean;
+    /**
+     * Precio base si no hay contrato aplicable.
+     */
+    default_unit_price?: string | null;
+    rfid_tag?: number | null;
+    readonly rfid_code?: string;
+    is_active?: boolean;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
+export type PatchedInstrumentPriceContract = {
+    readonly id?: number;
+    name?: string;
+    /**
+     * Si se omite, el contrato aplica a cualquier doctor del hospital.
+     */
+    doctor?: number | null;
+    readonly doctor_name?: string | null;
+    /**
+     * Si se omite, el contrato aplica a cualquier hospital del doctor.
+     */
+    hospital?: number | null;
+    readonly hospital_name?: string | null;
+    readonly scope_label?: string;
+    valid_from?: string | null;
+    valid_to?: string | null;
+    is_active?: boolean;
+    notes?: string;
+    lines?: Array<InstrumentContractLine>;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
+export type PatchedInstrumentProcedureRequest = {
+    readonly id?: number;
+    procedure?: number;
+    readonly procedure_type?: string;
+    doctor?: number;
+    readonly doctor_name?: string;
+    destination_hospital?: number;
+    readonly destination_hospital_name?: string;
+    status?: InstrumentProcedureRequestStatusEnum;
+    notes?: string;
+    scheduled_start?: string | null;
+    scheduled_end?: string | null;
+    estimated_out_hours?: number;
+    proximity_next_request?: number | null;
+    lines?: Array<InstrumentRequestLine>;
+    readonly quotation_status?: string;
+    readonly fulfillment_status?: string;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
 export type PatchedProcedure = {
     readonly id?: number;
     procedure_type?: string;
     destination_hospital?: string;
     scheduled_date?: string;
+    /**
+     * Doctor que ocupará el instrumental en el procedimiento.
+     */
+    doctor?: number | null;
+    readonly doctor_name?: string | null;
     status?: ProcedureStatusEnum;
     readonly created?: string;
     readonly modified?: string;
@@ -219,6 +613,16 @@ export type PatchedProvider = {
     readonly modified?: string;
 };
 
+export type PatchedProximityScheduleLink = {
+    readonly id?: number;
+    from_request?: number;
+    to_request?: number;
+    reuse_dispatch?: number | null;
+    minutes_between?: number;
+    notes?: string;
+    readonly created?: string;
+};
+
 export type PatchedPurchaseOrder = {
     readonly id?: number;
     provider?: number;
@@ -238,6 +642,11 @@ export type PatchedRfidTag = {
     status?: StatusBf9Enum;
     last_location?: string;
     readonly last_read_at?: string | null;
+    readonly is_available?: string;
+    readonly custody_type?: string;
+    readonly custody_id?: string;
+    readonly custody_label?: string;
+    readonly custody_status?: string;
     readonly created?: string;
     readonly modified?: string;
 };
@@ -270,10 +679,19 @@ export type PatchedSupplyKit = {
     name?: string;
     code?: string;
     procedure?: number | null;
+    readonly procedure_type?: string | null;
+    readonly procedure_doctor_name?: string | null;
     status?: SupplyKitStatusEnum;
     destination_hospital?: string;
-    shipped_at?: string | null;
+    readonly shipped_at?: string | null;
+    assigned_technician?: number | null;
+    readonly assigned_technician_name?: string | null;
+    transporter_name?: string;
+    readonly hospital_arrived_at?: string | null;
+    readonly return_checklist?: unknown;
+    readonly warehouse_confirmed_at?: string | null;
     readonly tag_codes?: Array<string>;
+    readonly tags?: Array<SupplyKitTagDetail>;
     readonly tag_count?: string;
     readonly created?: string;
     readonly modified?: string;
@@ -282,6 +700,19 @@ export type PatchedSupplyKit = {
 export type PatchedTechnician = {
     readonly id?: number;
     name?: string;
+    is_active?: boolean;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
+export type PatchedTransportVehicle = {
+    readonly id?: number;
+    code?: string;
+    plate?: string;
+    name?: string;
+    transporter_name?: string;
+    rfid_tag?: number | null;
+    readonly rfid_code?: string;
     is_active?: boolean;
     readonly created?: string;
     readonly modified?: string;
@@ -314,6 +745,11 @@ export type Procedure = {
     procedure_type: string;
     destination_hospital: string;
     scheduled_date: string;
+    /**
+     * Doctor que ocupará el instrumental en el procedimiento.
+     */
+    doctor?: number | null;
+    readonly doctor_name: string | null;
     status?: ProcedureStatusEnum;
     readonly created: string;
     readonly modified: string;
@@ -359,6 +795,16 @@ export type Provider = {
     readonly modified: string;
 };
 
+export type ProximityScheduleLink = {
+    readonly id: number;
+    from_request: number;
+    to_request: number;
+    reuse_dispatch?: number | null;
+    minutes_between?: number;
+    notes?: string;
+    readonly created: string;
+};
+
 export type PurchaseOrder = {
     readonly id: number;
     provider: number;
@@ -379,6 +825,23 @@ export type PurchaseOrderLine = {
     quantity: number;
     unit_price: string;
     readonly line_total: string;
+};
+
+export type QuotationLine = {
+    readonly id: number;
+    catalog_item: number;
+    readonly catalog_sku: string;
+    readonly catalog_name: string;
+    quantity?: number;
+    unit_price: string;
+    requires_sterilization?: boolean;
+    readonly line_total: string;
+    /**
+     * Origen del precio: doctor_hospital, doctor, hospital, catalog, default.
+     */
+    price_source?: string;
+    applied_contract?: number | null;
+    readonly applied_contract_name: string | null;
 };
 
 export type RfidReadEvent = {
@@ -410,6 +873,11 @@ export type RfidTag = {
     status?: StatusBf9Enum;
     last_location?: string;
     readonly last_read_at: string | null;
+    readonly is_available: string;
+    readonly custody_type: string;
+    readonly custody_id: string;
+    readonly custody_label: string;
+    readonly custody_status: string;
     readonly created: string;
     readonly modified: string;
 };
@@ -440,6 +908,12 @@ export type RequisitionLine = {
  * * `entregada` - Entregada
  */
 export type RequisitionStatusEnum = 'solicitada' | 'aprobada' | 'en_transito' | 'entregada';
+
+export type ReturnChecklistItem = {
+    code: string;
+    item_type?: string;
+    checked: boolean;
+};
 
 /**
  * * `lead_technician` - Técnico principal
@@ -487,32 +961,85 @@ export type Status086Enum = 'borrador' | 'confirmada' | 'en_transito' | 'entrega
  */
 export type StatusBf9Enum = 'en_stock' | 'en_transito' | 'en_uso' | 'dado_de_baja';
 
+/**
+ * * `not_required` - No requiere
+ * * `pending` - Pendiente
+ * * `in_progress` - En proceso
+ * * `ready` - Listo
+ */
+export type SterilizationStatusEnum = 'not_required' | 'pending' | 'in_progress' | 'ready';
+
 export type SupplyKit = {
     readonly id: number;
     name: string;
     code: string;
     procedure?: number | null;
+    readonly procedure_type: string | null;
+    readonly procedure_doctor_name: string | null;
     status?: SupplyKitStatusEnum;
     destination_hospital?: string;
-    shipped_at?: string | null;
+    readonly shipped_at: string | null;
+    assigned_technician?: number | null;
+    readonly assigned_technician_name: string | null;
+    transporter_name?: string;
+    readonly hospital_arrived_at: string | null;
+    readonly return_checklist: unknown;
+    readonly warehouse_confirmed_at: string | null;
     readonly tag_codes: Array<string>;
+    readonly tags: Array<SupplyKitTagDetail>;
     readonly tag_count: string;
     readonly created: string;
     readonly modified: string;
+};
+
+export type SupplyKitDispatch = {
+    transporter_name: string;
+    assigned_technician: number;
+};
+
+export type SupplyKitReturnChecklist = {
+    items: Array<ReturnChecklistItem>;
 };
 
 /**
  * * `armando` - Armando
  * * `lista` - Lista
  * * `en_transito` - En tránsito
- * * `entregada` - Entregada
+ * * `entregada` - Entregada en hospital
+ * * `retornando` - Retornando a almacén
+ * * `devuelta` - Confirmada en almacén
  * * `usada` - Usada
  */
-export type SupplyKitStatusEnum = 'armando' | 'lista' | 'en_transito' | 'entregada' | 'usada';
+export type SupplyKitStatusEnum = 'armando' | 'lista' | 'en_transito' | 'entregada' | 'retornando' | 'devuelta' | 'usada';
+
+export type SupplyKitTagAction = {
+    tag_ids: Array<number>;
+};
+
+export type SupplyKitTagDetail = {
+    id: number;
+    code: string;
+    item_type: string;
+    status: string;
+    last_location: string;
+};
 
 export type Technician = {
     readonly id: number;
     name: string;
+    is_active?: boolean;
+    readonly created: string;
+    readonly modified: string;
+};
+
+export type TransportVehicle = {
+    readonly id: number;
+    code: string;
+    plate?: string;
+    name: string;
+    transporter_name?: string;
+    rfid_tag?: number | null;
+    readonly rfid_code: string;
     is_active?: boolean;
     readonly created: string;
     readonly modified: string;
@@ -552,6 +1079,119 @@ export type DoctorWritable = {
     is_active?: boolean;
 };
 
+export type FulfillmentPlanWritable = {
+    request: number;
+    vehicle: number;
+    lead_technician: number;
+    status?: FulfillmentPlanStatusEnum;
+    scheduled_departure?: string | null;
+    scheduled_return?: string | null;
+    notes?: string;
+};
+
+export type HandheldScanEventWritable = {
+    material_dispatch?: number | null;
+    identifier_used: string;
+    event_type: EventTypeEnum;
+    hospital?: number | null;
+    handheld_id?: string;
+    location_notes?: string;
+    scanned_at?: string;
+};
+
+export type HospitalSiteWritable = {
+    name: string;
+    code: string;
+    /**
+     * Marca el almacén central de la organización.
+     */
+    is_central?: boolean;
+    city?: string;
+    is_active?: boolean;
+};
+
+export type InstrumentCatalogItemWritable = {
+    sku: string;
+    name: string;
+    item_type: ItemTypeEnum;
+    description?: string;
+    requires_sterilization?: boolean;
+    /**
+     * Precio base si no hay contrato aplicable.
+     */
+    default_unit_price?: string | null;
+    rfid_tag?: number | null;
+    is_active?: boolean;
+};
+
+export type InstrumentContractLineWritable = {
+    catalog_item: number;
+    unit_price: string;
+};
+
+export type InstrumentPriceContractWritable = {
+    name: string;
+    /**
+     * Si se omite, el contrato aplica a cualquier doctor del hospital.
+     */
+    doctor?: number | null;
+    /**
+     * Si se omite, el contrato aplica a cualquier hospital del doctor.
+     */
+    hospital?: number | null;
+    valid_from?: string | null;
+    valid_to?: string | null;
+    is_active?: boolean;
+    notes?: string;
+    lines?: Array<InstrumentContractLineWritable>;
+};
+
+export type InstrumentProcedureRequestWritable = {
+    procedure: number;
+    doctor: number;
+    destination_hospital: number;
+    status?: InstrumentProcedureRequestStatusEnum;
+    notes?: string;
+    scheduled_start?: string | null;
+    scheduled_end?: string | null;
+    estimated_out_hours?: number;
+    proximity_next_request?: number | null;
+    lines?: Array<InstrumentRequestLineWritable>;
+};
+
+export type InstrumentQuotationWritable = {
+    request: number;
+    status?: InstrumentQuotationStatusEnum;
+    subtotal?: string;
+    notes?: string;
+    sent_at?: string | null;
+    doctor_responded_at?: string | null;
+    /**
+     * Contrato principal usado al generar la cotización (si aplica).
+     */
+    applied_contract?: number | null;
+};
+
+export type InstrumentRequestLineWritable = {
+    catalog_item: number;
+    quantity?: number;
+    notes?: string;
+};
+
+export type MaterialDispatchWritable = {
+    catalog_item: number;
+    technician: number;
+    tray_code?: string;
+    rfid_tag?: number | null;
+    sku?: string;
+    requires_sterilization?: boolean;
+    sterilization_status?: SterilizationStatusEnum;
+    status?: MaterialDispatchStatusEnum;
+    current_hospital?: number | null;
+    loaded_at?: string | null;
+    returned_at?: string | null;
+};
+
 export type OrganizationWritable = {
     name: string;
     slug: string;
@@ -571,10 +1211,69 @@ export type PatchedDoctorWritable = {
     is_active?: boolean;
 };
 
+export type PatchedHospitalSiteWritable = {
+    name?: string;
+    code?: string;
+    /**
+     * Marca el almacén central de la organización.
+     */
+    is_central?: boolean;
+    city?: string;
+    is_active?: boolean;
+};
+
+export type PatchedInstrumentCatalogItemWritable = {
+    sku?: string;
+    name?: string;
+    item_type?: ItemTypeEnum;
+    description?: string;
+    requires_sterilization?: boolean;
+    /**
+     * Precio base si no hay contrato aplicable.
+     */
+    default_unit_price?: string | null;
+    rfid_tag?: number | null;
+    is_active?: boolean;
+};
+
+export type PatchedInstrumentPriceContractWritable = {
+    name?: string;
+    /**
+     * Si se omite, el contrato aplica a cualquier doctor del hospital.
+     */
+    doctor?: number | null;
+    /**
+     * Si se omite, el contrato aplica a cualquier hospital del doctor.
+     */
+    hospital?: number | null;
+    valid_from?: string | null;
+    valid_to?: string | null;
+    is_active?: boolean;
+    notes?: string;
+    lines?: Array<InstrumentContractLineWritable>;
+};
+
+export type PatchedInstrumentProcedureRequestWritable = {
+    procedure?: number;
+    doctor?: number;
+    destination_hospital?: number;
+    status?: InstrumentProcedureRequestStatusEnum;
+    notes?: string;
+    scheduled_start?: string | null;
+    scheduled_end?: string | null;
+    estimated_out_hours?: number;
+    proximity_next_request?: number | null;
+    lines?: Array<InstrumentRequestLineWritable>;
+};
+
 export type PatchedProcedureWritable = {
     procedure_type?: string;
     destination_hospital?: string;
     scheduled_date?: string;
+    /**
+     * Doctor que ocupará el instrumental en el procedimiento.
+     */
+    doctor?: number | null;
     status?: ProcedureStatusEnum;
 };
 
@@ -595,6 +1294,14 @@ export type PatchedProductWritable = {
 export type PatchedProviderWritable = {
     business_name?: string;
     contact?: string;
+};
+
+export type PatchedProximityScheduleLinkWritable = {
+    from_request?: number;
+    to_request?: number;
+    reuse_dispatch?: number | null;
+    minutes_between?: number;
+    notes?: string;
 };
 
 export type PatchedPurchaseOrderWritable = {
@@ -634,11 +1341,21 @@ export type PatchedSupplyKitWritable = {
     procedure?: number | null;
     status?: SupplyKitStatusEnum;
     destination_hospital?: string;
-    shipped_at?: string | null;
+    assigned_technician?: number | null;
+    transporter_name?: string;
 };
 
 export type PatchedTechnicianWritable = {
     name?: string;
+    is_active?: boolean;
+};
+
+export type PatchedTransportVehicleWritable = {
+    code?: string;
+    plate?: string;
+    name?: string;
+    transporter_name?: string;
+    rfid_tag?: number | null;
     is_active?: boolean;
 };
 
@@ -665,6 +1382,10 @@ export type ProcedureWritable = {
     procedure_type: string;
     destination_hospital: string;
     scheduled_date: string;
+    /**
+     * Doctor que ocupará el instrumental en el procedimiento.
+     */
+    doctor?: number | null;
     status?: ProcedureStatusEnum;
 };
 
@@ -687,6 +1408,14 @@ export type ProviderWritable = {
     contact?: string;
 };
 
+export type ProximityScheduleLinkWritable = {
+    from_request: number;
+    to_request: number;
+    reuse_dispatch?: number | null;
+    minutes_between?: number;
+    notes?: string;
+};
+
 export type PurchaseOrderWritable = {
     provider: number;
     status?: Status086Enum;
@@ -699,6 +1428,18 @@ export type PurchaseOrderLineWritable = {
     product: number;
     quantity: number;
     unit_price: string;
+};
+
+export type QuotationLineWritable = {
+    catalog_item: number;
+    quantity?: number;
+    unit_price: string;
+    requires_sterilization?: boolean;
+    /**
+     * Origen del precio: doctor_hospital, doctor, hospital, catalog, default.
+     */
+    price_source?: string;
+    applied_contract?: number | null;
 };
 
 export type RfidReadEventWritable = {
@@ -749,11 +1490,21 @@ export type SupplyKitWritable = {
     procedure?: number | null;
     status?: SupplyKitStatusEnum;
     destination_hospital?: string;
-    shipped_at?: string | null;
+    assigned_technician?: number | null;
+    transporter_name?: string;
 };
 
 export type TechnicianWritable = {
     name: string;
+    is_active?: boolean;
+};
+
+export type TransportVehicleWritable = {
+    code: string;
+    plate?: string;
+    name: string;
+    transporter_name?: string;
+    rfid_tag?: number | null;
     is_active?: boolean;
 };
 
@@ -1009,6 +1760,624 @@ export type DoctorsUpdateResponses = {
 
 export type DoctorsUpdateResponse = DoctorsUpdateResponses[keyof DoctorsUpdateResponses];
 
+export type FulfillmentPlansListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/fulfillment-plans/';
+};
+
+export type FulfillmentPlansListResponses = {
+    200: PaginatedFulfillmentPlanList;
+};
+
+export type FulfillmentPlansListResponse = FulfillmentPlansListResponses[keyof FulfillmentPlansListResponses];
+
+export type FulfillmentPlansRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this fulfillment plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/fulfillment-plans/{id}/';
+};
+
+export type FulfillmentPlansRetrieveResponses = {
+    200: FulfillmentPlan;
+};
+
+export type FulfillmentPlansRetrieveResponse = FulfillmentPlansRetrieveResponses[keyof FulfillmentPlansRetrieveResponses];
+
+export type HospitalSitesListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/hospital-sites/';
+};
+
+export type HospitalSitesListResponses = {
+    200: PaginatedHospitalSiteList;
+};
+
+export type HospitalSitesListResponse = HospitalSitesListResponses[keyof HospitalSitesListResponses];
+
+export type HospitalSitesCreateData = {
+    body: HospitalSiteWritable;
+    path?: never;
+    query?: never;
+    url: '/api/hospital-sites/';
+};
+
+export type HospitalSitesCreateResponses = {
+    201: HospitalSite;
+};
+
+export type HospitalSitesCreateResponse = HospitalSitesCreateResponses[keyof HospitalSitesCreateResponses];
+
+export type HospitalSitesDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this hospital site.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/hospital-sites/{id}/';
+};
+
+export type HospitalSitesDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type HospitalSitesDestroyResponse = HospitalSitesDestroyResponses[keyof HospitalSitesDestroyResponses];
+
+export type HospitalSitesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this hospital site.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/hospital-sites/{id}/';
+};
+
+export type HospitalSitesRetrieveResponses = {
+    200: HospitalSite;
+};
+
+export type HospitalSitesRetrieveResponse = HospitalSitesRetrieveResponses[keyof HospitalSitesRetrieveResponses];
+
+export type HospitalSitesPartialUpdateData = {
+    body?: PatchedHospitalSiteWritable;
+    path: {
+        /**
+         * A unique integer value identifying this hospital site.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/hospital-sites/{id}/';
+};
+
+export type HospitalSitesPartialUpdateResponses = {
+    200: HospitalSite;
+};
+
+export type HospitalSitesPartialUpdateResponse = HospitalSitesPartialUpdateResponses[keyof HospitalSitesPartialUpdateResponses];
+
+export type HospitalSitesUpdateData = {
+    body: HospitalSiteWritable;
+    path: {
+        /**
+         * A unique integer value identifying this hospital site.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/hospital-sites/{id}/';
+};
+
+export type HospitalSitesUpdateResponses = {
+    200: HospitalSite;
+};
+
+export type HospitalSitesUpdateResponse = HospitalSitesUpdateResponses[keyof HospitalSitesUpdateResponses];
+
+export type InstrumentCatalogListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/instrument-catalog/';
+};
+
+export type InstrumentCatalogListResponses = {
+    200: PaginatedInstrumentCatalogItemList;
+};
+
+export type InstrumentCatalogListResponse = InstrumentCatalogListResponses[keyof InstrumentCatalogListResponses];
+
+export type InstrumentCatalogCreateData = {
+    body: InstrumentCatalogItemWritable;
+    path?: never;
+    query?: never;
+    url: '/api/instrument-catalog/';
+};
+
+export type InstrumentCatalogCreateResponses = {
+    201: InstrumentCatalogItem;
+};
+
+export type InstrumentCatalogCreateResponse = InstrumentCatalogCreateResponses[keyof InstrumentCatalogCreateResponses];
+
+export type InstrumentCatalogDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument catalog item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-catalog/{id}/';
+};
+
+export type InstrumentCatalogDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type InstrumentCatalogDestroyResponse = InstrumentCatalogDestroyResponses[keyof InstrumentCatalogDestroyResponses];
+
+export type InstrumentCatalogRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument catalog item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-catalog/{id}/';
+};
+
+export type InstrumentCatalogRetrieveResponses = {
+    200: InstrumentCatalogItem;
+};
+
+export type InstrumentCatalogRetrieveResponse = InstrumentCatalogRetrieveResponses[keyof InstrumentCatalogRetrieveResponses];
+
+export type InstrumentCatalogPartialUpdateData = {
+    body?: PatchedInstrumentCatalogItemWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument catalog item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-catalog/{id}/';
+};
+
+export type InstrumentCatalogPartialUpdateResponses = {
+    200: InstrumentCatalogItem;
+};
+
+export type InstrumentCatalogPartialUpdateResponse = InstrumentCatalogPartialUpdateResponses[keyof InstrumentCatalogPartialUpdateResponses];
+
+export type InstrumentCatalogUpdateData = {
+    body: InstrumentCatalogItemWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument catalog item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-catalog/{id}/';
+};
+
+export type InstrumentCatalogUpdateResponses = {
+    200: InstrumentCatalogItem;
+};
+
+export type InstrumentCatalogUpdateResponse = InstrumentCatalogUpdateResponses[keyof InstrumentCatalogUpdateResponses];
+
+export type InstrumentPriceContractsListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/instrument-price-contracts/';
+};
+
+export type InstrumentPriceContractsListResponses = {
+    200: PaginatedInstrumentPriceContractList;
+};
+
+export type InstrumentPriceContractsListResponse = InstrumentPriceContractsListResponses[keyof InstrumentPriceContractsListResponses];
+
+export type InstrumentPriceContractsCreateData = {
+    body: InstrumentPriceContractWritable;
+    path?: never;
+    query?: never;
+    url: '/api/instrument-price-contracts/';
+};
+
+export type InstrumentPriceContractsCreateResponses = {
+    201: InstrumentPriceContract;
+};
+
+export type InstrumentPriceContractsCreateResponse = InstrumentPriceContractsCreateResponses[keyof InstrumentPriceContractsCreateResponses];
+
+export type InstrumentPriceContractsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument price contract.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-price-contracts/{id}/';
+};
+
+export type InstrumentPriceContractsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type InstrumentPriceContractsDestroyResponse = InstrumentPriceContractsDestroyResponses[keyof InstrumentPriceContractsDestroyResponses];
+
+export type InstrumentPriceContractsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument price contract.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-price-contracts/{id}/';
+};
+
+export type InstrumentPriceContractsRetrieveResponses = {
+    200: InstrumentPriceContract;
+};
+
+export type InstrumentPriceContractsRetrieveResponse = InstrumentPriceContractsRetrieveResponses[keyof InstrumentPriceContractsRetrieveResponses];
+
+export type InstrumentPriceContractsPartialUpdateData = {
+    body?: PatchedInstrumentPriceContractWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument price contract.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-price-contracts/{id}/';
+};
+
+export type InstrumentPriceContractsPartialUpdateResponses = {
+    200: InstrumentPriceContract;
+};
+
+export type InstrumentPriceContractsPartialUpdateResponse = InstrumentPriceContractsPartialUpdateResponses[keyof InstrumentPriceContractsPartialUpdateResponses];
+
+export type InstrumentPriceContractsUpdateData = {
+    body: InstrumentPriceContractWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument price contract.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-price-contracts/{id}/';
+};
+
+export type InstrumentPriceContractsUpdateResponses = {
+    200: InstrumentPriceContract;
+};
+
+export type InstrumentPriceContractsUpdateResponse = InstrumentPriceContractsUpdateResponses[keyof InstrumentPriceContractsUpdateResponses];
+
+export type InstrumentProcedureRequestsListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/instrument-procedure-requests/';
+};
+
+export type InstrumentProcedureRequestsListResponses = {
+    200: PaginatedInstrumentProcedureRequestList;
+};
+
+export type InstrumentProcedureRequestsListResponse = InstrumentProcedureRequestsListResponses[keyof InstrumentProcedureRequestsListResponses];
+
+export type InstrumentProcedureRequestsCreateData = {
+    body: InstrumentProcedureRequestWritable;
+    path?: never;
+    query?: never;
+    url: '/api/instrument-procedure-requests/';
+};
+
+export type InstrumentProcedureRequestsCreateResponses = {
+    201: InstrumentProcedureRequest;
+};
+
+export type InstrumentProcedureRequestsCreateResponse = InstrumentProcedureRequestsCreateResponses[keyof InstrumentProcedureRequestsCreateResponses];
+
+export type InstrumentProcedureRequestsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/';
+};
+
+export type InstrumentProcedureRequestsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type InstrumentProcedureRequestsDestroyResponse = InstrumentProcedureRequestsDestroyResponses[keyof InstrumentProcedureRequestsDestroyResponses];
+
+export type InstrumentProcedureRequestsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/';
+};
+
+export type InstrumentProcedureRequestsRetrieveResponses = {
+    200: InstrumentProcedureRequest;
+};
+
+export type InstrumentProcedureRequestsRetrieveResponse = InstrumentProcedureRequestsRetrieveResponses[keyof InstrumentProcedureRequestsRetrieveResponses];
+
+export type InstrumentProcedureRequestsPartialUpdateData = {
+    body?: PatchedInstrumentProcedureRequestWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/';
+};
+
+export type InstrumentProcedureRequestsPartialUpdateResponses = {
+    200: InstrumentProcedureRequest;
+};
+
+export type InstrumentProcedureRequestsPartialUpdateResponse = InstrumentProcedureRequestsPartialUpdateResponses[keyof InstrumentProcedureRequestsPartialUpdateResponses];
+
+export type InstrumentProcedureRequestsUpdateData = {
+    body: InstrumentProcedureRequestWritable;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/';
+};
+
+export type InstrumentProcedureRequestsUpdateResponses = {
+    200: InstrumentProcedureRequest;
+};
+
+export type InstrumentProcedureRequestsUpdateResponse = InstrumentProcedureRequestsUpdateResponses[keyof InstrumentProcedureRequestsUpdateResponses];
+
+export type InstrumentProcedureRequestsAcceptQuotationCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/accept-quotation/';
+};
+
+export type InstrumentProcedureRequestsAcceptQuotationCreateResponses = {
+    200: InstrumentQuotation;
+};
+
+export type InstrumentProcedureRequestsAcceptQuotationCreateResponse = InstrumentProcedureRequestsAcceptQuotationCreateResponses[keyof InstrumentProcedureRequestsAcceptQuotationCreateResponses];
+
+export type InstrumentProcedureRequestsCreateQuotationCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/create-quotation/';
+};
+
+export type InstrumentProcedureRequestsCreateQuotationCreateResponses = {
+    200: InstrumentQuotation;
+};
+
+export type InstrumentProcedureRequestsCreateQuotationCreateResponse = InstrumentProcedureRequestsCreateQuotationCreateResponses[keyof InstrumentProcedureRequestsCreateQuotationCreateResponses];
+
+export type InstrumentProcedureRequestsPlanFulfillmentCreateData = {
+    body: FulfillmentPlanCreate;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/plan-fulfillment/';
+};
+
+export type InstrumentProcedureRequestsPlanFulfillmentCreateResponses = {
+    200: FulfillmentPlan;
+};
+
+export type InstrumentProcedureRequestsPlanFulfillmentCreateResponse = InstrumentProcedureRequestsPlanFulfillmentCreateResponses[keyof InstrumentProcedureRequestsPlanFulfillmentCreateResponses];
+
+export type InstrumentProcedureRequestsSubmitCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument procedure request.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-procedure-requests/{id}/submit/';
+};
+
+export type InstrumentProcedureRequestsSubmitCreateResponses = {
+    200: InstrumentProcedureRequest;
+};
+
+export type InstrumentProcedureRequestsSubmitCreateResponse = InstrumentProcedureRequestsSubmitCreateResponses[keyof InstrumentProcedureRequestsSubmitCreateResponses];
+
+export type InstrumentQuotationsListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/instrument-quotations/';
+};
+
+export type InstrumentQuotationsListResponses = {
+    200: PaginatedInstrumentQuotationList;
+};
+
+export type InstrumentQuotationsListResponse = InstrumentQuotationsListResponses[keyof InstrumentQuotationsListResponses];
+
+export type InstrumentQuotationsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this instrument quotation.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/instrument-quotations/{id}/';
+};
+
+export type InstrumentQuotationsRetrieveResponses = {
+    200: InstrumentQuotation;
+};
+
+export type InstrumentQuotationsRetrieveResponse = InstrumentQuotationsRetrieveResponses[keyof InstrumentQuotationsRetrieveResponses];
+
+export type InstrumentalDashboardStatsRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/instrumental/dashboard-stats/';
+};
+
+export type InstrumentalDashboardStatsRetrieveResponses = {
+    200: InstrumentalDashboardStats;
+};
+
+export type InstrumentalDashboardStatsRetrieveResponse = InstrumentalDashboardStatsRetrieveResponses[keyof InstrumentalDashboardStatsRetrieveResponses];
+
+export type InstrumentalHandheldScansCreateData = {
+    body: HandheldScan;
+    path?: never;
+    query?: never;
+    url: '/api/instrumental/handheld-scans/';
+};
+
+export type InstrumentalHandheldScansCreateResponses = {
+    200: HandheldScanEvent;
+};
+
+export type InstrumentalHandheldScansCreateResponse = InstrumentalHandheldScansCreateResponses[keyof InstrumentalHandheldScansCreateResponses];
+
 export type InventoryDashboardStatsRetrieveData = {
     body?: never;
     path?: never;
@@ -1035,6 +2404,46 @@ export type LogisticsDashboardStatsRetrieveResponses = {
 };
 
 export type LogisticsDashboardStatsRetrieveResponse = LogisticsDashboardStatsRetrieveResponses[keyof LogisticsDashboardStatsRetrieveResponses];
+
+export type MaterialDispatchesListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/material-dispatches/';
+};
+
+export type MaterialDispatchesListResponses = {
+    200: PaginatedMaterialDispatchList;
+};
+
+export type MaterialDispatchesListResponse = MaterialDispatchesListResponses[keyof MaterialDispatchesListResponses];
+
+export type MaterialDispatchesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this material dispatch.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/material-dispatches/{id}/';
+};
+
+export type MaterialDispatchesRetrieveResponses = {
+    200: MaterialDispatch;
+};
+
+export type MaterialDispatchesRetrieveResponse = MaterialDispatchesRetrieveResponses[keyof MaterialDispatchesRetrieveResponses];
 
 export type MedicalDashboardStatsRetrieveData = {
     body?: never;
@@ -1506,6 +2915,116 @@ export type ProvidersUpdateResponses = {
 };
 
 export type ProvidersUpdateResponse = ProvidersUpdateResponses[keyof ProvidersUpdateResponses];
+
+export type ProximityScheduleLinksListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/proximity-schedule-links/';
+};
+
+export type ProximityScheduleLinksListResponses = {
+    200: PaginatedProximityScheduleLinkList;
+};
+
+export type ProximityScheduleLinksListResponse = ProximityScheduleLinksListResponses[keyof ProximityScheduleLinksListResponses];
+
+export type ProximityScheduleLinksCreateData = {
+    body: ProximityScheduleLinkWritable;
+    path?: never;
+    query?: never;
+    url: '/api/proximity-schedule-links/';
+};
+
+export type ProximityScheduleLinksCreateResponses = {
+    201: ProximityScheduleLink;
+};
+
+export type ProximityScheduleLinksCreateResponse = ProximityScheduleLinksCreateResponses[keyof ProximityScheduleLinksCreateResponses];
+
+export type ProximityScheduleLinksDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this proximity schedule link.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/proximity-schedule-links/{id}/';
+};
+
+export type ProximityScheduleLinksDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type ProximityScheduleLinksDestroyResponse = ProximityScheduleLinksDestroyResponses[keyof ProximityScheduleLinksDestroyResponses];
+
+export type ProximityScheduleLinksRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this proximity schedule link.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/proximity-schedule-links/{id}/';
+};
+
+export type ProximityScheduleLinksRetrieveResponses = {
+    200: ProximityScheduleLink;
+};
+
+export type ProximityScheduleLinksRetrieveResponse = ProximityScheduleLinksRetrieveResponses[keyof ProximityScheduleLinksRetrieveResponses];
+
+export type ProximityScheduleLinksPartialUpdateData = {
+    body?: PatchedProximityScheduleLinkWritable;
+    path: {
+        /**
+         * A unique integer value identifying this proximity schedule link.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/proximity-schedule-links/{id}/';
+};
+
+export type ProximityScheduleLinksPartialUpdateResponses = {
+    200: ProximityScheduleLink;
+};
+
+export type ProximityScheduleLinksPartialUpdateResponse = ProximityScheduleLinksPartialUpdateResponses[keyof ProximityScheduleLinksPartialUpdateResponses];
+
+export type ProximityScheduleLinksUpdateData = {
+    body: ProximityScheduleLinkWritable;
+    path: {
+        /**
+         * A unique integer value identifying this proximity schedule link.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/proximity-schedule-links/{id}/';
+};
+
+export type ProximityScheduleLinksUpdateResponses = {
+    200: ProximityScheduleLink;
+};
+
+export type ProximityScheduleLinksUpdateResponse = ProximityScheduleLinksUpdateResponses[keyof ProximityScheduleLinksUpdateResponses];
 
 export type PurchaseOrdersListData = {
     body?: never;
@@ -2131,7 +3650,7 @@ export type SupplyKitsUpdateResponses = {
 export type SupplyKitsUpdateResponse = SupplyKitsUpdateResponses[keyof SupplyKitsUpdateResponses];
 
 export type SupplyKitsAddTagsCreateData = {
-    body: SupplyKitWritable;
+    body: SupplyKitTagAction;
     path: {
         /**
          * A unique integer value identifying this supply kit.
@@ -2148,8 +3667,62 @@ export type SupplyKitsAddTagsCreateResponses = {
 
 export type SupplyKitsAddTagsCreateResponse = SupplyKitsAddTagsCreateResponses[keyof SupplyKitsAddTagsCreateResponses];
 
+export type SupplyKitsAssignDispatchCreateData = {
+    body: SupplyKitDispatch;
+    path: {
+        /**
+         * A unique integer value identifying this supply kit.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/supply-kits/{id}/assign-dispatch/';
+};
+
+export type SupplyKitsAssignDispatchCreateResponses = {
+    200: SupplyKit;
+};
+
+export type SupplyKitsAssignDispatchCreateResponse = SupplyKitsAssignDispatchCreateResponses[keyof SupplyKitsAssignDispatchCreateResponses];
+
+export type SupplyKitsConfirmHospitalArrivalCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this supply kit.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/supply-kits/{id}/confirm-hospital-arrival/';
+};
+
+export type SupplyKitsConfirmHospitalArrivalCreateResponses = {
+    200: SupplyKit;
+};
+
+export type SupplyKitsConfirmHospitalArrivalCreateResponse = SupplyKitsConfirmHospitalArrivalCreateResponses[keyof SupplyKitsConfirmHospitalArrivalCreateResponses];
+
+export type SupplyKitsConfirmWarehouseReturnCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this supply kit.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/supply-kits/{id}/confirm-warehouse-return/';
+};
+
+export type SupplyKitsConfirmWarehouseReturnCreateResponses = {
+    200: SupplyKit;
+};
+
+export type SupplyKitsConfirmWarehouseReturnCreateResponse = SupplyKitsConfirmWarehouseReturnCreateResponses[keyof SupplyKitsConfirmWarehouseReturnCreateResponses];
+
 export type SupplyKitsRemoveTagsCreateData = {
-    body: SupplyKitWritable;
+    body: SupplyKitTagAction;
     path: {
         /**
          * A unique integer value identifying this supply kit.
@@ -2165,6 +3738,24 @@ export type SupplyKitsRemoveTagsCreateResponses = {
 };
 
 export type SupplyKitsRemoveTagsCreateResponse = SupplyKitsRemoveTagsCreateResponses[keyof SupplyKitsRemoveTagsCreateResponses];
+
+export type SupplyKitsUpdateReturnChecklistCreateData = {
+    body: SupplyKitReturnChecklist;
+    path: {
+        /**
+         * A unique integer value identifying this supply kit.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/supply-kits/{id}/update-return-checklist/';
+};
+
+export type SupplyKitsUpdateReturnChecklistCreateResponses = {
+    200: SupplyKit;
+};
+
+export type SupplyKitsUpdateReturnChecklistCreateResponse = SupplyKitsUpdateReturnChecklistCreateResponses[keyof SupplyKitsUpdateReturnChecklistCreateResponses];
 
 export type TechniciansListData = {
     body?: never;
@@ -2275,6 +3866,116 @@ export type TechniciansUpdateResponses = {
 };
 
 export type TechniciansUpdateResponse = TechniciansUpdateResponses[keyof TechniciansUpdateResponses];
+
+export type TransportVehiclesListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/transport-vehicles/';
+};
+
+export type TransportVehiclesListResponses = {
+    200: PaginatedTransportVehicleList;
+};
+
+export type TransportVehiclesListResponse = TransportVehiclesListResponses[keyof TransportVehiclesListResponses];
+
+export type TransportVehiclesCreateData = {
+    body: TransportVehicleWritable;
+    path?: never;
+    query?: never;
+    url: '/api/transport-vehicles/';
+};
+
+export type TransportVehiclesCreateResponses = {
+    201: TransportVehicle;
+};
+
+export type TransportVehiclesCreateResponse = TransportVehiclesCreateResponses[keyof TransportVehiclesCreateResponses];
+
+export type TransportVehiclesDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this transport vehicle.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/transport-vehicles/{id}/';
+};
+
+export type TransportVehiclesDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type TransportVehiclesDestroyResponse = TransportVehiclesDestroyResponses[keyof TransportVehiclesDestroyResponses];
+
+export type TransportVehiclesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this transport vehicle.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/transport-vehicles/{id}/';
+};
+
+export type TransportVehiclesRetrieveResponses = {
+    200: TransportVehicle;
+};
+
+export type TransportVehiclesRetrieveResponse = TransportVehiclesRetrieveResponses[keyof TransportVehiclesRetrieveResponses];
+
+export type TransportVehiclesPartialUpdateData = {
+    body?: PatchedTransportVehicleWritable;
+    path: {
+        /**
+         * A unique integer value identifying this transport vehicle.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/transport-vehicles/{id}/';
+};
+
+export type TransportVehiclesPartialUpdateResponses = {
+    200: TransportVehicle;
+};
+
+export type TransportVehiclesPartialUpdateResponse = TransportVehiclesPartialUpdateResponses[keyof TransportVehiclesPartialUpdateResponses];
+
+export type TransportVehiclesUpdateData = {
+    body: TransportVehicleWritable;
+    path: {
+        /**
+         * A unique integer value identifying this transport vehicle.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/transport-vehicles/{id}/';
+};
+
+export type TransportVehiclesUpdateResponses = {
+    200: TransportVehicle;
+};
+
+export type TransportVehiclesUpdateResponse = TransportVehiclesUpdateResponses[keyof TransportVehiclesUpdateResponses];
 
 export type UsersListData = {
     body?: never;

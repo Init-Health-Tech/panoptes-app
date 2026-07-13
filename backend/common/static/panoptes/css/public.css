@@ -91,6 +91,13 @@ body.panoptes-public {
   color: var(--color-primary);
 }
 
+.panoptes-brand__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .panoptes-brand__icon {
   font-size: 2rem;
   color: var(--color-primary);
@@ -110,6 +117,10 @@ body.panoptes-public {
 .panoptes-brand--light .panoptes-brand__icon,
 .panoptes-brand--light .panoptes-brand__name {
   color: #fff;
+}
+
+.panoptes-brand--light .panoptes-brand__logo {
+  filter: brightness(1.15) saturate(1.05);
 }
 
 .panoptes-glass {
@@ -430,11 +441,16 @@ body.panoptes-public {
 }
 
 .panoptes-login__brand-badge {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   margin-bottom: 1rem;
   border-radius: 0.75rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow-elevated);
+}
+
+.panoptes-login__brand-badge .panoptes-brand__logo {
+  width: 3rem;
+  height: 3rem;
 }
 
 .panoptes-login__tagline {

@@ -7,7 +7,13 @@ export type ActiveModules = {
     slug: string;
     industry_type: string;
     is_active: boolean;
+    account_type?: string;
+    demo_expires_at?: string | null;
   } | null;
+  demo_expires_at?: string | null;
+  is_demo_expired?: boolean;
+  account_type?: string | null;
+  is_platform_admin?: boolean;
 };
 
 export type RfidTagStatus = 'en_stock' | 'en_transito' | 'en_uso' | 'dado_de_baja';

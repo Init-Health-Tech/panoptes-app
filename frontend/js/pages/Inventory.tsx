@@ -1,9 +1,16 @@
-import { Form, Link, useLoaderData, useSearchParams } from 'react-router';
+import { Form, Link, useLoaderData, useRevalidator, useSearchParams } from 'react-router';
+import { useState } from 'react';
 
-import type { PaginatedRfidTagList } from '@/js/api';
+import { rfidTagsCreate, type PaginatedRfidTagList } from '@/js/api';
 import { AppLayout } from '@/js/components/layout/AppLayout';
+import { CustodyBadge } from '@/js/components/ui/CustodyBadge';
+import { FormField } from '@/js/components/ui/FormField';
+import { FormPanel } from '@/js/components/ui/FormPanel';
+import { Input } from '@/js/components/ui/Input';
+import { Select } from '@/js/components/ui/Select';
 import { StatusBadge } from '@/js/components/ui/StatusBadge';
 import { makeLink } from '@/js/utils';
+import { ITEM_TYPE_EXAMPLE_OPTIONS } from '@/js/types/materialExamples';
 import type { RfidTagStatus } from '@/js/types/modules';
 import { RFID_STATUS_LABELS } from '@/js/types/modules';
 
@@ -15,16 +22,73 @@ const STATUS_OPTIONS = Object.entries(RFID_STATUS_LABELS) as [RfidTagStatus, str
 
 const Inventory = () => {
   const data = useLoaderData<InventoryLoaderData>();
+  const revalidator = useRevalidator();
   const [searchParams] = useSearchParams();
   const prev = makeLink(data.previous);
   const next = makeLink(data.next);
+  const [code, setCode] = useState('');
+  const [itemType, setItemType] = useState('');
+  const [location, setLocation] = useState('');
+  const [status, setStatus] = useState<RfidTagStatus>('en_stock');
+
+  const refresh = () => revalidator.revalidate();
+
+  const handleCreate = async () => {
+    await rfidTagsCreate({
+      body: { code, item_type: itemType, last_location: location, status },
+      throwOnError: true,
+    });
+    setCode('');
+    setItemType('');
+    setLocation('');
+    setStatus('en_stock');
+    refresh();
+  };
 
   return (
     <AppLayout
       subtitle="Lecturas RFID en tiempo real — filtra por estado, ubicación o tipo"
       title="Inventario"
+      tourId="inventory"
     >
-      <Form className="panoptes-card mb-6 grid gap-4 p-4 md:grid-cols-4" method="get">
+      <div data-tour="inventory-create">
+      <FormPanel onSubmit={handleCreate} onSuccess={refresh} submitLabel="Registrar tag" title="Nuevo tag RFID">
+        <FormField htmlFor="tag-code" label="Código RFID">
+          <Input id="tag-code" onChange={(e) => setCode(e.target.value)} placeholder="EPC-001" required value={code} />
+        </FormField>
+        <FormField htmlFor="tag-type" label="Tipo de item">
+          <Input
+            id="tag-type"
+            list="item-type-examples"
+            onChange={(e) => setItemType(e.target.value)}
+            placeholder="Ej. Monitor, Sutura, Pinza Kelly…"
+            value={itemType}
+          />
+          <datalist id="item-type-examples">
+            {ITEM_TYPE_EXAMPLE_OPTIONS.map((option) => (
+              <option key={option} value={option} />
+            ))}
+          </datalist>
+          <p className="mt-1 text-xs text-on-surface-variant">
+            Ejemplos: equipo médico, consumibles o instrumental.
+          </p>
+        </FormField>
+        <FormField htmlFor="tag-location" label="Ubicación">
+          <Input id="tag-location" onChange={(e) => setLocation(e.target.value)} value={location} />
+        </FormField>
+        <FormField htmlFor="tag-status" label="Estado">
+          <Select id="tag-status" onChange={(e) => setStatus(e.target.value as RfidTagStatus)} value={status}>
+            {STATUS_OPTIONS.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>
+        </FormField>
+      </FormPanel>
+      </div>
+
+      <Form className="panoptes-card mb-6 grid gap-4 p-4 md:grid-cols-4" data-tour="inventory-filters" method="get">
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase text-on-surface-variant">
             Estado
@@ -73,7 +137,7 @@ const Inventory = () => {
         <input name="limit" type="hidden" value={searchParams.get('limit') || '20'} />
       </Form>
 
-      <div className="panoptes-card overflow-hidden">
+      <div className="panoptes-card overflow-hidden" data-tour="inventory-table">
         <div className="flex items-center justify-between border-b border-outline-variant/30 px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-primary">sensors</span>
@@ -88,13 +152,14 @@ const Inventory = () => {
           </span>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="panoptes-table-scroll overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
               <tr>
                 <th className="panoptes-table-header">Código RFID</th>
                 <th className="panoptes-table-header">Tipo</th>
                 <th className="panoptes-table-header">Estado</th>
+                <th className="panoptes-table-header">Custodia</th>
                 <th className="panoptes-table-header">Ubicación</th>
                 <th className="panoptes-table-header">Última lectura</th>
               </tr>
@@ -103,10 +168,26 @@ const Inventory = () => {
               {data.results?.length ? (
                 data.results.map((tag) => (
                   <tr key={tag.id} className="panoptes-table-row">
-                    <td className="px-4 py-3 font-mono text-sm font-medium">{tag.code}</td>
+                    <td className="px-4 py-3 font-mono text-sm font-medium">
+                      <Link className="text-primary hover:underline" to={`/inventory/${tag.id}`}>
+                        {tag.code}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-on-surface-variant">{tag.item_type || '—'}</td>
                     <td className="px-4 py-3">
                       <StatusBadge pulse={tag.status === 'en_transito'} status={tag.status ?? 'en_stock'} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <CustodyBadge
+                        custodyLabel={tag.custody_label}
+                        custodyType={tag.custody_type}
+                        isAvailable={tag.is_available}
+                      />
+                      {tag.custody_label && (
+                        <p className="mt-1 max-w-[12rem] truncate text-[11px] text-on-surface-variant">
+                          {tag.custody_label}
+                        </p>
+                      )}
                     </td>
                     <td className="px-4 py-3">{tag.last_location || '—'}</td>
                     <td className="px-4 py-3 text-on-surface-variant">
@@ -118,7 +199,7 @@ const Inventory = () => {
                 ))
               ) : (
                 <tr>
-                  <td className="px-4 py-12 text-center text-on-surface-variant" colSpan={5}>
+                  <td className="px-4 py-12 text-center text-on-surface-variant" colSpan={6}>
                     No hay tags RFID registrados. Las lecturas del gateway aparecerán aquí.
                   </td>
                 </tr>

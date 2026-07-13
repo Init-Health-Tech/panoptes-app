@@ -2,7 +2,9 @@ export const SUPPLY_KIT_STATUS_LABELS: Record<string, string> = {
   armando: 'Armando',
   lista: 'Lista',
   en_transito: 'En tránsito',
-  entregada: 'Entregada',
+  entregada: 'Entregada en hospital',
+  retornando: 'Retornando a almacén',
+  devuelta: 'Confirmada en almacén',
   usada: 'Usada',
 };
 
