@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from inventory.apps import InventoryConfig
-from inventory.models import RFIDReadEvent, RFIDTag
+from inventory.models import InventoryLocation, RFIDReadEvent, RFIDTag
 from inventory.serializers import (
+    InventoryLocationSerializer,
     RFIDReadEventSerializer,
     RFIDReadWebhookSerializer,
     RFIDTagSerializer,
@@ -26,9 +27,14 @@ from organizations.permissions import has_module_and_role
     ),
 )
 class RFIDTagViewSet(OrganizationViewSetMixin, viewsets.ModelViewSet):
-    queryset = RFIDTag.objects.all()
+    queryset = RFIDTag.objects.select_related("catalog_item", "inventory_location")
     serializer_class = RFIDTagSerializer
     permission_classes = [IsAuthenticated, has_module_and_role(InventoryConfig.module_code)]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["organization"] = self.get_organization()
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -42,6 +48,12 @@ class RFIDTagViewSet(OrganizationViewSetMixin, viewsets.ModelViewSet):
             queryset = queryset.filter(item_type__icontains=item_type)
 
         return queryset
+
+
+class InventoryLocationViewSet(OrganizationViewSetMixin, viewsets.ModelViewSet):
+    queryset = InventoryLocation.objects.all()
+    serializer_class = InventoryLocationSerializer
+    permission_classes = [IsAuthenticated, has_module_and_role(InventoryConfig.module_code)]
 
 
 class RFIDReadEventViewSet(

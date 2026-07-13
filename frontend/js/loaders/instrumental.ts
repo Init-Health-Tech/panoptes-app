@@ -13,6 +13,7 @@ import {
   instrumentQuotationsList,
   materialDispatchesList,
   proceduresList,
+  rfidTagsList,
   techniciansList,
   transportVehiclesList,
 } from '@/js/api';
@@ -206,6 +207,60 @@ export async function instrumentalDashboardLoader({ request }: { request: Reques
   try {
     const response = await instrumentalDashboardStatsRetrieve({ throwOnError: false });
     return { instrumentalStats: response.data ?? null };
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function instrumentCatalogLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const response = await instrumentCatalogList({
+      query: {
+        limit: Number(url.searchParams.get('limit') || 50),
+        offset: Number(url.searchParams.get('offset') || 0),
+      },
+      throwOnError: true,
+    });
+    return response.data;
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function hospitalSitesLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const response = await hospitalSitesList({
+      query: {
+        limit: Number(url.searchParams.get('limit') || 50),
+        offset: Number(url.searchParams.get('offset') || 0),
+      },
+      throwOnError: true,
+    });
+    return response.data;
+  } catch (error) {
+    return handleAuthError(error, request);
+  }
+}
+
+export async function transportVehiclesLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const [response, tagsResponse] = await Promise.all([
+      transportVehiclesList({
+        query: {
+          limit: Number(url.searchParams.get('limit') || 50),
+          offset: Number(url.searchParams.get('offset') || 0),
+        },
+        throwOnError: true,
+      }),
+      rfidTagsList({ query: { limit: 200, offset: 0 }, throwOnError: false }),
+    ]);
+    return {
+      ...response.data,
+      rfidTags: tagsResponse.data?.results ?? [],
+    };
   } catch (error) {
     return handleAuthError(error, request);
   }

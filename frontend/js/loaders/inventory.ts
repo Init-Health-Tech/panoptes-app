@@ -1,7 +1,13 @@
 import { AxiosError } from 'axios';
 import { redirectDocument } from 'react-router';
 
-import { rfidReadEventsList, rfidTagsList, rfidTagsRetrieve } from '@/js/api';
+import {
+  instrumentCatalogList,
+  inventoryLocationsList,
+  rfidReadEventsList,
+  rfidTagsList,
+  rfidTagsRetrieve,
+} from '@/js/api';
 import { loginRedirectUrl } from '@/js/utils/auth';
 
 export async function inventoryLoader({ request }: { request: Request }) {
@@ -13,18 +19,47 @@ export async function inventoryLoader({ request }: { request: Request }) {
   const item_type = url.searchParams.get('item_type') || undefined;
 
   try {
-    const response = await rfidTagsList({
-      query: { limit, offset, status, location, item_type },
-      throwOnError: true,
-    });
+    const [response, locationsResponse, catalogSettled] = await Promise.all([
+      rfidTagsList({
+        query: { limit, offset, status, location, item_type },
+        throwOnError: true,
+      }),
+      inventoryLocationsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+      instrumentCatalogList({ query: { limit: 200, offset: 0 }, throwOnError: false }),
+    ]);
+
+    const catalog =
+      catalogSettled.data?.results?.filter((item) => item.is_active !== false) ?? [];
+
     return {
       ...response.data,
       filters: { status: status ?? '', location: location ?? '', item_type: item_type ?? '' },
+      catalog,
+      locations: (locationsResponse.data.results ?? []).filter((loc) => loc.is_active !== false),
     };
   } catch (error) {
     if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
       const next = url.pathname + url.search + url.hash;
       throw redirectDocument(loginRedirectUrl(next));
+    }
+    throw error;
+  }
+}
+
+export async function inventoryLocationsLoader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    const response = await inventoryLocationsList({
+      query: {
+        limit: Number(url.searchParams.get('limit') || 50),
+        offset: Number(url.searchParams.get('offset') || 0),
+      },
+      throwOnError: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
+      throw redirectDocument(loginRedirectUrl(url.pathname + url.search));
     }
     throw error;
   }

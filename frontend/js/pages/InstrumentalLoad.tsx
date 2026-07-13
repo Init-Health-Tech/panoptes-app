@@ -3,11 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 
 import {
   instrumentalHandheldScansCreate,
+  materialDispatchesUnloadCreate,
   type FulfillmentPlan,
   type HospitalSite,
   type InstrumentProcedureRequest,
 } from '@/js/api';
-import { materialDispatchesUnloadCreate } from '@/js/api/instrumentalExtras';
 import { AppLayout } from '@/js/components/layout/AppLayout';
 import { ActionModal } from '@/js/components/ui/ActionModal';
 import { Checkbox } from '@/js/components/ui/Checkbox';
@@ -288,7 +288,7 @@ const InstrumentalLoad = () => {
               <Input
                 id="load-scan"
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="INST-… o SKU-…"
+                placeholder="AVANT0000011 o SKU-…"
                 value={identifier}
               />
             </FormField>

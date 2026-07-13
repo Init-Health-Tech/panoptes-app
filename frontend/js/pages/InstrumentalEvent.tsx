@@ -282,7 +282,7 @@ const InstrumentalEvent = () => {
                     handleScan();
                   }
                 }}
-                placeholder="INST-… o SKU-…"
+                placeholder="AVANT0000011 o SKU-…"
                 value={identifier}
               />
             </FormField>

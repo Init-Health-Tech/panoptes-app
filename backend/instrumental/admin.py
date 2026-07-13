@@ -29,7 +29,16 @@ class InstrumentPriceContractAdmin(admin.ModelAdmin):
 
 
 admin.site.register(HospitalSite)
-admin.site.register(InstrumentCatalogItem)
+
+
+@admin.register(InstrumentCatalogItem)
+class InstrumentCatalogItemAdmin(admin.ModelAdmin):
+    list_display = ("sku", "name", "item_type", "category", "brand", "is_active", "organization")
+    list_filter = ("item_type", "is_active", "organization")
+    search_fields = ("sku", "name", "category", "brand")
+    readonly_fields = ("created", "modified")
+
+
 admin.site.register(TransportVehicle)
 admin.site.register(InstrumentProcedureRequest)
 admin.site.register(InstrumentQuotation)

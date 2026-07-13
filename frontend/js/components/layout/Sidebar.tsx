@@ -1,10 +1,33 @@
-import { useEffect, useId, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { NavLink, useLocation } from 'react-router';
 
 import { getNavItemsForModules, SECTION_LABELS, type NavSection } from '@/js/config/modules';
 import { useOptionalModules } from '@/js/context/ModulesContext';
 import { LogoutButton } from '@/js/components/layout/LogoutButton';
 import { PanoptesLogo } from '@/js/components/ui/PanoptesLogo';
+
+const SIDEBAR_NAV_SCROLL_KEY = 'panoptes-sidebar-nav-scroll';
+
+function saveNavScroll(el: HTMLElement | null) {
+  if (!el) return;
+  try {
+    sessionStorage.setItem(SIDEBAR_NAV_SCROLL_KEY, String(el.scrollTop));
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
+function restoreNavScroll(el: HTMLElement | null) {
+  if (!el) return;
+  try {
+    const saved = sessionStorage.getItem(SIDEBAR_NAV_SCROLL_KEY);
+    if (saved != null) {
+      el.scrollTop = Number(saved) || 0;
+    }
+  } catch {
+    // ignore
+  }
+}
 
 type SidebarProps = {
   open: boolean;
@@ -19,14 +42,21 @@ function NavSectionGroup({
   items,
   onNavigate,
   collapsed,
+  navRef,
 }: {
   section: NavSection;
   items: ReturnType<typeof getNavItemsForModules>;
   onNavigate: () => void;
   collapsed?: boolean;
+  navRef: RefObject<HTMLElement | null>;
 }) {
   const sectionItems = items.filter((item) => item.section === section);
   if (sectionItems.length === 0) return null;
+
+  const handleNavigate = () => {
+    saveNavScroll(navRef.current);
+    onNavigate();
+  };
 
   return (
     <div className={collapsed ? 'mb-2' : 'mb-4'}>
@@ -57,7 +87,7 @@ function NavSectionGroup({
                     ? 'nav-instrumental'
                     : undefined
             }
-            onClick={onNavigate}
+            onClick={handleNavigate}
             title={collapsed ? item.label : undefined}
             to={item.path}
           >
@@ -83,6 +113,16 @@ function SidebarPanel({
 }) {
   const modules = useOptionalModules();
   const navItems = getNavItemsForModules(modules?.modules ?? []);
+  const navRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    restoreNavScroll(navRef.current);
+  }, []);
+
+  const handleNavigate = () => {
+    saveNavScroll(navRef.current);
+    onNavigate();
+  };
 
   return (
     <>
@@ -117,7 +157,11 @@ function SidebarPanel({
         )}
       </div>
 
-      <nav className={`flex-1 overflow-y-auto overscroll-contain pb-4 ${collapsed ? 'px-1.5' : 'px-3'}`}>
+      <nav
+        className={`flex-1 overflow-y-auto overscroll-contain pb-4 ${collapsed ? 'px-1.5' : 'px-3'}`}
+        onScroll={(e) => saveNavScroll(e.currentTarget)}
+        ref={navRef}
+      >
         <NavLink
           className={({ isActive }) =>
             [
@@ -129,7 +173,7 @@ function SidebarPanel({
             ].join(' ')
           }
           end
-          onClick={onNavigate}
+          onClick={handleNavigate}
           title={collapsed ? 'Dashboard' : undefined}
           to="/"
         >
@@ -148,7 +192,7 @@ function SidebarPanel({
                   : 'text-on-surface-variant hover:bg-surface-container-high',
               ].join(' ')
             }
-            onClick={onNavigate}
+            onClick={handleNavigate}
             title={collapsed ? 'Platform admin' : undefined}
             to="/platform"
           >
@@ -160,18 +204,21 @@ function SidebarPanel({
         <NavSectionGroup
           collapsed={collapsed}
           items={navItems}
+          navRef={navRef}
           onNavigate={onNavigate}
           section="core"
         />
         <NavSectionGroup
           collapsed={collapsed}
           items={navItems}
+          navRef={navRef}
           onNavigate={onNavigate}
           section="instrumental"
         />
         <NavSectionGroup
           collapsed={collapsed}
           items={navItems}
+          navRef={navRef}
           onNavigate={onNavigate}
           section="logistics"
         />

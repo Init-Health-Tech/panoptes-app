@@ -182,6 +182,29 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/dashboard/charts/:
+    get:
+      operationId: dashboard_charts_retrieve
+      description: Tenant dashboard chart series (inventory + instrumental funnel).
+      tags:
+      - dashboard
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/demo/request-license/:
+    get:
+      operationId: demo_request_license_retrieve
+      description: Return a prefilled mailto for sales when demo expires (or nears
+        expiry).
+      tags:
+      - demo
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/doctors/:
     get:
       operationId: doctors_list
@@ -1258,6 +1281,170 @@ paths:
               schema:
                 $ref: '#/components/schemas/HandheldScanEvent'
           description: ''
+  /api/inventory-locations/:
+    get:
+      operationId: inventory_locations_list
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - inventory-locations
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInventoryLocationList'
+          description: ''
+    post:
+      operationId: inventory_locations_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      tags:
+      - inventory-locations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryLocation'
+          description: ''
+  /api/inventory-locations/{id}/:
+    get:
+      operationId: inventory_locations_retrieve
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this inventory location.
+        required: true
+      tags:
+      - inventory-locations
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryLocation'
+          description: ''
+    put:
+      operationId: inventory_locations_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this inventory location.
+        required: true
+      tags:
+      - inventory-locations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InventoryLocation'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryLocation'
+          description: ''
+    patch:
+      operationId: inventory_locations_partial_update
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this inventory location.
+        required: true
+      tags:
+      - inventory-locations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedInventoryLocation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedInventoryLocation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedInventoryLocation'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryLocation'
+          description: ''
+    delete:
+      operationId: inventory_locations_destroy
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this inventory location.
+        required: true
+      tags:
+      - inventory-locations
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/inventory/dashboard-stats/:
     get:
       operationId: inventory_dashboard_stats_retrieve
@@ -1334,6 +1521,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/MaterialDispatch'
           description: ''
+  /api/material-dispatches/{id}/unload/:
+    post:
+      operationId: material_dispatches_unload_create
+      description: Filter querysets and assign organization on create for tenant-scoped
+        models.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this material dispatch.
+        required: true
+      tags:
+      - material-dispatches
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialDispatch'
+          description: ''
   /api/medical/dashboard-stats/:
     get:
       operationId: medical_dashboard_stats_retrieve
@@ -1372,6 +1582,152 @@ paths:
                   module:
                     type: string
           description: ''
+  /api/platform/organizations/:
+    get:
+      operationId: platform_organizations_list
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlatformOrganization'
+          description: ''
+    post:
+      operationId: platform_organizations_create
+      description: Create + provision a demo client in one step.
+      tags:
+      - platform
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionDemo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProvisionDemo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProvisionDemo'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformOrganization'
+          description: ''
+  /api/platform/organizations/{id}/:
+    get:
+      operationId: platform_organizations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformOrganization'
+          description: ''
+  /api/platform/organizations/{id}/assign-package/:
+    post:
+      operationId: platform_organizations_assign_package_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/platform/organizations/{id}/extend-demo/:
+    post:
+      operationId: platform_organizations_extend_demo_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/platform/organizations/{id}/purge-demo/:
+    post:
+      operationId: platform_organizations_purge_demo_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/platform/organizations/{id}/usage/:
+    get:
+      operationId: platform_organizations_usage_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/platform/packages/:
+    get:
+      operationId: platform_packages_retrieve
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/platform/usage/summary/:
+    get:
+      operationId: platform_usage_summary_retrieve
+      tags:
+      - platform
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/procedure-assignments/:
     get:
       operationId: procedure_assignments_list
@@ -3809,6 +4165,16 @@ paths:
           description: No response body
 components:
   schemas:
+    AccountTypeEnum:
+      enum:
+      - demo
+      - customer
+      - internal
+      type: string
+      description: |-
+        * `demo` - Demo
+        * `customer` - Cliente
+        * `internal` - Interno INIT
     ActiveModules:
       type: object
       properties:
@@ -3823,6 +4189,17 @@ components:
           allOf:
           - $ref: '#/components/schemas/Organization'
           nullable: true
+        demo_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_demo_expired:
+          type: boolean
+        account_type:
+          type: string
+          nullable: true
+        is_platform_admin:
+          type: boolean
       required:
       - modules
       - organization
@@ -4073,7 +4450,7 @@ components:
       - id
       - modified
       - name
-    IndustryTypeEnum:
+    IndustryTypeB6eEnum:
       enum:
       - clinical
       - logistics
@@ -4097,6 +4474,16 @@ components:
           maxLength: 255
         item_type:
           $ref: '#/components/schemas/ItemTypeEnum'
+        category:
+          type: string
+          description: Grupo o especialidad (ej. Cardiología, Ortopedia).
+          maxLength: 128
+        brand:
+          type: string
+          maxLength: 128
+        unit:
+          type: string
+          maxLength: 32
         description:
           type: string
         requires_sterilization:
@@ -4438,16 +4825,62 @@ components:
       - materials_returning
       - open_requests
       - pending_quotations
+    InventoryLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 64
+        location_type:
+          $ref: '#/components/schemas/LocationTypeEnum'
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - code
+      - created
+      - id
+      - modified
+      - name
     ItemTypeEnum:
       enum:
       - instrument
       - equipment
       - tray
+      - consumable
       type: string
       description: |-
         * `instrument` - Instrumental
         * `equipment` - Equipo médico
         * `tray` - Charola
+        * `consumable` - Consumible
+    LocationTypeEnum:
+      enum:
+      - warehouse
+      - zone
+      - hospital
+      - vehicle
+      - other
+      type: string
+      description: |-
+        * `warehouse` - Almacén
+        * `zone` - Zona / anaquel
+        * `hospital` - Hospital
+        * `vehicle` - Vehículo
+        * `other` - Otro
     LogisticsDashboardStats:
       type: object
       properties:
@@ -4585,12 +5018,39 @@ components:
           maxLength: 255
         slug:
           type: string
-          maxLength: 100
+          readOnly: true
           pattern: ^[-a-zA-Z0-9_]+$
         industry_type:
-          $ref: '#/components/schemas/IndustryTypeEnum'
+          $ref: '#/components/schemas/IndustryTypeB6eEnum'
+        account_type:
+          $ref: '#/components/schemas/AccountTypeEnum'
         is_active:
           type: boolean
+        contact_name:
+          type: string
+          maxLength: 255
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        notes:
+          type: string
+        demo_duration_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        demo_expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        demo_locked:
+          type: boolean
+          readOnly: true
+          description: Bloqueada por caducidad de demo; solo CTA a ventas.
+        is_demo_expired:
+          type: boolean
+          readOnly: true
         created:
           type: string
           format: date-time
@@ -4601,7 +5061,10 @@ components:
           readOnly: true
       required:
       - created
+      - demo_expires_at
+      - demo_locked
       - id
+      - is_demo_expired
       - modified
       - name
       - slug
@@ -4789,6 +5252,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InstrumentQuotation'
+    PaginatedInventoryLocationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryLocation'
     PaginatedMaterialDispatchList:
       type: object
       required:
@@ -5221,6 +5707,16 @@ components:
           maxLength: 255
         item_type:
           $ref: '#/components/schemas/ItemTypeEnum'
+        category:
+          type: string
+          description: Grupo o especialidad (ej. Cardiología, Ortopedia).
+          maxLength: 128
+        brand:
+          type: string
+          maxLength: 128
+        unit:
+          type: string
+          maxLength: 32
         description:
           type: string
         requires_sterilization:
@@ -5349,6 +5845,30 @@ components:
         fulfillment_status:
           type: string
           readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedInventoryLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 64
+        location_type:
+          $ref: '#/components/schemas/LocationTypeEnum'
+        is_active:
+          type: boolean
         created:
           type: string
           format: date-time
@@ -5535,11 +6055,30 @@ components:
         item_type:
           type: string
           maxLength: 128
+        catalog_item:
+          type: integer
+          nullable: true
+          description: Producto del catálogo al que pertenece esta unidad física.
+        catalog_sku:
+          type: string
+          readOnly: true
+          nullable: true
+        catalog_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/StatusBf9Enum'
         last_location:
           type: string
           maxLength: 255
+        inventory_location:
+          type: integer
+          nullable: true
+        inventory_location_name:
+          type: string
+          readOnly: true
+          nullable: true
         last_read_at:
           type: string
           format: date-time
@@ -5792,6 +6331,79 @@ components:
           type: string
           format: date-time
           nullable: true
+    PlatformOrganization:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        industry_type:
+          $ref: '#/components/schemas/IndustryTypeB6eEnum'
+        account_type:
+          $ref: '#/components/schemas/AccountTypeEnum'
+        is_active:
+          type: boolean
+        contact_name:
+          type: string
+          maxLength: 255
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        notes:
+          type: string
+        demo_duration_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        demo_expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        demo_locked:
+          type: boolean
+          readOnly: true
+          description: Bloqueada por caducidad de demo; solo CTA a ventas.
+        is_demo_expired:
+          type: boolean
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        active_modules:
+          type: string
+          readOnly: true
+        packages:
+          type: string
+          readOnly: true
+        member_count:
+          type: string
+          readOnly: true
+      required:
+      - active_modules
+      - created
+      - demo_expires_at
+      - demo_locked
+      - id
+      - is_demo_expired
+      - member_count
+      - modified
+      - name
+      - packages
+      - slug
     Procedure:
       type: object
       properties:
@@ -5946,6 +6558,48 @@ components:
       - created
       - id
       - modified
+    ProvisionDemo:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        contact_email:
+          type: string
+          format: email
+        contact_name:
+          type: string
+          maxLength: 255
+        duration_days:
+          type: integer
+          maximum: 365
+          minimum: 1
+          default: 14
+        package_codes:
+          type: array
+          items:
+            type: string
+            pattern: ^[-a-zA-Z0-9_]+$
+        industry_type:
+          allOf:
+          - $ref: '#/components/schemas/ProvisionDemoIndustryTypeEnum'
+          default: clinical
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - contact_email
+      - name
+    ProvisionDemoIndustryTypeEnum:
+      enum:
+      - clinical
+      - logistics
+      - mixed
+      type: string
+      description: |-
+        * `clinical` - clinical
+        * `logistics` - logistics
+        * `mixed` - mixed
     ProximityScheduleLink:
       type: object
       properties:
@@ -6173,11 +6827,30 @@ components:
         item_type:
           type: string
           maxLength: 128
+        catalog_item:
+          type: integer
+          nullable: true
+          description: Producto del catálogo al que pertenece esta unidad física.
+        catalog_sku:
+          type: string
+          readOnly: true
+          nullable: true
+        catalog_name:
+          type: string
+          readOnly: true
+          nullable: true
         status:
           $ref: '#/components/schemas/StatusBf9Enum'
         last_location:
           type: string
           maxLength: 255
+        inventory_location:
+          type: integer
+          nullable: true
+        inventory_location_name:
+          type: string
+          readOnly: true
+          nullable: true
         last_read_at:
           type: string
           format: date-time
@@ -6207,6 +6880,8 @@ components:
           format: date-time
           readOnly: true
       required:
+      - catalog_name
+      - catalog_sku
       - code
       - created
       - custody_id
@@ -6214,6 +6889,7 @@ components:
       - custody_status
       - custody_type
       - id
+      - inventory_location_name
       - is_available
       - last_read_at
       - modified

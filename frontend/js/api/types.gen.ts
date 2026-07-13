@@ -4,10 +4,21 @@ export type ClientOptions = {
     baseURL: `${string}://${string}` | (string & {});
 };
 
+/**
+ * * `demo` - Demo
+ * * `customer` - Cliente
+ * * `internal` - Interno INIT
+ */
+export type AccountTypeEnum = 'demo' | 'customer' | 'internal';
+
 export type ActiveModules = {
     modules: Array<string>;
     role: string | null;
     organization: Organization | null;
+    demo_expires_at?: string | null;
+    is_demo_expired?: boolean;
+    account_type?: string | null;
+    is_platform_admin?: boolean;
 };
 
 export type Client = {
@@ -110,13 +121,19 @@ export type HospitalSite = {
  * * `logistics` - Logístico / comercial
  * * `mixed` - Mixto
  */
-export type IndustryTypeEnum = 'clinical' | 'logistics' | 'mixed';
+export type IndustryTypeB6eEnum = 'clinical' | 'logistics' | 'mixed';
 
 export type InstrumentCatalogItem = {
     readonly id: number;
     sku: string;
     name: string;
     item_type: ItemTypeEnum;
+    /**
+     * Grupo o especialidad (ej. Cardiología, Ortopedia).
+     */
+    category?: string;
+    brand?: string;
+    unit?: string;
     description?: string;
     requires_sterilization?: boolean;
     /**
@@ -244,12 +261,32 @@ export type InstrumentalDashboardStats = {
     materials_returning: number;
 };
 
+export type InventoryLocation = {
+    readonly id: number;
+    name: string;
+    code: string;
+    location_type?: LocationTypeEnum;
+    is_active?: boolean;
+    readonly created: string;
+    readonly modified: string;
+};
+
 /**
  * * `instrument` - Instrumental
  * * `equipment` - Equipo médico
  * * `tray` - Charola
+ * * `consumable` - Consumible
  */
-export type ItemTypeEnum = 'instrument' | 'equipment' | 'tray';
+export type ItemTypeEnum = 'instrument' | 'equipment' | 'tray' | 'consumable';
+
+/**
+ * * `warehouse` - Almacén
+ * * `zone` - Zona / anaquel
+ * * `hospital` - Hospital
+ * * `vehicle` - Vehículo
+ * * `other` - Otro
+ */
+export type LocationTypeEnum = 'warehouse' | 'zone' | 'hospital' | 'vehicle' | 'other';
 
 export type LogisticsDashboardStats = {
     pending_requisitions: number;
@@ -305,9 +342,20 @@ export type Message = {
 export type Organization = {
     readonly id: number;
     name: string;
-    slug: string;
-    industry_type?: IndustryTypeEnum;
+    readonly slug: string;
+    industry_type?: IndustryTypeB6eEnum;
+    account_type?: AccountTypeEnum;
     is_active?: boolean;
+    contact_name?: string;
+    contact_email?: string;
+    notes?: string;
+    demo_duration_days?: number;
+    readonly demo_expires_at: string | null;
+    /**
+     * Bloqueada por caducidad de demo; solo CTA a ventas.
+     */
+    readonly demo_locked: boolean;
+    readonly is_demo_expired: boolean;
     readonly created: string;
     readonly modified: string;
 };
@@ -366,6 +414,13 @@ export type PaginatedInstrumentQuotationList = {
     next?: string | null;
     previous?: string | null;
     results: Array<InstrumentQuotation>;
+};
+
+export type PaginatedInventoryLocationList = {
+    count: number;
+    next?: string | null;
+    previous?: string | null;
+    results: Array<InventoryLocation>;
 };
 
 export type PaginatedMaterialDispatchList = {
@@ -510,6 +565,12 @@ export type PatchedInstrumentCatalogItem = {
     sku?: string;
     name?: string;
     item_type?: ItemTypeEnum;
+    /**
+     * Grupo o especialidad (ej. Cardiología, Ortopedia).
+     */
+    category?: string;
+    brand?: string;
+    unit?: string;
     description?: string;
     requires_sterilization?: boolean;
     /**
@@ -563,6 +624,16 @@ export type PatchedInstrumentProcedureRequest = {
     lines?: Array<InstrumentRequestLine>;
     readonly quotation_status?: string;
     readonly fulfillment_status?: string;
+    readonly created?: string;
+    readonly modified?: string;
+};
+
+export type PatchedInventoryLocation = {
+    readonly id?: number;
+    name?: string;
+    code?: string;
+    location_type?: LocationTypeEnum;
+    is_active?: boolean;
     readonly created?: string;
     readonly modified?: string;
 };
@@ -639,8 +710,18 @@ export type PatchedRfidTag = {
     readonly id?: number;
     code?: string;
     item_type?: string;
+    /**
+     * Producto del catálogo al que pertenece esta unidad física.
+     */
+    catalog_item?: number | null;
+    readonly catalog_sku?: string | null;
+    readonly catalog_name?: string | null;
+    lot?: string;
+    expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
+    inventory_location?: number | null;
+    readonly inventory_location_name?: string | null;
     readonly last_read_at?: string | null;
     readonly is_available?: string;
     readonly custody_type?: string;
@@ -740,6 +821,30 @@ export type PatchedUser = {
     last_login?: string | null;
 };
 
+export type PlatformOrganization = {
+    readonly id: number;
+    name: string;
+    readonly slug: string;
+    industry_type?: IndustryTypeB6eEnum;
+    account_type?: AccountTypeEnum;
+    is_active?: boolean;
+    contact_name?: string;
+    contact_email?: string;
+    notes?: string;
+    demo_duration_days?: number;
+    readonly demo_expires_at: string | null;
+    /**
+     * Bloqueada por caducidad de demo; solo CTA a ventas.
+     */
+    readonly demo_locked: boolean;
+    readonly is_demo_expired: boolean;
+    readonly created: string;
+    readonly modified: string;
+    readonly active_modules: string;
+    readonly packages: string;
+    readonly member_count: string;
+};
+
 export type Procedure = {
     readonly id: number;
     procedure_type: string;
@@ -794,6 +899,22 @@ export type Provider = {
     readonly created: string;
     readonly modified: string;
 };
+
+export type ProvisionDemo = {
+    name: string;
+    contact_email: string;
+    contact_name?: string;
+    duration_days?: number;
+    package_codes?: Array<string>;
+    industry_type?: ProvisionDemoIndustryTypeEnum;
+};
+
+/**
+ * * `clinical` - clinical
+ * * `logistics` - logistics
+ * * `mixed` - mixed
+ */
+export type ProvisionDemoIndustryTypeEnum = 'clinical' | 'logistics' | 'mixed';
 
 export type ProximityScheduleLink = {
     readonly id: number;
@@ -870,8 +991,18 @@ export type RfidTag = {
     readonly id: number;
     code: string;
     item_type?: string;
+    /**
+     * Producto del catálogo al que pertenece esta unidad física.
+     */
+    catalog_item?: number | null;
+    readonly catalog_sku: string | null;
+    readonly catalog_name: string | null;
+    lot?: string;
+    expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
+    inventory_location?: number | null;
+    readonly inventory_location_name: string | null;
     readonly last_read_at: string | null;
     readonly is_available: string;
     readonly custody_type: string;
@@ -1114,6 +1245,12 @@ export type InstrumentCatalogItemWritable = {
     sku: string;
     name: string;
     item_type: ItemTypeEnum;
+    /**
+     * Grupo o especialidad (ej. Cardiología, Ortopedia).
+     */
+    category?: string;
+    brand?: string;
+    unit?: string;
     description?: string;
     requires_sterilization?: boolean;
     /**
@@ -1178,6 +1315,13 @@ export type InstrumentRequestLineWritable = {
     notes?: string;
 };
 
+export type InventoryLocationWritable = {
+    name: string;
+    code: string;
+    location_type?: LocationTypeEnum;
+    is_active?: boolean;
+};
+
 export type MaterialDispatchWritable = {
     catalog_item: number;
     technician: number;
@@ -1194,9 +1338,13 @@ export type MaterialDispatchWritable = {
 
 export type OrganizationWritable = {
     name: string;
-    slug: string;
-    industry_type?: IndustryTypeEnum;
+    industry_type?: IndustryTypeB6eEnum;
+    account_type?: AccountTypeEnum;
     is_active?: boolean;
+    contact_name?: string;
+    contact_email?: string;
+    notes?: string;
+    demo_duration_days?: number;
 };
 
 export type PatchedClientWritable = {
@@ -1226,6 +1374,12 @@ export type PatchedInstrumentCatalogItemWritable = {
     sku?: string;
     name?: string;
     item_type?: ItemTypeEnum;
+    /**
+     * Grupo o especialidad (ej. Cardiología, Ortopedia).
+     */
+    category?: string;
+    brand?: string;
+    unit?: string;
     description?: string;
     requires_sterilization?: boolean;
     /**
@@ -1264,6 +1418,13 @@ export type PatchedInstrumentProcedureRequestWritable = {
     estimated_out_hours?: number;
     proximity_next_request?: number | null;
     lines?: Array<InstrumentRequestLineWritable>;
+};
+
+export type PatchedInventoryLocationWritable = {
+    name?: string;
+    code?: string;
+    location_type?: LocationTypeEnum;
+    is_active?: boolean;
 };
 
 export type PatchedProcedureWritable = {
@@ -1315,8 +1476,15 @@ export type PatchedPurchaseOrderWritable = {
 export type PatchedRfidTagWritable = {
     code?: string;
     item_type?: string;
+    /**
+     * Producto del catálogo al que pertenece esta unidad física.
+     */
+    catalog_item?: number | null;
+    lot?: string;
+    expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
+    inventory_location?: number | null;
 };
 
 export type PatchedRequisitionWritable = {
@@ -1378,6 +1546,17 @@ export type PatchedUserWritable = {
     last_login?: string | null;
 };
 
+export type PlatformOrganizationWritable = {
+    name: string;
+    industry_type?: IndustryTypeB6eEnum;
+    account_type?: AccountTypeEnum;
+    is_active?: boolean;
+    contact_name?: string;
+    contact_email?: string;
+    notes?: string;
+    demo_duration_days?: number;
+};
+
 export type ProcedureWritable = {
     procedure_type: string;
     destination_hospital: string;
@@ -1406,6 +1585,16 @@ export type ProductWritable = {
 export type ProviderWritable = {
     business_name: string;
     contact?: string;
+};
+
+export type ProvisionDemoWritable = {
+    name: string;
+    contact_email: string;
+    contact_name?: string;
+    duration_days?: number;
+    package_codes?: Array<string>;
+    industry_type?: ProvisionDemoIndustryTypeEnum;
+    password?: string;
 };
 
 export type ProximityScheduleLinkWritable = {
@@ -1453,8 +1642,15 @@ export type RfidReadEventWritable = {
 export type RfidTagWritable = {
     code: string;
     item_type?: string;
+    /**
+     * Producto del catálogo al que pertenece esta unidad física.
+     */
+    catalog_item?: number | null;
+    lot?: string;
+    expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
+    inventory_location?: number | null;
 };
 
 export type RequisitionWritable = {
@@ -1649,6 +1845,34 @@ export type ClientsUpdateResponses = {
 };
 
 export type ClientsUpdateResponse = ClientsUpdateResponses[keyof ClientsUpdateResponses];
+
+export type DashboardChartsRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/dashboard/charts/';
+};
+
+export type DashboardChartsRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type DemoRequestLicenseRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/demo/request-license/';
+};
+
+export type DemoRequestLicenseRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
 
 export type DoctorsListData = {
     body?: never;
@@ -2378,6 +2602,116 @@ export type InstrumentalHandheldScansCreateResponses = {
 
 export type InstrumentalHandheldScansCreateResponse = InstrumentalHandheldScansCreateResponses[keyof InstrumentalHandheldScansCreateResponses];
 
+export type InventoryLocationsListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Number of results to return per page.
+         */
+        limit?: number;
+        /**
+         * The initial index from which to return the results.
+         */
+        offset?: number;
+    };
+    url: '/api/inventory-locations/';
+};
+
+export type InventoryLocationsListResponses = {
+    200: PaginatedInventoryLocationList;
+};
+
+export type InventoryLocationsListResponse = InventoryLocationsListResponses[keyof InventoryLocationsListResponses];
+
+export type InventoryLocationsCreateData = {
+    body: InventoryLocationWritable;
+    path?: never;
+    query?: never;
+    url: '/api/inventory-locations/';
+};
+
+export type InventoryLocationsCreateResponses = {
+    201: InventoryLocation;
+};
+
+export type InventoryLocationsCreateResponse = InventoryLocationsCreateResponses[keyof InventoryLocationsCreateResponses];
+
+export type InventoryLocationsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this inventory location.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/inventory-locations/{id}/';
+};
+
+export type InventoryLocationsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type InventoryLocationsDestroyResponse = InventoryLocationsDestroyResponses[keyof InventoryLocationsDestroyResponses];
+
+export type InventoryLocationsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this inventory location.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/inventory-locations/{id}/';
+};
+
+export type InventoryLocationsRetrieveResponses = {
+    200: InventoryLocation;
+};
+
+export type InventoryLocationsRetrieveResponse = InventoryLocationsRetrieveResponses[keyof InventoryLocationsRetrieveResponses];
+
+export type InventoryLocationsPartialUpdateData = {
+    body?: PatchedInventoryLocationWritable;
+    path: {
+        /**
+         * A unique integer value identifying this inventory location.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/inventory-locations/{id}/';
+};
+
+export type InventoryLocationsPartialUpdateResponses = {
+    200: InventoryLocation;
+};
+
+export type InventoryLocationsPartialUpdateResponse = InventoryLocationsPartialUpdateResponses[keyof InventoryLocationsPartialUpdateResponses];
+
+export type InventoryLocationsUpdateData = {
+    body: InventoryLocationWritable;
+    path: {
+        /**
+         * A unique integer value identifying this inventory location.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/inventory-locations/{id}/';
+};
+
+export type InventoryLocationsUpdateResponses = {
+    200: InventoryLocation;
+};
+
+export type InventoryLocationsUpdateResponse = InventoryLocationsUpdateResponses[keyof InventoryLocationsUpdateResponses];
+
 export type InventoryDashboardStatsRetrieveData = {
     body?: never;
     path?: never;
@@ -2445,6 +2779,24 @@ export type MaterialDispatchesRetrieveResponses = {
 
 export type MaterialDispatchesRetrieveResponse = MaterialDispatchesRetrieveResponses[keyof MaterialDispatchesRetrieveResponses];
 
+export type MaterialDispatchesUnloadCreateData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this material dispatch.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/material-dispatches/{id}/unload/';
+};
+
+export type MaterialDispatchesUnloadCreateResponses = {
+    200: MaterialDispatch;
+};
+
+export type MaterialDispatchesUnloadCreateResponse = MaterialDispatchesUnloadCreateResponses[keyof MaterialDispatchesUnloadCreateResponses];
+
 export type MedicalDashboardStatsRetrieveData = {
     body?: never;
     path?: never;
@@ -2474,6 +2826,139 @@ export type ModulesProbeRetrieveResponses = {
 };
 
 export type ModulesProbeRetrieveResponse = ModulesProbeRetrieveResponses[keyof ModulesProbeRetrieveResponses];
+
+export type PlatformOrganizationsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/platform/organizations/';
+};
+
+export type PlatformOrganizationsListResponses = {
+    200: Array<PlatformOrganization>;
+};
+
+export type PlatformOrganizationsListResponse = PlatformOrganizationsListResponses[keyof PlatformOrganizationsListResponses];
+
+export type PlatformOrganizationsCreateData = {
+    body: ProvisionDemoWritable;
+    path?: never;
+    query?: never;
+    url: '/api/platform/organizations/';
+};
+
+export type PlatformOrganizationsCreateResponses = {
+    200: PlatformOrganization;
+};
+
+export type PlatformOrganizationsCreateResponse = PlatformOrganizationsCreateResponses[keyof PlatformOrganizationsCreateResponses];
+
+export type PlatformOrganizationsRetrieveData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/platform/organizations/{id}/';
+};
+
+export type PlatformOrganizationsRetrieveResponses = {
+    200: PlatformOrganization;
+};
+
+export type PlatformOrganizationsRetrieveResponse = PlatformOrganizationsRetrieveResponses[keyof PlatformOrganizationsRetrieveResponses];
+
+export type PlatformOrganizationsAssignPackageCreateData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/platform/organizations/{id}/assign-package/';
+};
+
+export type PlatformOrganizationsAssignPackageCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PlatformOrganizationsExtendDemoCreateData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/platform/organizations/{id}/extend-demo/';
+};
+
+export type PlatformOrganizationsExtendDemoCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PlatformOrganizationsPurgeDemoCreateData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/platform/organizations/{id}/purge-demo/';
+};
+
+export type PlatformOrganizationsPurgeDemoCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PlatformOrganizationsUsageRetrieveData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/platform/organizations/{id}/usage/';
+};
+
+export type PlatformOrganizationsUsageRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PlatformPackagesRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/platform/packages/';
+};
+
+export type PlatformPackagesRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type PlatformUsageSummaryRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/platform/usage/summary/';
+};
+
+export type PlatformUsageSummaryRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
 
 export type ProcedureAssignmentsListData = {
     body?: never;

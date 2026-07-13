@@ -74,6 +74,12 @@ class InstrumentCatalogViewSet(OrganizationSerializerContextMixin, OrganizationV
         queryset = super().get_queryset()
         if item_type := self.request.query_params.get("item_type"):
             queryset = queryset.filter(item_type=item_type)
+        if category := self.request.query_params.get("category"):
+            queryset = queryset.filter(category__icontains=category)
+        if self.request.query_params.get("is_active") == "true":
+            queryset = queryset.filter(is_active=True)
+        elif self.request.query_params.get("is_active") == "false":
+            queryset = queryset.filter(is_active=False)
         return queryset
 
 

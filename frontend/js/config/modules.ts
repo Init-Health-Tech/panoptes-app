@@ -25,6 +25,13 @@ export const NAV_ITEMS: NavItem[] = [
     section: 'core',
   },
   {
+    moduleCode: 'inventory_realtime',
+    label: 'Ubicaciones',
+    path: '/inventory-locations',
+    icon: 'location_on',
+    section: 'core',
+  },
+  {
     moduleCode: 'instrumental_control',
     label: 'Flujo',
     path: '/instrumental',
@@ -36,6 +43,27 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Cargas RFID',
     path: '/supply-kits',
     icon: 'medical_services',
+    section: 'instrumental',
+  },
+  {
+    moduleCode: 'instrumental_control',
+    label: 'Catálogo',
+    path: '/instrument-catalog',
+    icon: 'category',
+    section: 'instrumental',
+  },
+  {
+    moduleCode: 'instrumental_control',
+    label: 'Sedes',
+    path: '/hospital-sites',
+    icon: 'apartment',
+    section: 'instrumental',
+  },
+  {
+    moduleCode: 'instrumental_control',
+    label: 'Vehículos',
+    path: '/transport-vehicles',
+    icon: 'local_shipping',
     section: 'instrumental',
   },
   {

@@ -11,11 +11,15 @@ import {
   instrumentalFulfillmentLoader,
   instrumentalHandheldLoader,
   instrumentalLoadLoader,
+  instrumentCatalogLoader,
+  hospitalSitesLoader,
+  transportVehiclesLoader,
   clientsLoader,
   dashboardLoader,
   doctorsLoader,
   inventoryDetailLoader,
   inventoryLoader,
+  inventoryLocationsLoader,
   modulesLoader,
   platformAdminLoader,
   proceduresLoader,
@@ -36,6 +40,10 @@ import InstrumentalHandheld from '@/js/pages/InstrumentalHandheld';
 import InstrumentalLoad from '@/js/pages/InstrumentalLoad';
 import InstrumentalQuotations from '@/js/pages/InstrumentalQuotations';
 import InstrumentalRequests from '@/js/pages/InstrumentalRequests';
+import InstrumentCatalog from '@/js/pages/InstrumentCatalog';
+import HospitalSites from '@/js/pages/HospitalSites';
+import TransportVehicles from '@/js/pages/TransportVehicles';
+import InventoryLocations from '@/js/pages/InventoryLocations';
 import Clients from '@/js/pages/Clients';
 import Dashboard from '@/js/pages/Dashboard';
 import Doctors from '@/js/pages/Doctors';
@@ -80,6 +88,11 @@ const router = createBrowserRouter([
         loader: inventoryDetailLoader,
       },
       {
+        path: 'inventory-locations',
+        Component: guarded(InventoryLocations, 'inventory_realtime'),
+        loader: inventoryLocationsLoader,
+      },
+      {
         path: 'supply-kits',
         Component: guarded(SupplyKits, ['medical_kits', 'instrumental_control']),
         loader: supplyKitsLoader,
@@ -118,6 +131,21 @@ const router = createBrowserRouter([
         path: 'instrumental-requests',
         Component: guarded(InstrumentalRequests, 'instrumental_control'),
         loader: instrumentalRequestsLoader,
+      },
+      {
+        path: 'instrument-catalog',
+        Component: guarded(InstrumentCatalog, 'instrumental_control'),
+        loader: instrumentCatalogLoader,
+      },
+      {
+        path: 'hospital-sites',
+        Component: guarded(HospitalSites, 'instrumental_control'),
+        loader: hospitalSitesLoader,
+      },
+      {
+        path: 'transport-vehicles',
+        Component: guarded(TransportVehicles, 'instrumental_control'),
+        loader: transportVehiclesLoader,
       },
       {
         path: 'instrumental-contracts',

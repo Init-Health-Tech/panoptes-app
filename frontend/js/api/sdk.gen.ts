@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ActiveModulesRetrieveData, ActiveModulesRetrieveResponses, ClientsCreateData, ClientsCreateResponses, ClientsDestroyData, ClientsDestroyResponses, ClientsListData, ClientsListResponses, ClientsPartialUpdateData, ClientsPartialUpdateResponses, ClientsRetrieveData, ClientsRetrieveResponses, ClientsUpdateData, ClientsUpdateResponses, DoctorsCreateData, DoctorsCreateResponses, DoctorsDestroyData, DoctorsDestroyResponses, DoctorsListData, DoctorsListResponses, DoctorsPartialUpdateData, DoctorsPartialUpdateResponses, DoctorsRetrieveData, DoctorsRetrieveResponses, DoctorsUpdateData, DoctorsUpdateResponses, FulfillmentPlansListData, FulfillmentPlansListResponses, FulfillmentPlansRetrieveData, FulfillmentPlansRetrieveResponses, HospitalSitesCreateData, HospitalSitesCreateResponses, HospitalSitesDestroyData, HospitalSitesDestroyResponses, HospitalSitesListData, HospitalSitesListResponses, HospitalSitesPartialUpdateData, HospitalSitesPartialUpdateResponses, HospitalSitesRetrieveData, HospitalSitesRetrieveResponses, HospitalSitesUpdateData, HospitalSitesUpdateResponses, InstrumentalDashboardStatsRetrieveData, InstrumentalDashboardStatsRetrieveResponses, InstrumentalHandheldScansCreateData, InstrumentalHandheldScansCreateResponses, InstrumentCatalogCreateData, InstrumentCatalogCreateResponses, InstrumentCatalogDestroyData, InstrumentCatalogDestroyResponses, InstrumentCatalogListData, InstrumentCatalogListResponses, InstrumentCatalogPartialUpdateData, InstrumentCatalogPartialUpdateResponses, InstrumentCatalogRetrieveData, InstrumentCatalogRetrieveResponses, InstrumentCatalogUpdateData, InstrumentCatalogUpdateResponses, InstrumentPriceContractsCreateData, InstrumentPriceContractsCreateResponses, InstrumentPriceContractsDestroyData, InstrumentPriceContractsDestroyResponses, InstrumentPriceContractsListData, InstrumentPriceContractsListResponses, InstrumentPriceContractsPartialUpdateData, InstrumentPriceContractsPartialUpdateResponses, InstrumentPriceContractsRetrieveData, InstrumentPriceContractsRetrieveResponses, InstrumentPriceContractsUpdateData, InstrumentPriceContractsUpdateResponses, InstrumentProcedureRequestsAcceptQuotationCreateData, InstrumentProcedureRequestsAcceptQuotationCreateResponses, InstrumentProcedureRequestsCreateData, InstrumentProcedureRequestsCreateQuotationCreateData, InstrumentProcedureRequestsCreateQuotationCreateResponses, InstrumentProcedureRequestsCreateResponses, InstrumentProcedureRequestsDestroyData, InstrumentProcedureRequestsDestroyResponses, InstrumentProcedureRequestsListData, InstrumentProcedureRequestsListResponses, InstrumentProcedureRequestsPartialUpdateData, InstrumentProcedureRequestsPartialUpdateResponses, InstrumentProcedureRequestsPlanFulfillmentCreateData, InstrumentProcedureRequestsPlanFulfillmentCreateResponses, InstrumentProcedureRequestsRetrieveData, InstrumentProcedureRequestsRetrieveResponses, InstrumentProcedureRequestsSubmitCreateData, InstrumentProcedureRequestsSubmitCreateResponses, InstrumentProcedureRequestsUpdateData, InstrumentProcedureRequestsUpdateResponses, InstrumentQuotationsListData, InstrumentQuotationsListResponses, InstrumentQuotationsRetrieveData, InstrumentQuotationsRetrieveResponses, InventoryDashboardStatsRetrieveData, InventoryDashboardStatsRetrieveResponses, LogisticsDashboardStatsRetrieveData, LogisticsDashboardStatsRetrieveResponses, MaterialDispatchesListData, MaterialDispatchesListResponses, MaterialDispatchesRetrieveData, MaterialDispatchesRetrieveResponses, MedicalDashboardStatsRetrieveData, MedicalDashboardStatsRetrieveResponses, ModulesProbeRetrieveData, ModulesProbeRetrieveResponses, ProcedureAssignmentsCreateData, ProcedureAssignmentsCreateResponses, ProcedureAssignmentsDestroyData, ProcedureAssignmentsDestroyResponses, ProcedureAssignmentsListData, ProcedureAssignmentsListResponses, ProcedureAssignmentsPartialUpdateData, ProcedureAssignmentsPartialUpdateResponses, ProcedureAssignmentsRetrieveData, ProcedureAssignmentsRetrieveResponses, ProcedureAssignmentsUpdateData, ProcedureAssignmentsUpdateResponses, ProceduresCreateData, ProceduresCreateResponses, ProceduresDestroyData, ProceduresDestroyResponses, ProceduresListData, ProceduresListResponses, ProceduresPartialUpdateData, ProceduresPartialUpdateResponses, ProceduresRetrieveData, ProceduresRetrieveResponses, ProceduresUpdateData, ProceduresUpdateResponses, ProductsCreateData, ProductsCreateResponses, ProductsDestroyData, ProductsDestroyResponses, ProductsListData, ProductsListResponses, ProductsPartialUpdateData, ProductsPartialUpdateResponses, ProductsRetrieveData, ProductsRetrieveResponses, ProductsUpdateData, ProductsUpdateResponses, ProvidersCreateData, ProvidersCreateResponses, ProvidersDestroyData, ProvidersDestroyResponses, ProvidersListData, ProvidersListResponses, ProvidersPartialUpdateData, ProvidersPartialUpdateResponses, ProvidersRetrieveData, ProvidersRetrieveResponses, ProvidersUpdateData, ProvidersUpdateResponses, ProximityScheduleLinksCreateData, ProximityScheduleLinksCreateResponses, ProximityScheduleLinksDestroyData, ProximityScheduleLinksDestroyResponses, ProximityScheduleLinksListData, ProximityScheduleLinksListResponses, ProximityScheduleLinksPartialUpdateData, ProximityScheduleLinksPartialUpdateResponses, ProximityScheduleLinksRetrieveData, ProximityScheduleLinksRetrieveResponses, ProximityScheduleLinksUpdateData, ProximityScheduleLinksUpdateResponses, PurchaseOrdersCreateData, PurchaseOrdersCreateResponses, PurchaseOrdersDestroyData, PurchaseOrdersDestroyResponses, PurchaseOrdersListData, PurchaseOrdersListResponses, PurchaseOrdersPartialUpdateData, PurchaseOrdersPartialUpdateResponses, PurchaseOrdersRetrieveData, PurchaseOrdersRetrieveResponses, PurchaseOrdersUpdateData, PurchaseOrdersUpdateResponses, RequisitionsCreateData, RequisitionsCreateResponses, RequisitionsDestroyData, RequisitionsDestroyResponses, RequisitionsListData, RequisitionsListResponses, RequisitionsPartialUpdateData, RequisitionsPartialUpdateResponses, RequisitionsRetrieveData, RequisitionsRetrieveResponses, RequisitionsUpdateData, RequisitionsUpdateResponses, RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, RfidReadEventsListData, RfidReadEventsListResponses, RfidReadEventsRetrieveData, RfidReadEventsRetrieveResponses, RfidReadsCreateData, RfidReadsCreateResponses, RfidTagsCreateData, RfidTagsCreateResponses, RfidTagsDestroyData, RfidTagsDestroyResponses, RfidTagsListData, RfidTagsListResponses, RfidTagsPartialUpdateData, RfidTagsPartialUpdateResponses, RfidTagsRetrieveData, RfidTagsRetrieveResponses, RfidTagsUpdateData, RfidTagsUpdateResponses, SalesOrdersCreateData, SalesOrdersCreateResponses, SalesOrdersDestroyData, SalesOrdersDestroyResponses, SalesOrdersListData, SalesOrdersListResponses, SalesOrdersPartialUpdateData, SalesOrdersPartialUpdateResponses, SalesOrdersRetrieveData, SalesOrdersRetrieveResponses, SalesOrdersUpdateData, SalesOrdersUpdateResponses, SupplyKitsAddTagsCreateData, SupplyKitsAddTagsCreateResponses, SupplyKitsAssignDispatchCreateData, SupplyKitsAssignDispatchCreateResponses, SupplyKitsConfirmHospitalArrivalCreateData, SupplyKitsConfirmHospitalArrivalCreateResponses, SupplyKitsConfirmWarehouseReturnCreateData, SupplyKitsConfirmWarehouseReturnCreateResponses, SupplyKitsCreateData, SupplyKitsCreateResponses, SupplyKitsDestroyData, SupplyKitsDestroyResponses, SupplyKitsListData, SupplyKitsListResponses, SupplyKitsPartialUpdateData, SupplyKitsPartialUpdateResponses, SupplyKitsRemoveTagsCreateData, SupplyKitsRemoveTagsCreateResponses, SupplyKitsRetrieveData, SupplyKitsRetrieveResponses, SupplyKitsUpdateData, SupplyKitsUpdateResponses, SupplyKitsUpdateReturnChecklistCreateData, SupplyKitsUpdateReturnChecklistCreateResponses, TechniciansCreateData, TechniciansCreateResponses, TechniciansDestroyData, TechniciansDestroyResponses, TechniciansListData, TechniciansListResponses, TechniciansPartialUpdateData, TechniciansPartialUpdateResponses, TechniciansRetrieveData, TechniciansRetrieveResponses, TechniciansUpdateData, TechniciansUpdateResponses, TransportVehiclesCreateData, TransportVehiclesCreateResponses, TransportVehiclesDestroyData, TransportVehiclesDestroyResponses, TransportVehiclesListData, TransportVehiclesListResponses, TransportVehiclesPartialUpdateData, TransportVehiclesPartialUpdateResponses, TransportVehiclesRetrieveData, TransportVehiclesRetrieveResponses, TransportVehiclesUpdateData, TransportVehiclesUpdateResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
+import type { ActiveModulesRetrieveData, ActiveModulesRetrieveResponses, ClientsCreateData, ClientsCreateResponses, ClientsDestroyData, ClientsDestroyResponses, ClientsListData, ClientsListResponses, ClientsPartialUpdateData, ClientsPartialUpdateResponses, ClientsRetrieveData, ClientsRetrieveResponses, ClientsUpdateData, ClientsUpdateResponses, DashboardChartsRetrieveData, DashboardChartsRetrieveResponses, DemoRequestLicenseRetrieveData, DemoRequestLicenseRetrieveResponses, DoctorsCreateData, DoctorsCreateResponses, DoctorsDestroyData, DoctorsDestroyResponses, DoctorsListData, DoctorsListResponses, DoctorsPartialUpdateData, DoctorsPartialUpdateResponses, DoctorsRetrieveData, DoctorsRetrieveResponses, DoctorsUpdateData, DoctorsUpdateResponses, FulfillmentPlansListData, FulfillmentPlansListResponses, FulfillmentPlansRetrieveData, FulfillmentPlansRetrieveResponses, HospitalSitesCreateData, HospitalSitesCreateResponses, HospitalSitesDestroyData, HospitalSitesDestroyResponses, HospitalSitesListData, HospitalSitesListResponses, HospitalSitesPartialUpdateData, HospitalSitesPartialUpdateResponses, HospitalSitesRetrieveData, HospitalSitesRetrieveResponses, HospitalSitesUpdateData, HospitalSitesUpdateResponses, InstrumentalDashboardStatsRetrieveData, InstrumentalDashboardStatsRetrieveResponses, InstrumentalHandheldScansCreateData, InstrumentalHandheldScansCreateResponses, InstrumentCatalogCreateData, InstrumentCatalogCreateResponses, InstrumentCatalogDestroyData, InstrumentCatalogDestroyResponses, InstrumentCatalogListData, InstrumentCatalogListResponses, InstrumentCatalogPartialUpdateData, InstrumentCatalogPartialUpdateResponses, InstrumentCatalogRetrieveData, InstrumentCatalogRetrieveResponses, InstrumentCatalogUpdateData, InstrumentCatalogUpdateResponses, InstrumentPriceContractsCreateData, InstrumentPriceContractsCreateResponses, InstrumentPriceContractsDestroyData, InstrumentPriceContractsDestroyResponses, InstrumentPriceContractsListData, InstrumentPriceContractsListResponses, InstrumentPriceContractsPartialUpdateData, InstrumentPriceContractsPartialUpdateResponses, InstrumentPriceContractsRetrieveData, InstrumentPriceContractsRetrieveResponses, InstrumentPriceContractsUpdateData, InstrumentPriceContractsUpdateResponses, InstrumentProcedureRequestsAcceptQuotationCreateData, InstrumentProcedureRequestsAcceptQuotationCreateResponses, InstrumentProcedureRequestsCreateData, InstrumentProcedureRequestsCreateQuotationCreateData, InstrumentProcedureRequestsCreateQuotationCreateResponses, InstrumentProcedureRequestsCreateResponses, InstrumentProcedureRequestsDestroyData, InstrumentProcedureRequestsDestroyResponses, InstrumentProcedureRequestsListData, InstrumentProcedureRequestsListResponses, InstrumentProcedureRequestsPartialUpdateData, InstrumentProcedureRequestsPartialUpdateResponses, InstrumentProcedureRequestsPlanFulfillmentCreateData, InstrumentProcedureRequestsPlanFulfillmentCreateResponses, InstrumentProcedureRequestsRetrieveData, InstrumentProcedureRequestsRetrieveResponses, InstrumentProcedureRequestsSubmitCreateData, InstrumentProcedureRequestsSubmitCreateResponses, InstrumentProcedureRequestsUpdateData, InstrumentProcedureRequestsUpdateResponses, InstrumentQuotationsListData, InstrumentQuotationsListResponses, InstrumentQuotationsRetrieveData, InstrumentQuotationsRetrieveResponses, InventoryDashboardStatsRetrieveData, InventoryDashboardStatsRetrieveResponses, InventoryLocationsCreateData, InventoryLocationsCreateResponses, InventoryLocationsDestroyData, InventoryLocationsDestroyResponses, InventoryLocationsListData, InventoryLocationsListResponses, InventoryLocationsPartialUpdateData, InventoryLocationsPartialUpdateResponses, InventoryLocationsRetrieveData, InventoryLocationsRetrieveResponses, InventoryLocationsUpdateData, InventoryLocationsUpdateResponses, LogisticsDashboardStatsRetrieveData, LogisticsDashboardStatsRetrieveResponses, MaterialDispatchesListData, MaterialDispatchesListResponses, MaterialDispatchesRetrieveData, MaterialDispatchesRetrieveResponses, MaterialDispatchesUnloadCreateData, MaterialDispatchesUnloadCreateResponses, MedicalDashboardStatsRetrieveData, MedicalDashboardStatsRetrieveResponses, ModulesProbeRetrieveData, ModulesProbeRetrieveResponses, PlatformOrganizationsAssignPackageCreateData, PlatformOrganizationsAssignPackageCreateResponses, PlatformOrganizationsCreateData, PlatformOrganizationsCreateResponses, PlatformOrganizationsExtendDemoCreateData, PlatformOrganizationsExtendDemoCreateResponses, PlatformOrganizationsListData, PlatformOrganizationsListResponses, PlatformOrganizationsPurgeDemoCreateData, PlatformOrganizationsPurgeDemoCreateResponses, PlatformOrganizationsRetrieveData, PlatformOrganizationsRetrieveResponses, PlatformOrganizationsUsageRetrieveData, PlatformOrganizationsUsageRetrieveResponses, PlatformPackagesRetrieveData, PlatformPackagesRetrieveResponses, PlatformUsageSummaryRetrieveData, PlatformUsageSummaryRetrieveResponses, ProcedureAssignmentsCreateData, ProcedureAssignmentsCreateResponses, ProcedureAssignmentsDestroyData, ProcedureAssignmentsDestroyResponses, ProcedureAssignmentsListData, ProcedureAssignmentsListResponses, ProcedureAssignmentsPartialUpdateData, ProcedureAssignmentsPartialUpdateResponses, ProcedureAssignmentsRetrieveData, ProcedureAssignmentsRetrieveResponses, ProcedureAssignmentsUpdateData, ProcedureAssignmentsUpdateResponses, ProceduresCreateData, ProceduresCreateResponses, ProceduresDestroyData, ProceduresDestroyResponses, ProceduresListData, ProceduresListResponses, ProceduresPartialUpdateData, ProceduresPartialUpdateResponses, ProceduresRetrieveData, ProceduresRetrieveResponses, ProceduresUpdateData, ProceduresUpdateResponses, ProductsCreateData, ProductsCreateResponses, ProductsDestroyData, ProductsDestroyResponses, ProductsListData, ProductsListResponses, ProductsPartialUpdateData, ProductsPartialUpdateResponses, ProductsRetrieveData, ProductsRetrieveResponses, ProductsUpdateData, ProductsUpdateResponses, ProvidersCreateData, ProvidersCreateResponses, ProvidersDestroyData, ProvidersDestroyResponses, ProvidersListData, ProvidersListResponses, ProvidersPartialUpdateData, ProvidersPartialUpdateResponses, ProvidersRetrieveData, ProvidersRetrieveResponses, ProvidersUpdateData, ProvidersUpdateResponses, ProximityScheduleLinksCreateData, ProximityScheduleLinksCreateResponses, ProximityScheduleLinksDestroyData, ProximityScheduleLinksDestroyResponses, ProximityScheduleLinksListData, ProximityScheduleLinksListResponses, ProximityScheduleLinksPartialUpdateData, ProximityScheduleLinksPartialUpdateResponses, ProximityScheduleLinksRetrieveData, ProximityScheduleLinksRetrieveResponses, ProximityScheduleLinksUpdateData, ProximityScheduleLinksUpdateResponses, PurchaseOrdersCreateData, PurchaseOrdersCreateResponses, PurchaseOrdersDestroyData, PurchaseOrdersDestroyResponses, PurchaseOrdersListData, PurchaseOrdersListResponses, PurchaseOrdersPartialUpdateData, PurchaseOrdersPartialUpdateResponses, PurchaseOrdersRetrieveData, PurchaseOrdersRetrieveResponses, PurchaseOrdersUpdateData, PurchaseOrdersUpdateResponses, RequisitionsCreateData, RequisitionsCreateResponses, RequisitionsDestroyData, RequisitionsDestroyResponses, RequisitionsListData, RequisitionsListResponses, RequisitionsPartialUpdateData, RequisitionsPartialUpdateResponses, RequisitionsRetrieveData, RequisitionsRetrieveResponses, RequisitionsUpdateData, RequisitionsUpdateResponses, RestRestCheckRetrieveData, RestRestCheckRetrieveResponses, RfidReadEventsListData, RfidReadEventsListResponses, RfidReadEventsRetrieveData, RfidReadEventsRetrieveResponses, RfidReadsCreateData, RfidReadsCreateResponses, RfidTagsCreateData, RfidTagsCreateResponses, RfidTagsDestroyData, RfidTagsDestroyResponses, RfidTagsListData, RfidTagsListResponses, RfidTagsPartialUpdateData, RfidTagsPartialUpdateResponses, RfidTagsRetrieveData, RfidTagsRetrieveResponses, RfidTagsUpdateData, RfidTagsUpdateResponses, SalesOrdersCreateData, SalesOrdersCreateResponses, SalesOrdersDestroyData, SalesOrdersDestroyResponses, SalesOrdersListData, SalesOrdersListResponses, SalesOrdersPartialUpdateData, SalesOrdersPartialUpdateResponses, SalesOrdersRetrieveData, SalesOrdersRetrieveResponses, SalesOrdersUpdateData, SalesOrdersUpdateResponses, SupplyKitsAddTagsCreateData, SupplyKitsAddTagsCreateResponses, SupplyKitsAssignDispatchCreateData, SupplyKitsAssignDispatchCreateResponses, SupplyKitsConfirmHospitalArrivalCreateData, SupplyKitsConfirmHospitalArrivalCreateResponses, SupplyKitsConfirmWarehouseReturnCreateData, SupplyKitsConfirmWarehouseReturnCreateResponses, SupplyKitsCreateData, SupplyKitsCreateResponses, SupplyKitsDestroyData, SupplyKitsDestroyResponses, SupplyKitsListData, SupplyKitsListResponses, SupplyKitsPartialUpdateData, SupplyKitsPartialUpdateResponses, SupplyKitsRemoveTagsCreateData, SupplyKitsRemoveTagsCreateResponses, SupplyKitsRetrieveData, SupplyKitsRetrieveResponses, SupplyKitsUpdateData, SupplyKitsUpdateResponses, SupplyKitsUpdateReturnChecklistCreateData, SupplyKitsUpdateReturnChecklistCreateResponses, TechniciansCreateData, TechniciansCreateResponses, TechniciansDestroyData, TechniciansDestroyResponses, TechniciansListData, TechniciansListResponses, TechniciansPartialUpdateData, TechniciansPartialUpdateResponses, TechniciansRetrieveData, TechniciansRetrieveResponses, TechniciansUpdateData, TechniciansUpdateResponses, TransportVehiclesCreateData, TransportVehiclesCreateResponses, TransportVehiclesDestroyData, TransportVehiclesDestroyResponses, TransportVehiclesListData, TransportVehiclesListResponses, TransportVehiclesPartialUpdateData, TransportVehiclesPartialUpdateResponses, TransportVehiclesRetrieveData, TransportVehiclesRetrieveResponses, TransportVehiclesUpdateData, TransportVehiclesUpdateResponses, UsersCreateData, UsersCreateResponses, UsersDestroyData, UsersDestroyResponses, UsersListData, UsersListResponses, UsersPartialUpdateData, UsersPartialUpdateResponses, UsersRetrieveData, UsersRetrieveResponses, UsersUpdateData, UsersUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -149,6 +149,40 @@ export const clientsUpdate = <ThrowOnError extends boolean = false>(options: Opt
             'Content-Type': 'application/json',
             ...options.headers
         }
+    });
+};
+
+/**
+ * Tenant dashboard chart series (inventory + instrumental funnel).
+ */
+export const dashboardChartsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<DashboardChartsRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<DashboardChartsRetrieveResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/dashboard/charts/',
+        ...options
+    });
+};
+
+/**
+ * Return a prefilled mailto for sales when demo expires (or nears expiry).
+ */
+export const demoRequestLicenseRetrieve = <ThrowOnError extends boolean = false>(options?: Options<DemoRequestLicenseRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<DemoRequestLicenseRetrieveResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/demo/request-license/',
+        ...options
     });
 };
 
@@ -929,6 +963,125 @@ export const instrumentalHandheldScansCreate = <ThrowOnError extends boolean = f
     });
 };
 
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsList = <ThrowOnError extends boolean = false>(options?: Options<InventoryLocationsListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<InventoryLocationsListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsCreate = <ThrowOnError extends boolean = false>(options: Options<InventoryLocationsCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<InventoryLocationsCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsDestroy = <ThrowOnError extends boolean = false>(options: Options<InventoryLocationsDestroyData, ThrowOnError>) => {
+    return (options.client ?? client).delete<InventoryLocationsDestroyResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsRetrieve = <ThrowOnError extends boolean = false>(options: Options<InventoryLocationsRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<InventoryLocationsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/{id}/',
+        ...options
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<InventoryLocationsPartialUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).patch<InventoryLocationsPartialUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const inventoryLocationsUpdate = <ThrowOnError extends boolean = false>(options: Options<InventoryLocationsUpdateData, ThrowOnError>) => {
+    return (options.client ?? client).put<InventoryLocationsUpdateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/inventory-locations/{id}/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
 export const inventoryDashboardStatsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<InventoryDashboardStatsRetrieveData, ThrowOnError>) => {
     return (options?.client ?? client).get<InventoryDashboardStatsRetrieveResponses, unknown, ThrowOnError>({
         security: [
@@ -994,6 +1147,24 @@ export const materialDispatchesRetrieve = <ThrowOnError extends boolean = false>
     });
 };
 
+/**
+ * Filter querysets and assign organization on create for tenant-scoped models.
+ */
+export const materialDispatchesUnloadCreate = <ThrowOnError extends boolean = false>(options: Options<MaterialDispatchesUnloadCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<MaterialDispatchesUnloadCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/material-dispatches/{id}/unload/',
+        ...options
+    });
+};
+
 export const medicalDashboardStatsRetrieve = <ThrowOnError extends boolean = false>(options?: Options<MedicalDashboardStatsRetrieveData, ThrowOnError>) => {
     return (options?.client ?? client).get<MedicalDashboardStatsRetrieveResponses, unknown, ThrowOnError>({
         responseType: 'json',
@@ -1023,6 +1194,142 @@ export const modulesProbeRetrieve = <ThrowOnError extends boolean = false>(optio
             }
         ],
         url: '/api/modules/{module_code}/probe/',
+        ...options
+    });
+};
+
+export const platformOrganizationsList = <ThrowOnError extends boolean = false>(options?: Options<PlatformOrganizationsListData, ThrowOnError>) => {
+    return (options?.client ?? client).get<PlatformOrganizationsListResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/',
+        ...options
+    });
+};
+
+/**
+ * Create + provision a demo client in one step.
+ */
+export const platformOrganizationsCreate = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<PlatformOrganizationsCreateResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/',
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+};
+
+export const platformOrganizationsRetrieve = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<PlatformOrganizationsRetrieveResponses, unknown, ThrowOnError>({
+        responseType: 'json',
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/{id}/',
+        ...options
+    });
+};
+
+export const platformOrganizationsAssignPackageCreate = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsAssignPackageCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<PlatformOrganizationsAssignPackageCreateResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/{id}/assign-package/',
+        ...options
+    });
+};
+
+export const platformOrganizationsExtendDemoCreate = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsExtendDemoCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<PlatformOrganizationsExtendDemoCreateResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/{id}/extend-demo/',
+        ...options
+    });
+};
+
+export const platformOrganizationsPurgeDemoCreate = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsPurgeDemoCreateData, ThrowOnError>) => {
+    return (options.client ?? client).post<PlatformOrganizationsPurgeDemoCreateResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/{id}/purge-demo/',
+        ...options
+    });
+};
+
+export const platformOrganizationsUsageRetrieve = <ThrowOnError extends boolean = false>(options: Options<PlatformOrganizationsUsageRetrieveData, ThrowOnError>) => {
+    return (options.client ?? client).get<PlatformOrganizationsUsageRetrieveResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/organizations/{id}/usage/',
+        ...options
+    });
+};
+
+export const platformPackagesRetrieve = <ThrowOnError extends boolean = false>(options?: Options<PlatformPackagesRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<PlatformPackagesRetrieveResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/packages/',
+        ...options
+    });
+};
+
+export const platformUsageSummaryRetrieve = <ThrowOnError extends boolean = false>(options?: Options<PlatformUsageSummaryRetrieveData, ThrowOnError>) => {
+    return (options?.client ?? client).get<PlatformUsageSummaryRetrieveResponses, unknown, ThrowOnError>({
+        security: [
+            {
+                in: 'cookie',
+                name: 'sessionid',
+                type: 'apiKey'
+            }
+        ],
+        url: '/api/platform/usage/summary/',
         ...options
     });
 };

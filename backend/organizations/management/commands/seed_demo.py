@@ -3,8 +3,10 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from datetime import date
 
 from inventory.models import RFIDTag, RFIDTagStatus
+from inventory.rfid_code import ascii_to_hex_epc
 from logistics.models import (
     Client,
     OrderStatus,
@@ -43,6 +45,33 @@ LOGISTICS_MODULES = [
 ]
 
 ALL_MODULE_CODES = [entry["code"] for entry in MODULE_SEED_DATA]
+
+# Seriales ASCII demo (exactamente 12 chars → EPC canónico de 24 hex).
+# Ejemplo: AVANT0000001 → 4156414E5430303030303031
+DEMO_RFID_SEQ = {
+    "EQ-01": 1,
+    "EQ-02": 2,
+    "CON-01": 3,
+    "CON-02": 4,
+    "CON-03": 5,
+    "INS-01": 6,
+    "INS-02": 7,
+    "INS-03": 8,
+    "LEGACY-001": 9,
+    "LEGACY-002": 10,
+    "SCOPE-01": 11,
+    "TRAY-01": 12,
+    "PUMP-01": 13,
+    "VAN-01": 14,
+}
+
+
+def avant_ascii(seq: int) -> str:
+    return f"AVANT{seq:07d}"
+
+
+def avant_epc(seq: int) -> str:
+    return ascii_to_hex_epc(avant_ascii(seq))
 
 
 class Command(BaseCommand):
@@ -161,6 +190,52 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Created user {email} / demo1234"))
         return user
 
+    def _ensure_avant_tag(
+        self,
+        org,
+        seq,
+        *,
+        item_type,
+        status,
+        last_location,
+        inventory_location=None,
+        legacy_codes=(),
+        lot=None,
+        expires_on=None,
+        set_lot_fields=False,
+    ):
+        code = avant_epc(seq)
+        tag = RFIDTag.objects.filter(organization=org, code=code).first()
+        if tag is None:
+            for legacy in legacy_codes:
+                tag = RFIDTag.objects.filter(organization=org, code=legacy).first()
+                if tag:
+                    tag.code = code
+                    break
+
+        fields = {
+            "item_type": item_type,
+            "status": status,
+            "last_location": last_location,
+        }
+        if inventory_location is not None:
+            fields["inventory_location"] = inventory_location
+        if set_lot_fields:
+            fields["lot"] = lot or ""
+            fields["expires_on"] = expires_on
+
+        if tag:
+            for key, value in fields.items():
+                setattr(tag, key, value)
+            tag.save()
+            return tag
+
+        create_fields = {**fields}
+        if not set_lot_fields:
+            create_fields.setdefault("lot", "")
+            create_fields.setdefault("expires_on", None)
+        return RFIDTag.objects.create(organization=org, code=code, **create_fields)
+
     def _ensure_api_key(self, organization):
         if OrganizationAPIKey.objects.filter(organization=organization, is_active=True).exists():
             return None
@@ -168,7 +243,7 @@ class Command(BaseCommand):
         return raw_key
 
     def _seed_inventory(self, org, prefix):
-        # Ejemplos básicos: equipo médico, consumibles e instrumental
+        # Equipo, consumibles e instrumental con serial ASCII AVANT000000N
         examples = [
             ("EQ-01", "Monitor multiparámetros", RFIDTagStatus.EN_STOCK, "Almacén Central"),
             ("EQ-02", "Bomba de infusión", RFIDTagStatus.EN_STOCK, "Almacén Central"),
@@ -180,34 +255,39 @@ class Command(BaseCommand):
             ("INS-03", "Endoscopio flexible", RFIDTagStatus.EN_STOCK, "Almacén Central"),
         ]
         for code_suffix, item_type, status, location in examples:
-            RFIDTag.objects.get_or_create(
-                organization=org,
-                code=f"EPC-{prefix}-{code_suffix}",
-                defaults={
-                    "item_type": item_type,
-                    "status": status,
-                    "last_location": location,
-                },
+            seq = DEMO_RFID_SEQ[code_suffix]
+            lot = ""
+            expires_on = None
+            if code_suffix.startswith("CON-"):
+                lot = f"LOT-{seq:04d}"
+                expires_on = date(2027, 6, 30) if code_suffix != "CON-03" else date(2026, 12, 15)
+            self._ensure_avant_tag(
+                org,
+                seq,
+                item_type=item_type,
+                status=status,
+                last_location=location,
+                legacy_codes=(f"EPC-{prefix}-{code_suffix}",),
+                lot=lot,
+                expires_on=expires_on,
+                set_lot_fields=True,
             )
 
-        # Tags legacy del seed anterior (compatibilidad)
-        RFIDTag.objects.get_or_create(
-            organization=org,
-            code=f"EPC-{prefix}-001",
-            defaults={
-                "item_type": "Sutura",
-                "status": RFIDTagStatus.EN_STOCK,
-                "last_location": "Almacén Central",
-            },
+        self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["LEGACY-001"],
+            item_type="Sutura",
+            status=RFIDTagStatus.EN_STOCK,
+            last_location="Almacén Central",
+            legacy_codes=(f"EPC-{prefix}-001",),
         )
-        RFIDTag.objects.get_or_create(
-            organization=org,
-            code=f"EPC-{prefix}-002",
-            defaults={
-                "item_type": "Kit quirúrgico",
-                "status": RFIDTagStatus.EN_TRANSITO,
-                "last_location": "Ambulancia 2",
-            },
+        self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["LEGACY-002"],
+            item_type="Kit quirúrgico",
+            status=RFIDTagStatus.EN_TRANSITO,
+            last_location="Ambulancia 2",
+            legacy_codes=(f"EPC-{prefix}-002",),
         )
 
     def _seed_clinical_data(self, org):
@@ -252,19 +332,18 @@ class Command(BaseCommand):
 
         # Mezcla de equipo, consumible e instrumental en el envío demo
         prefix = "CLN" if "clin" in org.slug else "DEMO"
-        for code_suffix, item_type in (
-            (f"EPC-{prefix}-EQ-01", "Monitor multiparámetros"),
-            (f"EPC-{prefix}-CON-03", "Catéter guía 6F"),
-            (f"EPC-{prefix}-INS-02", "Charola angioplastia"),
+        for seq_key, item_type in (
+            ("EQ-01", "Monitor multiparámetros"),
+            ("CON-03", "Catéter guía 6F"),
+            ("INS-02", "Charola angioplastia"),
         ):
-            tag, _ = RFIDTag.objects.get_or_create(
-                organization=org,
-                code=code_suffix,
-                defaults={
-                    "item_type": item_type,
-                    "status": RFIDTagStatus.EN_TRANSITO,
-                    "last_location": "Hospital ABC Santa Fe",
-                },
+            tag = self._ensure_avant_tag(
+                org,
+                DEMO_RFID_SEQ[seq_key],
+                item_type=item_type,
+                status=RFIDTagStatus.EN_TRANSITO,
+                last_location="Hospital ABC Santa Fe",
+                legacy_codes=(f"EPC-{prefix}-{seq_key}",),
             )
             SupplyKitTag.objects.get_or_create(
                 supply_kit=kit,
@@ -282,19 +361,18 @@ class Command(BaseCommand):
                 "destination_hospital": "Hospital ABC Santa Fe",
             },
         )
-        for code_suffix, item_type in (
-            (f"EPC-{prefix}-EQ-02", "Bomba de infusión"),
-            (f"EPC-{prefix}-CON-01", "Sutura Vicryl 3-0"),
-            (f"EPC-{prefix}-INS-01", "Pinza Kelly curva"),
+        for seq_key, item_type in (
+            ("EQ-02", "Bomba de infusión"),
+            ("CON-01", "Sutura Vicryl 3-0"),
+            ("INS-01", "Pinza Kelly curva"),
         ):
-            tag, _ = RFIDTag.objects.get_or_create(
-                organization=org,
-                code=code_suffix,
-                defaults={
-                    "item_type": item_type,
-                    "status": RFIDTagStatus.EN_STOCK,
-                    "last_location": "Almacén Central",
-                },
+            tag = self._ensure_avant_tag(
+                org,
+                DEMO_RFID_SEQ[seq_key],
+                item_type=item_type,
+                status=RFIDTagStatus.EN_STOCK,
+                last_location="Almacén Central",
+                legacy_codes=(f"EPC-{prefix}-{seq_key}",),
             )
             SupplyKitTag.objects.get_or_create(
                 supply_kit=kit_ready,
@@ -306,6 +384,7 @@ class Command(BaseCommand):
         from datetime import date
         from decimal import Decimal as D
 
+        from inventory.models import InventoryLocation, InventoryLocationType, RFIDTag, RFIDTagStatus
         from instrumental.models import (
             CatalogItemType,
             HospitalSite,
@@ -346,41 +425,74 @@ class Command(BaseCommand):
             defaults={"name": "Hospital Ángeles Pedregal", "is_central": False, "city": "CDMX"},
         )
 
-        tag_scope, _ = RFIDTag.objects.get_or_create(
+        loc_central, _ = InventoryLocation.objects.get_or_create(
             organization=org,
-            code=f"INST-{prefix}-SCOPE-01",
+            code="LOC-CENTRAL",
             defaults={
-                "item_type": "Endoscopio",
-                "status": RFIDTagStatus.EN_STOCK,
-                "last_location": central.name,
+                "name": central.name,
+                "location_type": InventoryLocationType.WAREHOUSE,
             },
         )
-        tag_tray, _ = RFIDTag.objects.get_or_create(
+        InventoryLocation.objects.get_or_create(
             organization=org,
-            code=f"INST-{prefix}-TRAY-01",
+            code="LOC-ABC",
             defaults={
-                "item_type": "Charola angioplastia",
-                "status": RFIDTagStatus.EN_STOCK,
-                "last_location": central.name,
+                "name": hospital_abc.name,
+                "location_type": InventoryLocationType.HOSPITAL,
             },
         )
-        tag_pump, _ = RFIDTag.objects.get_or_create(
+        InventoryLocation.objects.get_or_create(
             organization=org,
-            code=f"INST-{prefix}-PUMP-01",
+            code="LOC-ANG",
             defaults={
-                "item_type": "Bomba de infusión",
-                "status": RFIDTagStatus.EN_STOCK,
-                "last_location": central.name,
+                "name": hospital_angeles.name,
+                "location_type": InventoryLocationType.HOSPITAL,
             },
         )
-        tag_van, _ = RFIDTag.objects.get_or_create(
+        InventoryLocation.objects.get_or_create(
             organization=org,
-            code=f"VEH-{prefix}-VAN-01",
+            code="LOC-EST",
             defaults={
-                "item_type": "Camioneta",
-                "status": RFIDTagStatus.EN_STOCK,
-                "last_location": central.name,
+                "name": "Zona esterilización",
+                "location_type": InventoryLocationType.ZONE,
             },
+        )
+
+        tag_scope = self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["SCOPE-01"],
+            item_type="Endoscopio flexible",
+            status=RFIDTagStatus.EN_STOCK,
+            last_location=central.name,
+            inventory_location=loc_central,
+            legacy_codes=(f"INST-{prefix}-SCOPE-01",),
+        )
+        tag_tray = self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["TRAY-01"],
+            item_type="Charola angioplastia",
+            status=RFIDTagStatus.EN_STOCK,
+            last_location=central.name,
+            inventory_location=loc_central,
+            legacy_codes=(f"INST-{prefix}-TRAY-01",),
+        )
+        tag_pump = self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["PUMP-01"],
+            item_type="Bomba de infusión",
+            status=RFIDTagStatus.EN_STOCK,
+            last_location=central.name,
+            inventory_location=loc_central,
+            legacy_codes=(f"INST-{prefix}-PUMP-01",),
+        )
+        tag_van = self._ensure_avant_tag(
+            org,
+            DEMO_RFID_SEQ["VAN-01"],
+            item_type="Camioneta",
+            status=RFIDTagStatus.EN_STOCK,
+            last_location=central.name,
+            inventory_location=loc_central,
+            legacy_codes=(f"VEH-{prefix}-VAN-01",),
         )
 
         scope_item, _ = InstrumentCatalogItem.objects.get_or_create(
@@ -389,6 +501,8 @@ class Command(BaseCommand):
             defaults={
                 "name": "Endoscopio flexible",
                 "item_type": CatalogItemType.INSTRUMENT,
+                "category": "Endoscopía",
+                "brand": "Olympus",
                 "requires_sterilization": True,
                 "rfid_tag": tag_scope,
                 "default_unit_price": D("180.00"),
@@ -404,6 +518,8 @@ class Command(BaseCommand):
             defaults={
                 "name": "Charola angioplastia",
                 "item_type": CatalogItemType.TRAY,
+                "category": "Cardiología",
+                "brand": "INIT",
                 "requires_sterilization": True,
                 "rfid_tag": tag_tray,
                 "default_unit_price": D("280.00"),
@@ -419,6 +535,8 @@ class Command(BaseCommand):
             defaults={
                 "name": "Monitor hemodinámico (solo SKU demo)",
                 "item_type": CatalogItemType.EQUIPMENT,
+                "category": "Cardiología",
+                "brand": "Philips",
                 "requires_sterilization": False,
                 "default_unit_price": D("520.00"),
             },
@@ -429,6 +547,8 @@ class Command(BaseCommand):
             defaults={
                 "name": "Bomba de infusión",
                 "item_type": CatalogItemType.EQUIPMENT,
+                "category": "Cuidados intensivos",
+                "brand": "Baxter",
                 "requires_sterilization": False,
                 "rfid_tag": tag_pump,
                 "default_unit_price": D("450.00"),
@@ -440,10 +560,35 @@ class Command(BaseCommand):
             defaults={
                 "name": "Pinza Kelly curva",
                 "item_type": CatalogItemType.INSTRUMENT,
+                "category": "Cirugía general",
+                "brand": "Aesculap",
                 "requires_sterilization": True,
                 "default_unit_price": D("95.00"),
             },
         )
+        InstrumentCatalogItem.objects.get_or_create(
+            organization=org,
+            sku=f"SKU-{prefix}-SUTURE-01",
+            defaults={
+                "name": "Sutura absorbible 3-0",
+                "item_type": CatalogItemType.CONSUMABLE,
+                "category": "Consumibles",
+                "brand": "Ethicon",
+                "unit": "caja",
+                "requires_sterilization": False,
+                "default_unit_price": D("42.00"),
+            },
+        )
+
+        for tag, catalog in (
+            (tag_scope, scope_item),
+            (tag_tray, tray_item),
+            (tag_pump, pump_item),
+        ):
+            if tag.catalog_item_id != catalog.id or tag.inventory_location_id != loc_central.id:
+                tag.catalog_item = catalog
+                tag.inventory_location = loc_central
+                tag.save()
 
         TransportVehicle.objects.get_or_create(
             organization=org,

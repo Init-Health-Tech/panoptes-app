@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.utils import timezone
 
 from inventory.models import RFIDTag, RFIDTagStatus
+from inventory.rfid_code import find_rfid_tag_by_code
 from instrumental.models import (
     DispatchStatus,
     FulfillmentStatus,
@@ -21,7 +22,7 @@ def resolve_identifier(organization, identifier: str):
     if not identifier:
         return None, None, None
 
-    tag = RFIDTag.objects.filter(organization=organization, code=identifier).first()
+    tag = find_rfid_tag_by_code(RFIDTag.objects.filter(organization=organization), identifier)
     if tag:
         dispatch = (
             MaterialDispatch.objects.filter(organization=organization, rfid_tag=tag)

@@ -11,6 +11,8 @@ from instrumental.models import (
     InstrumentQuotation,
     RequestStatus,
 )
+from inventory.models import RFIDTag
+from organizations.management.commands.seed_demo import avant_ascii, avant_epc, DEMO_RFID_SEQ
 from organizations.models import Organization
 
 
@@ -34,3 +36,6 @@ class SeedDemoInstrumentalTest(TestCase):
             ).exists(),
         )
         self.assertTrue(InstrumentQuotation.objects.filter(organization=org).exists())
+        scope_epc = avant_epc(DEMO_RFID_SEQ["SCOPE-01"])
+        self.assertTrue(RFIDTag.objects.filter(organization=org, code=scope_epc).exists())
+        self.assertEqual(avant_ascii(DEMO_RFID_SEQ["SCOPE-01"]), "AVANT0000011")

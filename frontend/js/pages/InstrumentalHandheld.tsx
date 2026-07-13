@@ -71,8 +71,9 @@ const InstrumentalHandheld = () => {
       <div className="panoptes-card mb-6 border-primary/30 bg-primary/5 p-4 text-sm">
         <p className="font-semibold text-on-surface">Modo demo dual</p>
         <p className="mt-1 text-on-surface-variant">
-          Usa el código RFID (ej. <code className="font-mono">INST-CLN-SCOPE-01</code>) o el SKU puro (ej.{' '}
-          <code className="font-mono">SKU-CLN-MONITOR-01</code>). Ambos actualizan inventario y estado del despacho.
+          Usa el código ASCII (ej. <code className="font-mono">AVANT0000011</code>), el EPC hex de 24
+          caracteres, o el SKU de catálogo (ej. <code className="font-mono">SKU-CLN-MONITOR-01</code>).
+          Ambos actualizan inventario y estado del despacho.
         </p>
       </div>
 
@@ -80,14 +81,17 @@ const InstrumentalHandheld = () => {
         <FormField htmlFor="hh-id" label="ID Handheld">
           <Input id="hh-id" onChange={(e) => setHandheldId(e.target.value)} value={handheldId} />
         </FormField>
-        <FormField htmlFor="hh-identifier" label="RFID o SKU">
+        <FormField htmlFor="hh-identifier" label="RFID (EPC) o ASCII">
           <Input
             id="hh-identifier"
             onChange={(e) => setIdentifier(e.target.value)}
-            placeholder="INST-CLN-SCOPE-01 o SKU-CLN-MONITOR-01"
+            placeholder="AVANT0000011 o AVANT0000001"
             required
             value={identifier}
           />
+          <p className="mt-1 text-xs text-on-surface-variant">
+            Acepta EPC de 24 hex o su equivalente ASCII de 12 caracteres, además de SKU de catálogo.
+          </p>
         </FormField>
         <FormField htmlFor="hh-event" label="Evento">
           <Select

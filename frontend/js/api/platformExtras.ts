@@ -1,152 +1,176 @@
+/**
+ * Manual API helpers for platform admin / demo / dashboard charts.
+ * OpenAPI schema for several of these endpoints lacks response serializers,
+ * so we keep typed wrappers here instead of relying on incomplete generated types.
+ */
 import { client } from '@/js/api/client.gen';
+import {
+  dashboardChartsRetrieve as sdkDashboardChartsRetrieve,
+  demoRequestLicenseRetrieve as sdkDemoRequestLicenseRetrieve,
+  platformOrganizationsCreate,
+  platformOrganizationsList as sdkPlatformOrganizationsList,
+  platformOrganizationsPurgeDemoCreate,
+  platformPackagesRetrieve,
+  platformUsageSummaryRetrieve,
+} from '@/js/api/sdk.gen';
 
-const security = [
-  {
-    in: 'cookie' as const,
-    name: 'sessionid',
-    type: 'apiKey' as const,
-  },
-];
+export type ChartSeries = {
+  labels: string[];
+  values: number[];
+  total?: number;
+};
 
-export type PlatformOrganization = {
-  id: number;
-  name: string;
-  slug: string;
-  industry_type: string;
-  account_type: string;
-  is_active: boolean;
-  contact_name: string;
-  contact_email: string;
-  notes: string;
-  demo_duration_days: number;
-  demo_expires_at: string | null;
-  demo_locked: boolean;
+export type DashboardCharts = {
+  inventory: ChartSeries | null;
+  instrumental_funnel: ChartSeries | null;
+};
+
+export type DemoLicenseInfo = {
+  sales_email: string;
+  mailto: string;
+  organization: string | null;
   is_demo_expired: boolean;
-  active_modules: string[];
-  packages: string[];
-  member_count: number;
-  demo_credentials?: {
-    email: string;
-    password: string | null;
-    demo_expires_at: string;
-  };
 };
 
 export type ProductPackage = {
   id: number;
   code: string;
   name: string;
-  description: string;
-  is_public: boolean;
+  description?: string;
+  is_public?: boolean;
   modules: string[];
 };
 
-export type DashboardCharts = {
-  inventory: { labels: string[]; values: number[]; total: number } | null;
-  instrumental_funnel: { labels: string[]; values: number[]; total: number } | null;
+export type PlatformOrganization = {
+  id: number;
+  name: string;
+  slug: string;
+  industry_type?: string;
+  account_type?: string;
+  is_active?: boolean;
+  contact_name?: string;
+  contact_email?: string;
+  notes?: string;
+  demo_duration_days?: number;
+  demo_expires_at: string | null;
+  demo_locked?: boolean;
+  is_demo_expired?: boolean;
+  active_modules: string[];
+  packages: string[];
+  member_count: number;
+  demo_credentials?: {
+    email: string;
+    password: string | null;
+    demo_expires_at?: string | null;
+  };
 };
 
-export async function platformOrganizationsList() {
-  return client.get<PlatformOrganization[], unknown, true>({
-    responseType: 'json',
-    security,
-    url: '/api/platform/organizations/',
-    throwOnError: true,
-  });
-}
+export type PlatformUsageSummary = {
+  window_days: number;
+  demo_count: number;
+  demos_expiring_soon: number;
+  by_organization: Array<{
+    organization_id: number;
+    organization__name: string;
+    organization__slug: string;
+    requests: number;
+    users: number;
+    ips: number;
+  }>;
+  by_module: Array<{
+    module_code: string;
+    requests: number;
+  }>;
+};
 
-export async function platformProvisionDemo(body: {
-  name: string;
-  contact_email: string;
-  contact_name?: string;
-  duration_days: number;
-  package_codes: string[];
-  industry_type?: string;
-  password?: string;
-}) {
-  return client.post<PlatformOrganization, unknown, true>({
-    responseType: 'json',
-    security,
-    url: '/api/platform/organizations/',
-    body,
-    throwOnError: true,
-  });
-}
-
-export async function platformPurgeDemo(id: number) {
-  return client.post<{ ok: boolean; counts: Record<string, number> }, unknown, true>({
-    responseType: 'json',
-    security,
-    url: '/api/platform/organizations/{id}/purge-demo/',
-    path: { id },
-    throwOnError: true,
-  });
-}
-
-export async function platformExtendDemo(id: number, extra_days: number) {
-  return client.post<PlatformOrganization, unknown, true>({
-    responseType: 'json',
-    security,
-    url: '/api/platform/organizations/{id}/extend-demo/',
-    path: { id },
-    body: { extra_days },
-    throwOnError: true,
-  });
-}
-
-export async function platformPackagesList() {
-  return client.get<ProductPackage[], unknown, true>({
-    responseType: 'json',
-    security,
-    url: '/api/platform/packages/',
-    throwOnError: true,
-  });
-}
-
-export async function platformUsageSummary() {
-  return client.get<
-    {
-      window_days: number;
-      demo_count: number;
-      demos_expiring_soon: number;
-      by_organization: Array<{
-        organization_id: number;
-        organization__name: string;
-        organization__slug: string;
-        requests: number;
-        users: number;
-        ips: number;
-      }>;
-      by_module: Array<{ module_code: string; requests: number }>;
-    },
-    unknown,
-    true
-  >({
-    responseType: 'json',
-    security,
-    url: '/api/platform/usage/summary/',
-    throwOnError: true,
-  });
+function normalizeOrg(raw: Record<string, unknown>): PlatformOrganization {
+  const modules = raw.active_modules;
+  const packages = raw.packages;
+  return {
+    ...(raw as unknown as PlatformOrganization),
+    active_modules: Array.isArray(modules) ? (modules as string[]) : [],
+    packages: Array.isArray(packages) ? (packages as string[]) : [],
+    member_count: typeof raw.member_count === 'number' ? raw.member_count : Number(raw.member_count) || 0,
+  };
 }
 
 export async function dashboardChartsRetrieve() {
-  return client.get<DashboardCharts, unknown, false>({
-    responseType: 'json',
-    security,
-    url: '/api/dashboard/charts/',
-    throwOnError: false,
-  });
+  const response = await sdkDashboardChartsRetrieve({ throwOnError: false });
+  return {
+    ...response,
+    data: (response.data ?? null) as DashboardCharts | null,
+  };
 }
 
 export async function demoRequestLicenseRetrieve() {
-  return client.get<
-    { sales_email: string; mailto: string; organization: string | null; is_demo_expired: boolean },
-    unknown,
-    true
-  >({
-    responseType: 'json',
-    security,
-    url: '/api/demo/request-license/',
+  const response = await sdkDemoRequestLicenseRetrieve({ throwOnError: true });
+  return {
+    ...response,
+    data: response.data as DemoLicenseInfo,
+  };
+}
+
+export async function platformOrganizationsList() {
+  const response = await sdkPlatformOrganizationsList({ throwOnError: true });
+  const rows = (response.data ?? []) as unknown as Record<string, unknown>[];
+  return {
+    ...response,
+    data: rows.map(normalizeOrg),
+  };
+}
+
+export async function platformPackagesList() {
+  const response = await platformPackagesRetrieve({ throwOnError: true });
+  return {
+    ...response,
+    data: (response.data ?? []) as ProductPackage[],
+  };
+}
+
+export async function platformUsageSummary() {
+  const response = await platformUsageSummaryRetrieve({ throwOnError: true });
+  return {
+    ...response,
+    data: (response.data ?? null) as PlatformUsageSummary | null,
+  };
+}
+
+export type ProvisionDemoPayload = {
+  name: string;
+  contact_email: string;
+  contact_name?: string;
+  duration_days?: number;
+  package_codes?: string[];
+  industry_type?: 'clinical' | 'logistics' | 'mixed';
+  password?: string;
+};
+
+export async function platformProvisionDemo(body: ProvisionDemoPayload) {
+  const response = await platformOrganizationsCreate({
+    body,
+    throwOnError: true,
+  });
+  const raw = response.data as unknown as Record<string, unknown>;
+  return {
+    ...response,
+    data: normalizeOrg(raw),
+  };
+}
+
+export async function platformPurgeDemo(organizationId: number) {
+  return platformOrganizationsPurgeDemoCreate({
+    path: { id: organizationId },
+    throwOnError: true,
+  });
+}
+
+export async function platformExtendDemo(organizationId: number, extraDays: number) {
+  // Schema omits the request body; call the client directly.
+  return client.post({
+    url: `/api/platform/organizations/${organizationId}/extend-demo/`,
+    body: { extra_days: extraDays },
+    headers: { 'Content-Type': 'application/json' },
+    security: [{ in: 'cookie', name: 'sessionid', type: 'apiKey' }],
     throwOnError: true,
   });
 }

@@ -32,6 +32,7 @@ describe('Sidebar', () => {
     renderSidebar(['inventory_realtime']);
 
     expect(screen.getByRole('link', { name: /Inventario/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Ubicaciones/i })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /Cargas RFID/i })).not.toBeInTheDocument();
   });
 
@@ -41,12 +42,14 @@ describe('Sidebar', () => {
     expect(screen.getAllByText('Control de instrumental').length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Flujo/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Cargas RFID/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Catálogo/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Sedes/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Vehículos/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Contratos/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Doctores/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Técnicos/i }).length).toBeGreaterThan(0);
     expect(screen.queryByText('Clínico')).not.toBeInTheDocument();
     expect(screen.queryByText('Instrumental médico')).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /Productos/i })).not.toBeInTheDocument();
   });
 
   test('instrumental_control unlocks the full product nav', () => {

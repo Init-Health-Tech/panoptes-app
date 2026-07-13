@@ -12,6 +12,7 @@ class CatalogItemType(models.TextChoices):
     INSTRUMENT = "instrument", _("Instrumental")
     EQUIPMENT = "equipment", _("Equipo médico")
     TRAY = "tray", _("Charola")
+    CONSUMABLE = "consumable", _("Consumible")
 
 
 class RequestStatus(models.TextChoices):
@@ -96,6 +97,13 @@ class InstrumentCatalogItem(OrganizationModel):
     sku = models.CharField(max_length=128)
     name = models.CharField(max_length=255)
     item_type = models.CharField(max_length=32, choices=CatalogItemType.choices)
+    category = models.CharField(
+        max_length=128,
+        blank=True,
+        help_text=_("Grupo o especialidad (ej. Cardiología, Ortopedia)."),
+    )
+    brand = models.CharField(max_length=128, blank=True)
+    unit = models.CharField(max_length=32, default="pza")
     description = models.TextField(blank=True)
     requires_sterilization = models.BooleanField(default=False)
     default_unit_price = models.DecimalField(
