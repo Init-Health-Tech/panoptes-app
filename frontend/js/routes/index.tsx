@@ -2,6 +2,7 @@ import { createElement, type ComponentType } from 'react';
 import { createBrowserRouter } from 'react-router';
 
 import { ModuleGuard } from '@/js/components/layout/ModuleGuard';
+import { RootErrorPage } from '@/js/components/layout/RootErrorPage';
 import { RootLayout } from '@/js/components/layout/RootLayout';
 import {
   instrumentalContractsLoader,
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
     id: 'root',
     loader: modulesLoader,
     Component: RootLayout,
+    errorElement: createElement(RootErrorPage),
     children: [
       { index: true, Component: Dashboard, loader: dashboardLoader },
       { path: 'platform', Component: PlatformAdmin, loader: platformAdminLoader },

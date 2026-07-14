@@ -17,7 +17,7 @@ export function ModuleGuard({ moduleCode, children }: ModuleGuardProps) {
     return null;
   }
 
-  if (!hasModuleAccess(modules.modules, moduleCode)) {
+  if (!hasModuleAccess(modules.modules ?? [], moduleCode)) {
     return <Navigate replace state={{ from: location.pathname }} to="/" />;
   }
 

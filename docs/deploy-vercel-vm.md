@@ -39,13 +39,23 @@ Admin Django: `https://api.avant.init.com.mx/admin/`
 
 1. Importa este repo en Vercel (root = monorepo).
 2. `vercel.json` ya define build/output/SPA fallback.
-3. Variable de entorno **Production** (y Preview si quieres):
+3. Variable de entorno **Production** (y Preview si quieres) — **obligatoria en Build**:
 
 ```
 API_BASE_URL=https://api.avant.init.com.mx
 ```
 
+   Sin ella el SPA llama `/api` en el propio `*.vercel.app`, recibe el `index.html` y se rompe.
+   Tras cambiarla: **Redeploy** (el valor se inyecta en el build de webpack).
+
 4. Dominio custom: `avant.init.com.mx` → Vercel.
+
+5. Mientras uses el preview `https://panoptes-app.vercel.app`, añade ese origen en el backend:
+
+```
+CORS_ALLOWED_ORIGINS=https://avant.init.com.mx,https://panoptes-app.vercel.app
+CSRF_TRUSTED_ORIGINS=https://avant.init.com.mx,https://panoptes-app.vercel.app
+```
 
 Build local de prueba:
 

@@ -40,8 +40,8 @@ const Dashboard = () => {
   const { stats, medicalStats, logisticsStats, instrumentalStats, charts } =
     useLoaderData<DashboardLoaderData>();
   const modules = useOptionalModules();
-  const hasInventory = modules?.modules.includes('inventory_realtime');
-  const hasLogistics = modules?.modules.includes('logistics_requisitions');
+  const hasInventory = modules?.modules?.includes('inventory_realtime');
+  const hasLogistics = modules?.modules?.includes('logistics_requisitions');
   const hasInstrumental = hasInstrumentalProduct(modules?.modules ?? []);
   const showInstrumentalKpis = hasInstrumental && (medicalStats || instrumentalStats);
   const demoExpiry = modules?.demo_expires_at ? new Date(modules.demo_expires_at) : null;
@@ -249,7 +249,7 @@ const Dashboard = () => {
               ajustan según la configuración de tu organización.
             </p>
             <p className="mt-3 text-xs text-on-surface-variant">
-              Módulos activos: {modules?.modules.length ? modules.modules.join(', ') : 'ninguno'}
+              Módulos activos: {modules?.modules?.length ? modules.modules.join(', ') : 'ninguno'}
             </p>
           </div>
         </div>
