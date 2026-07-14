@@ -1,15 +1,20 @@
 import { parse as cookieParse } from 'cookie';
 
+import { getApiBaseUrl } from '@/js/config';
+import { logoutActionUrl } from '@/js/utils/auth';
+
 type LogoutButtonProps = {
   compact?: boolean;
 };
 
 export function LogoutButton({ compact = false }: LogoutButtonProps) {
   const { csrftoken } = cookieParse(document.cookie);
+  const next = getApiBaseUrl() ? window.location.origin : '/';
 
   return (
-    <form action="/logout/" method="post">
+    <form action={logoutActionUrl()} method="post">
       <input name="csrfmiddlewaretoken" type="hidden" value={csrftoken ?? ''} />
+      <input name="next" type="hidden" value={next} />
       <button
         className={
           compact

@@ -1,5 +1,9 @@
+from urllib.parse import urlparse
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import generic
 
 from drf_spectacular.utils import OpenApiExample, extend_schema
@@ -60,18 +64,38 @@ class PanoptesLoginView(LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["next"] = self.request.POST.get("next") or self.request.GET.get("next", "/")
+        default_next = getattr(settings, "FRONTEND_URL", "") or "/"
+        context["next"] = self.request.POST.get("next") or self.request.GET.get("next", default_next)
         return context
+
+    def _allowed_hosts(self):
+        hosts = {self.request.get_host()}
+        frontend = getattr(settings, "FRONTEND_URL", "") or ""
+        if frontend:
+            hosts.add(urlparse(frontend).netloc)
+        return hosts
 
     def get_success_url(self):
         redirect_to = self.request.POST.get("next") or self.request.GET.get("next")
-        if redirect_to:
+        if redirect_to and url_has_allowed_host_and_scheme(
+            url=redirect_to,
+            allowed_hosts=self._allowed_hosts(),
+            require_https=self.request.is_secure(),
+        ):
             return redirect_to
-        return "/"
+        return getattr(settings, "FRONTEND_URL", "") or "/"
 
 
 class PanoptesLogoutView(LogoutView):
-    next_page = "/"
+    def get_success_url_allowed_hosts(self):
+        hosts = set(super().get_success_url_allowed_hosts())
+        frontend = getattr(settings, "FRONTEND_URL", "") or ""
+        if frontend:
+            hosts.add(urlparse(frontend).netloc)
+        return hosts
+
+    def get_default_redirect_url(self):
+        return getattr(settings, "FRONTEND_URL", "") or "/"
 
 
 class RestViewSet(viewsets.ViewSet):

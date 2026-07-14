@@ -20,6 +20,10 @@ docker compose exec backend python manage.py seed_demo
 - **Admin Django:** http://localhost:8000/admin/
 - **Webpack dev server:** corre dentro del contenedor `frontend`; desde la raíz del repo usa `pnpm run dev` si trabajas en local (no desde `frontend/`).
 
+## Deploy separado (Vercel + VM)
+
+Frontend en **https://avant.init.com.mx** (Vercel) y API en **https://api.avant.init.com.mx** (VM): ver [docs/deploy-vercel-vm.md](docs/deploy-vercel-vm.md).
+
 ## Cuentas demo
 
 | Email | Contraseña | Organización | Módulos |

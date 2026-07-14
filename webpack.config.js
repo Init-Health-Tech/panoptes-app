@@ -1,5 +1,6 @@
 const path = require('path');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
@@ -8,16 +9,19 @@ const BundleTracker = require('webpack-bundle-tracker');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
+  const isStandalone = process.env.STANDALONE === '1' || process.env.VERCEL === '1';
   const nodeModulesDir = path.resolve(__dirname, 'node_modules');
+  const apiBaseUrl = process.env.API_BASE_URL || '';
+
   const localhostOutput = {
     path: path.resolve('./frontend/webpack_bundles/'),
     publicPath: 'http://localhost:3000/frontend/webpack_bundles/',
     filename: '[name].js',
   };
   const productionOutput = {
-    path: path.resolve('./frontend/webpack_bundles/'),
-    publicPath: 'auto',
-    filename: '[name]-[chunkhash].js',
+    path: path.resolve(isStandalone ? './frontend/dist' : './frontend/webpack_bundles/'),
+    publicPath: isStandalone ? '/' : 'auto',
+    filename: isStandalone ? 'assets/[name]-[chunkhash].js' : '[name]-[chunkhash].js',
     clean: true,
   };
 
@@ -29,7 +33,6 @@ module.exports = (env, argv) => {
       historyApiFallback: true,
       host: '0.0.0.0',
       port: 3000,
-      // Allow CORS requests from the Django dev server domain:
       headers: { 'Access-Control-Allow-Origin': '*' },
     },
     context: __dirname,
@@ -49,7 +52,6 @@ module.exports = (env, argv) => {
             isDev && 'style-loader',
             !isDev && MiniCssExtractPlugin.loader,
             { loader: 'css-loader', options: { importLoaders: 1 } },
-            // Tailwind v4 uses @tailwindcss/postcss (condigured in the postcss.config.mjs file)
             'postcss-loader',
           ].filter(Boolean),
         },
@@ -68,11 +70,23 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
-      !isDev && new MiniCssExtractPlugin({ filename: '[name]-[chunkhash].css' }),
+      !isDev &&
+        new MiniCssExtractPlugin({
+          filename: isStandalone ? 'assets/[name]-[chunkhash].css' : '[name]-[chunkhash].css',
+        }),
       isDev && new ReactRefreshWebpackPlugin(),
-      new BundleTracker({
-        path: __dirname,
-        filename: 'webpack-stats.json',
+      !isStandalone &&
+        new BundleTracker({
+          path: __dirname,
+          filename: 'webpack-stats.json',
+        }),
+      isStandalone &&
+        new HtmlWebpackPlugin({
+          template: path.resolve(__dirname, 'frontend/public/index.html'),
+          filename: 'index.html',
+        }),
+      new webpack.DefinePlugin({
+        'process.env.API_BASE_URL': JSON.stringify(apiBaseUrl),
       }),
       new NodePolyfillPlugin(),
       new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
@@ -86,7 +100,6 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: !isDev,
       splitChunks: {
-        // include all types of chunks
         chunks: 'all',
       },
     },

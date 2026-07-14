@@ -1,6 +1,6 @@
 import os
 
-from decouple import config
+from decouple import Csv, config
 from dj_database_url import parse as db_url
 
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "django_js_reverse",
     "webpack_loader",
     "import_export",
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django_permissions_policy.PermissionsPolicyMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -195,6 +197,14 @@ COMMIT_SHA = config("RENDER_GIT_COMMIT", default="")
 # https://github.com/vintasoftware/safari-samesite-cookie-issue
 CSRF_COOKIE_SAMESITE = None
 SESSION_COOKIE_SAMESITE = None
+
+# Split deploy (Vercel FE + VM API). Empty by default = same-origin monolith.
+FRONTEND_URL = config("FRONTEND_URL", default="").rstrip("/")
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+SESSION_COOKIE_DOMAIN = config("SESSION_COOKIE_DOMAIN", default="") or None
+CSRF_COOKIE_DOMAIN = config("CSRF_COOKIE_DOMAIN", default="") or None
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

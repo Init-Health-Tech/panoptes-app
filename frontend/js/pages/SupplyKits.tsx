@@ -116,10 +116,12 @@ function SupplyKitCard({
     (tag) =>
       tag.code &&
       !assignedCodes.has(tag.code) &&
-      (tag.is_available !== false || tag.custody_type == null),
+      ((tag.is_available !== false && tag.is_available !== 'false') || tag.custody_type == null),
   );
   // Prefer tags explicitly marked available when custody fields exist
-  const loadableTags = availableTags.filter((tag) => tag.is_available !== false);
+  const loadableTags = availableTags.filter(
+    (tag) => tag.is_available !== false && tag.is_available !== 'false',
+  );
   const activeTechnicians = technicians.filter((t) => t.is_active !== false);
   const kitStatus = kit.status ?? 'armando';
   const steps = clinicalLoadSteps(kitStatus, role);

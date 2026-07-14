@@ -3,7 +3,15 @@ import { parse as cookieParse } from 'cookie';
 import { RouterProvider } from 'react-router/dom';
 
 import { client } from '@/js/api/client.gen';
+import { getApiBaseUrl } from '@/js/config';
 import router from '@/js/routes';
+
+const apiBaseUrl = getApiBaseUrl();
+if (apiBaseUrl) {
+  client.setConfig({ baseURL: apiBaseUrl });
+  client.instance.defaults.baseURL = apiBaseUrl;
+}
+client.instance.defaults.withCredentials = true;
 
 client.instance.interceptors.request.use((request) => {
   const { csrftoken } = cookieParse(document.cookie);

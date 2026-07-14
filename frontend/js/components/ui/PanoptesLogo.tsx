@@ -1,6 +1,6 @@
 import type { ImgHTMLAttributes } from 'react';
 
-import logoUrl from '@/assets/images/panoptes-logo.png';
+import logoUrl from '@/assets/images/panoptes-logo.svg';
 
 type PanoptesLogoProps = {
   size?: number;
