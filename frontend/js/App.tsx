@@ -19,9 +19,12 @@ if (apiBaseUrl) {
 client.instance.defaults.withCredentials = true;
 
 client.instance.interceptors.request.use((request) => {
-  // Prefer the in-memory token (works cross-origin); fall back to the cookie for the
-  // same-origin monolith where `document.cookie` is readable.
-  const token = getCsrfToken() || cookieParse(document.cookie).csrftoken;
+  // Django validates X-CSRFToken against the `csrftoken` cookie (double-submit), so
+  // prefer the cookie value: on a same-site subdomain (e.g. avant.init.com.mx) the
+  // cookie is `Domain=.init.com.mx` and readable via document.cookie, guaranteeing the
+  // header matches. The in-memory token is only a fallback for a truly cross-site SPA
+  // (e.g. *.vercel.app) where document.cookie can't read the API's cookie.
+  const token = cookieParse(document.cookie).csrftoken || getCsrfToken();
   if (request.headers && token) {
     request.headers['X-CSRFTOKEN'] = token;
   }
