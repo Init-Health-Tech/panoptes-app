@@ -168,6 +168,74 @@ class SalesOrderViewSetTest(LogisticsTestMixin, TestCaseUtils, APITestCase):
         self.assertResponse403(response)
 
 
+class ScanProductViewTest(LogisticsTestMixin, TestCaseUtils, APITestCase):
+    def setUp(self):
+        super().setUp()
+        self.setUp_logistics_org(modules=["logistics_requisitions"])
+        self.product = baker.make(
+            Product,
+            organization=self.organization,
+            sku="RTR-AX3000",
+            name="Router WiFi 6 AX3000",
+        )
+
+    def test_resolve_by_rfid_item_type(self):
+        from inventory.models import RFIDTag
+
+        baker.make(
+            RFIDTag,
+            organization=self.organization,
+            code="TCOMBA000001",
+            item_type="Router WiFi 6 AX3000",
+        )
+        response = self.auth_client.post(
+            reverse("logistics-scan-product"),
+            {"identifier": "TCOMBA000001"},
+            format="json",
+        )
+        self.assertResponse200(response)
+        self.assertEqual(response.data["product"]["id"], self.product.id)
+        self.assertEqual(response.data["matched_by"], "rfid")
+
+    def test_resolve_by_sku_when_no_tag(self):
+        response = self.auth_client.post(
+            reverse("logistics-scan-product"),
+            {"identifier": "rtr-ax3000"},
+            format="json",
+        )
+        self.assertResponse200(response)
+        self.assertEqual(response.data["product"]["id"], self.product.id)
+        self.assertEqual(response.data["matched_by"], "sku")
+
+    def test_unknown_identifier_returns_404(self):
+        response = self.auth_client.post(
+            reverse("logistics-scan-product"),
+            {"identifier": "NO-EXISTE-999"},
+            format="json",
+        )
+        self.assertResponse404(response)
+
+    def test_empty_identifier_returns_400(self):
+        response = self.auth_client.post(
+            reverse("logistics-scan-product"),
+            {"identifier": ""},
+            format="json",
+        )
+        self.assertResponse400(response)
+
+    def test_403_without_requisitions_module(self):
+        OrganizationModule.objects.filter(
+            organization=self.organization,
+            module__code="logistics_requisitions",
+        ).update(is_active=False)
+        response = self.auth_client.post(
+            reverse("logistics-scan-product"),
+            {"identifier": "RTR-AX3000"},
+            format="json",
+        )
+        self.assertResponse403(response)
+
+
 class LogisticsDashboardStatsTest(LogisticsTestMixin, TestCaseUtils, APITestCase):
     def setUp(self):
         super().setUp()

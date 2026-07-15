@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 
 import {
   clientsList,
+  inventoryLocationsList,
   logisticsDashboardStatsRetrieve,
   productsList,
   providersList,
@@ -40,7 +41,7 @@ export async function requisitionsLoader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const status = url.searchParams.get('status') || undefined;
   try {
-    const [requisitionsResponse, productsResponse] = await Promise.all([
+    const [requisitionsResponse, productsResponse, locationsResponse] = await Promise.all([
       requisitionsList({
         query: {
           limit: Number(url.searchParams.get('limit') || 20),
@@ -50,11 +51,13 @@ export async function requisitionsLoader({ request }: { request: Request }) {
         throwOnError: true,
       }),
       productsList({ query: { limit: 100, offset: 0 }, throwOnError: true }),
+      inventoryLocationsList({ query: { limit: 200, offset: 0 }, throwOnError: true }),
     ]);
     return {
       ...requisitionsResponse.data,
       filters: { status: status ?? '' },
       products: productsResponse.data.results ?? [],
+      locations: locationsResponse.data.results ?? [],
     };
   } catch (error) {
     return handleAuthError(error, request);

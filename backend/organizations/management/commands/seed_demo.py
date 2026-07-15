@@ -1034,13 +1034,17 @@ class Command(BaseCommand):
                 inventory_location=loc,
             )
 
-        # Catálogo de productos de telecom
+        # Catálogo de productos de telecom.
+        # Cada nombre coincide con el ``item_type`` de un tag RFID de arriba, para que
+        # al escanear un tag con el handheld se resuelva el producto correspondiente.
         product_specs = [
             ("RTR-AX3000", "Router WiFi 6 AX3000", "Routers", "pza"),
             ("MDM-GPON-01", "Módem GPON ONT dual-band", "Módems", "pza"),
             ("SW-GIGA-24", "Switch Gigabit 24 puertos", "Switches", "pza"),
-            ("ONT-XPON-01", "ONT fibra óptica XPON", "ONT", "pza"),
+            ("ANT-SEC-5G", "Antena sectorial 5 GHz", "Antenas", "pza"),
             ("MESH-WIFI-01", "Repetidor mesh WiFi", "Repetidores", "pza"),
+            ("ONT-XPON-01", "ONT fibra óptica XPON", "ONT", "pza"),
+            ("RTR-VPN-EMP", "Router empresarial VPN", "Routers", "pza"),
             ("IPTV-4K-01", "Decodificador IPTV 4K", "Decodificadores", "pza"),
         ]
         products = {}
