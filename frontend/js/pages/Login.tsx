@@ -8,6 +8,29 @@ import { Input } from '@/js/components/ui/Input';
 import { PanoptesLogo } from '@/js/components/ui/PanoptesLogo';
 import { safeNextPath } from '@/js/utils/auth';
 
+/** Turn any login failure into a clear, actionable message (never leave the UI silent). */
+function loginErrorMessage(err: unknown): string {
+  if (err instanceof AxiosError) {
+    // The API answered: use its message (e.g. "Credenciales incorrectas." on 400).
+    if (err.response) {
+      const detail = (err.response.data as { detail?: unknown } | undefined)?.detail;
+      if (typeof detail === 'string' && detail.trim()) {
+        return detail;
+      }
+      if (err.response.status >= 500) {
+        return 'El servidor tuvo un error. Intenta de nuevo en un momento.';
+      }
+      return 'No se pudo iniciar sesión. Revisa tus datos e intenta de nuevo.';
+    }
+    // No response: timeout or the API is unreachable.
+    if (err.code === 'ECONNABORTED') {
+      return 'El servidor tardó demasiado en responder. Verifica tu conexión e intenta de nuevo.';
+    }
+    return 'No se pudo contactar el servidor. Verifica tu conexión e intenta de nuevo.';
+  }
+  return 'No se pudo iniciar sesión. Intenta de nuevo.';
+}
+
 export default function Login() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -26,13 +49,7 @@ export default function Login() {
       await login(email, password);
       navigate(next, { replace: true });
     } catch (err) {
-      const data =
-        err instanceof AxiosError ? (err.response?.data as { detail?: unknown } | undefined) : undefined;
-      const detail =
-        typeof data?.detail === 'string'
-          ? data.detail
-          : 'No se pudo iniciar sesión. Revisa tu conexión e intenta de nuevo.';
-      setError(detail);
+      setError(loginErrorMessage(err));
       setSubmitting(false);
     }
   }
