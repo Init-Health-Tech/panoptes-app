@@ -209,14 +209,9 @@ class Command(BaseCommand):
         else:
             module_codes = CLINICAL_MODULES
 
-        # Activa los módulos del perfil SIN desactivar los que ya tenga (unión).
-        active_codes = set(
-            OrganizationModule.objects.filter(organization=org, is_active=True).values_list(
-                "module__code", flat=True
-            )
-        )
-        active_codes.update(module_codes)
-        enable_modules_for_organization(org, list(active_codes))
+        # Deja EXACTAMENTE los módulos del perfil: activa esos y DESACTIVA el resto,
+        # para que el menú refleje solo lo del perfil (p. ej. warehouse sin instrumental).
+        enable_modules_for_organization(org, list(module_codes))
 
         prefix = (slug[:3] or "ORG").upper()
         if profile == "warehouse":

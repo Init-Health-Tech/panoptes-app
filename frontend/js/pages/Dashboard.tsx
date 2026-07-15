@@ -42,6 +42,7 @@ const Dashboard = () => {
   const modules = useOptionalModules();
   const hasInventory = modules?.modules?.includes('inventory_realtime');
   const hasLogistics = modules?.modules?.includes('logistics_requisitions');
+  const hasSalesPurchases = modules?.modules?.includes('logistics_sales_purchases');
   const hasInstrumental = hasInstrumentalProduct(modules?.modules ?? []);
   const showInstrumentalKpis = hasInstrumental && (medicalStats || instrumentalStats);
   const demoExpiry = modules?.demo_expires_at ? new Date(modules.demo_expires_at) : null;
@@ -201,7 +202,7 @@ const Dashboard = () => {
         <section className="mb-8">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold text-on-surface">
-              Logística
+              {hasSalesPurchases ? 'Logística' : 'Salidas y entradas'}
             </h2>
             <Link className="panoptes-btn-secondary text-xs" to="/requisitions">
               Ver requisiciones
@@ -221,18 +222,22 @@ const Dashboard = () => {
               label="En tránsito"
               value={logisticsStats.requisitions_in_transit}
             />
-            <KpiCard
-              accent="primary"
-              icon="receipt_long"
-              label="Ventas abiertas"
-              value={logisticsStats.open_sales_orders}
-            />
-            <KpiCard
-              accent="primary"
-              icon="shopping_cart"
-              label="Compras abiertas"
-              value={logisticsStats.open_purchase_orders}
-            />
+            {hasSalesPurchases && (
+              <>
+                <KpiCard
+                  accent="primary"
+                  icon="receipt_long"
+                  label="Ventas abiertas"
+                  value={logisticsStats.open_sales_orders}
+                />
+                <KpiCard
+                  accent="primary"
+                  icon="shopping_cart"
+                  label="Compras abiertas"
+                  value={logisticsStats.open_purchase_orders}
+                />
+              </>
+            )}
           </div>
         </section>
       )}
