@@ -11,27 +11,33 @@ Login/logout siguen en el API (`/login/`, `/logout/`). Tras autenticarse, el usu
 
 ## 1. Backend (VM)
 
-1. Apunta DNS `api.avant.init.com.mx` a la VM (A/AAAA) y termina TLS (Caddy/Nginx + Let’s Encrypt).
-2. Usa `backend/.env.production.example` como base:
+Puerto del API en la VM (loopback, raro para no chocar con otros backends):
 
-```bash
-ALLOWED_HOSTS=api.avant.init.com.mx
-FRONTEND_URL=https://avant.init.com.mx
-CORS_ALLOWED_ORIGINS=https://avant.init.com.mx
-CSRF_TRUSTED_ORIGINS=https://avant.init.com.mx
-SESSION_COOKIE_DOMAIN=.init.com.mx
-CSRF_COOKIE_DOMAIN=.init.com.mx
+```text
+127.0.0.1:58427  →  contenedor gunicorn :8000
 ```
 
-3. Migraciones y seed (si aplica):
+> Nota: `100000` no es un puerto válido (máximo `65535`). Usamos **58427**.
+
+1. Apunta DNS `api.avant.init.com.mx` a la VM y termina TLS (Caddy/Nginx → `http://127.0.0.1:58427`).
+2. Copia `backend/.env.production.example` → `backend/.env` en el servidor y rellena secretos.
+3. Arranque:
 
 ```bash
-python manage.py migrate
-python manage.py collectstatic --noinput
-# gunicorn / systemd / docker compose solo con backend+db+redis+broker
+docker compose -f docker-compose.prod.yml --env-file backend/.env up -d --build
+docker compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
+docker compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
 ```
 
 4. El proxy debe enviar `X-Forwarded-Proto: https` (ya hay `SECURE_PROXY_SSL_HEADER`).
+
+Ejemplo Caddy:
+
+```caddy
+api.avant.init.com.mx {
+  reverse_proxy 127.0.0.1:58427
+}
+```
 
 Admin Django: `https://api.avant.init.com.mx/admin/`
 

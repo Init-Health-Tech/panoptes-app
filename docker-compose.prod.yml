@@ -1,0 +1,103 @@
+# Producción en VM — aislado de otros backends.
+# Puerto host raro (válido ≤65535): 58427 → gunicorn interno :8000
+#
+# Uso:
+#   docker compose -f docker-compose.prod.yml --env-file backend/.env up -d --build
+#   docker compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
+#   docker compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
+#
+# Proxy (Caddy/Nginx): api.avant.init.com.mx → http://127.0.0.1:58427
+
+name: panoptes-prod
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: panoptes
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-panoptes_change_me}
+      POSTGRES_DB: panoptes
+    volumes:
+      - panoptes_pgdata:/var/lib/postgresql/data
+    networks:
+      - panoptes_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U panoptes -d panoptes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - panoptes_internal
+
+  broker:
+    image: rabbitmq:alpine
+    restart: unless-stopped
+    networks:
+      - panoptes_internal
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    command: >
+      gunicorn project_name.wsgi
+      --bind 0.0.0.0:8000
+      --workers 3
+      --timeout 120
+      --log-file -
+    env_file:
+      - backend/.env
+    environment:
+      DATABASE_URL: postgres://panoptes:${POSTGRES_PASSWORD:-panoptes_change_me}@db:5432/panoptes
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://guest:guest@broker:5672//
+      CELERY_BROKER_URL: amqp://guest:guest@broker:5672//
+    ports:
+      # Solo loopback + puerto raro para no chocar con otros APIs en la VM
+      - "127.0.0.1:58427:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      broker:
+        condition: service_started
+    networks:
+      - panoptes_internal
+
+  celery:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    command: celery --app=project_name worker --loglevel=info
+    env_file:
+      - backend/.env
+    environment:
+      DATABASE_URL: postgres://panoptes:${POSTGRES_PASSWORD:-panoptes_change_me}@db:5432/panoptes
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://guest:guest@broker:5672//
+      CELERY_BROKER_URL: amqp://guest:guest@broker:5672//
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      broker:
+        condition: service_started
+    networks:
+      - panoptes_internal
+
+volumes:
+  panoptes_pgdata:
+
+networks:
+  panoptes_internal:
+    name: panoptes_internal
+    driver: bridge
