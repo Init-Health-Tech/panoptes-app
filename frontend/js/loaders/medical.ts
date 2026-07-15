@@ -1,15 +1,14 @@
 import { AxiosError } from 'axios';
-import { redirectDocument } from 'react-router';
 
 import { doctorsList, medicalDashboardStatsRetrieve, proceduresList, rfidTagsList, supplyKitsList, techniciansList } from '@/js/api';
 
-import { loginRedirectUrl } from '@/js/utils/auth';
+import { loginRedirect } from '@/js/utils/auth';
 
 async function handleAuthError(error: unknown, request: Request) {
   if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
     const url = new URL(request.url);
     const next = url.pathname + url.search + url.hash;
-    throw redirectDocument(loginRedirectUrl(next));
+    throw loginRedirect(next);
   }
   throw error;
 }

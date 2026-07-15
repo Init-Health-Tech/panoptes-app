@@ -27,6 +27,7 @@ urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
     path("admin/defender/", include("defender.urls")),
     path("jsreverse/", django_js_reverse.views.urls_js, name="js_reverse"),
+    path("api/auth/", include("common.api_urls")),
     path("api/", include(router.urls), name="api"),
     path("api/", include("organizations.api_urls")),
     path("api/", include("inventory.api_urls")),

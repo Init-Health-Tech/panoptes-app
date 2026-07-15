@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
-import { redirectDocument } from 'react-router';
+
+import type { ActiveModules } from '@/js/types/modules';
 
 import { activeModulesRetrieve } from '@/js/api';
+import { bootstrapCsrf } from '@/js/api/auth';
 import { getApiBaseUrl } from '@/js/config';
-import type { ActiveModules } from '@/js/types/modules';
-import { loginRedirectUrl } from '@/js/utils/auth';
+import { loginRedirect } from '@/js/utils/auth';
 
 function isActiveModules(data: unknown): data is ActiveModules {
   if (!data || typeof data !== 'object') return false;
@@ -24,6 +25,12 @@ export async function modulesLoader({ request }: { request: Request }): Promise<
         { status: 502, statusText: 'Bad Gateway' },
       );
     }
+    // Authenticated: make sure the CSRF token is in memory for later writes.
+    try {
+      await bootstrapCsrf();
+    } catch {
+      // Non-fatal: the token is fetched lazily again before the next write.
+    }
     return response.data;
   } catch (error) {
     if (error instanceof Response) {
@@ -32,7 +39,7 @@ export async function modulesLoader({ request }: { request: Request }): Promise<
     if (error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403 || error.status === 401 || error.status === 403)) {
       const url = new URL(request.url);
       const next = url.pathname + url.search + url.hash;
-      throw redirectDocument(loginRedirectUrl(next));
+      throw loginRedirect(next);
     }
     if (error instanceof AxiosError && !error.response && !getApiBaseUrl()) {
       throw new Response(

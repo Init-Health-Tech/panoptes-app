@@ -45,12 +45,16 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     restart: unless-stopped
+    # migrate + collectstatic on every start so the DB schema and the Django-rendered
+    # login CSS (WhiteNoise + ManifestStaticFilesStorage) are always in sync.
     command: >
+      sh -c "python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
       gunicorn project_name.wsgi
       --bind 0.0.0.0:8000
       --workers 3
       --timeout 120
-      --log-file -
+      --log-file -"
     env_file:
       - backend/.env
     environment:

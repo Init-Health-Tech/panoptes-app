@@ -1,5 +1,4 @@
 import { AxiosError } from 'axios';
-import { redirectDocument } from 'react-router';
 
 import {
   instrumentCatalogList,
@@ -8,7 +7,7 @@ import {
   rfidTagsList,
   rfidTagsRetrieve,
 } from '@/js/api';
-import { loginRedirectUrl } from '@/js/utils/auth';
+import { loginRedirect } from '@/js/utils/auth';
 
 export async function inventoryLoader({ request }: { request: Request }) {
   const url = new URL(request.url);
@@ -40,7 +39,7 @@ export async function inventoryLoader({ request }: { request: Request }) {
   } catch (error) {
     if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
       const next = url.pathname + url.search + url.hash;
-      throw redirectDocument(loginRedirectUrl(next));
+      throw loginRedirect(next);
     }
     throw error;
   }
@@ -59,7 +58,7 @@ export async function inventoryLocationsLoader({ request }: { request: Request }
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
-      throw redirectDocument(loginRedirectUrl(url.pathname + url.search));
+      throw loginRedirect(url.pathname + url.search);
     }
     throw error;
   }
@@ -92,7 +91,7 @@ export async function inventoryDetailLoader({
   } catch (error) {
     if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
       const url = new URL(request.url);
-      throw redirectDocument(loginRedirectUrl(url.pathname + url.search));
+      throw loginRedirect(url.pathname + url.search);
     }
     throw new Response('Not Found', { status: 404 });
   }

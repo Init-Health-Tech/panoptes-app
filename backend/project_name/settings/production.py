@@ -34,9 +34,11 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-# Sibling subdomains (avant.* / api.*) are same-site; Lax is enough with shared cookie domain.
-SESSION_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_SAMESITE = "Lax"
+# Split deploy: the SPA (Vercel domain) calls the API cross-origin via fetch.
+# "None" (with Secure) guarantees the browser sends the cookie on those XHR requests,
+# which "Lax" refuses to do from a different site (e.g. *.vercel.app).
+SESSION_COOKIE_SAMESITE = config("SESSION_COOKIE_SAMESITE", default="None")
+CSRF_COOKIE_SAMESITE = config("CSRF_COOKIE_SAMESITE", default="None")
 SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=3600, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 

@@ -1,6 +1,7 @@
 import { createElement, type ComponentType } from 'react';
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 
+import { fetchCurrentUser } from '@/js/api/auth';
 import { ModuleGuard } from '@/js/components/layout/ModuleGuard';
 import { RootErrorPage } from '@/js/components/layout/RootErrorPage';
 import { RootLayout } from '@/js/components/layout/RootLayout';
@@ -50,6 +51,7 @@ import Dashboard from '@/js/pages/Dashboard';
 import Doctors from '@/js/pages/Doctors';
 import Inventory from '@/js/pages/Inventory';
 import InventoryDetail from '@/js/pages/InventoryDetail';
+import Login from '@/js/pages/Login';
 import PlatformAdmin from '@/js/pages/PlatformAdmin';
 import Procedures from '@/js/pages/Procedures';
 import Products from '@/js/pages/Products';
@@ -70,7 +72,18 @@ function guarded(Component: ComponentType, moduleCode: string | string[]) {
   return Guarded;
 }
 
+/** If already authenticated, skip the login page. */
+async function loginLoader() {
+  try {
+    await fetchCurrentUser();
+    return redirect('/');
+  } catch {
+    return null;
+  }
+}
+
 const router = createBrowserRouter([
+  { path: '/login', Component: Login, loader: loginLoader },
   {
     id: 'root',
     loader: modulesLoader,

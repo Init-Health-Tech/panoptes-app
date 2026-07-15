@@ -20,3 +20,20 @@ export function apiUrl(path: string): string {
   }
   return base ? `${base}${path}` : path;
 }
+
+/**
+ * In-memory CSRF token.
+ *
+ * The SPA can run on a different origin than the API (e.g. Vercel), where it cannot
+ * read the `csrftoken` cookie via `document.cookie`. So we keep the token that
+ * `GET /api/auth/csrf/` returns in memory and send it as the `X-CSRFToken` header.
+ */
+let csrfToken: string | null = null;
+
+export function getCsrfToken(): string | null {
+  return csrfToken;
+}
+
+export function setCsrfToken(token: string | null): void {
+  csrfToken = token || null;
+}

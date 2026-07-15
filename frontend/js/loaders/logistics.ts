@@ -1,5 +1,4 @@
 import { AxiosError } from 'axios';
-import { redirectDocument } from 'react-router';
 
 import {
   clientsList,
@@ -11,12 +10,12 @@ import {
   salesOrdersList,
 } from '@/js/api';
 
-import { loginRedirectUrl } from '@/js/utils/auth';
+import { loginRedirect } from '@/js/utils/auth';
 
 async function handleAuthError(error: unknown, request: Request) {
   if (error instanceof AxiosError && (error?.status === 401 || error?.status === 403)) {
     const url = new URL(request.url);
-    throw redirectDocument(loginRedirectUrl(url.pathname + url.search));
+    throw loginRedirect(url.pathname + url.search);
   }
   throw error;
 }

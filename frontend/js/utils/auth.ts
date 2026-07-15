@@ -1,13 +1,16 @@
-import { apiUrl, getApiBaseUrl } from '@/js/config';
+import { redirect } from 'react-router';
 
-/** Absolute path on the SPA, used as login `next` when FE and API are split. */
-export function loginRedirectUrl(nextPath: string): string {
-  const next = getApiBaseUrl()
-    ? `${window.location.origin}${nextPath.startsWith('/') ? nextPath : `/${nextPath}`}`
-    : nextPath;
-  return apiUrl(`/login/?next=${encodeURIComponent(next)}`);
+/** Safe relative path to send back to after login (rejects absolute/external URLs). */
+export function safeNextPath(nextPath: string | null | undefined): string {
+  if (!nextPath) return '/';
+  // Reject absolute URLs and protocol-relative URLs to avoid open redirects.
+  if (/^https?:\/\//i.test(nextPath) || nextPath.startsWith('//')) return '/';
+  return nextPath.startsWith('/') ? nextPath : `/${nextPath}`;
 }
 
-export function logoutActionUrl(): string {
-  return apiUrl('/logout/');
+/** Client-side redirect to the React login route, preserving where to return to. */
+export function loginRedirect(nextPath: string) {
+  const next = safeNextPath(nextPath);
+  const qs = next && next !== '/' ? `?next=${encodeURIComponent(next)}` : '';
+  return redirect(`/login${qs}`);
 }

@@ -3,20 +3,27 @@ import { parse as cookieParse } from 'cookie';
 import { RouterProvider } from 'react-router/dom';
 
 import { client } from '@/js/api/client.gen';
-import { getApiBaseUrl } from '@/js/config';
+import { getApiBaseUrl, getCsrfToken } from '@/js/config';
 import router from '@/js/routes';
 
 const apiBaseUrl = getApiBaseUrl();
+// `withCredentials` must be part of the client config so it is spread into every
+// request (setting it only on instance.defaults is not enough for cross-origin cookies).
+client.setConfig({
+  ...(apiBaseUrl ? { baseURL: apiBaseUrl } : {}),
+  withCredentials: true,
+});
 if (apiBaseUrl) {
-  client.setConfig({ baseURL: apiBaseUrl });
   client.instance.defaults.baseURL = apiBaseUrl;
 }
 client.instance.defaults.withCredentials = true;
 
 client.instance.interceptors.request.use((request) => {
-  const { csrftoken } = cookieParse(document.cookie);
-  if (request.headers && csrftoken) {
-    request.headers['X-CSRFTOKEN'] = csrftoken;
+  // Prefer the in-memory token (works cross-origin); fall back to the cookie for the
+  // same-origin monolith where `document.cookie` is readable.
+  const token = getCsrfToken() || cookieParse(document.cookie).csrftoken;
+  if (request.headers && token) {
+    request.headers['X-CSRFTOKEN'] = token;
   }
   return request;
 });
