@@ -6,6 +6,7 @@ import {
   requisitionsCreate,
   requisitionsPartialUpdate,
   type InventoryLocation,
+  type MovementTypeEnum,
   type PaginatedRequisitionList,
   type Product,
   type Requisition,
@@ -38,6 +39,28 @@ type DraftLine = {
 
 const KANBAN_COLUMNS = ['solicitada', 'aprobada', 'en_transito', 'entregada'] as const;
 
+const MOVEMENT_META: Record<
+  MovementTypeEnum,
+  { label: string; icon: string; originLabel: string; destinationLabel: string; blurb: string }
+> = {
+  salida: {
+    label: 'Salida',
+    icon: 'upload_file',
+    originLabel: 'Almacén de origen',
+    destinationLabel: 'A dónde se envía',
+    blurb: 'Envío de mercancía desde un almacén hacia una sucursal o destino.',
+  },
+  entrada: {
+    label: 'Entrada',
+    icon: 'download',
+    originLabel: 'De dónde llega',
+    destinationLabel: 'Almacén que recibe',
+    blurb: 'Recepción de mercancía que ingresa a un almacén.',
+  },
+};
+
+const WIZARD_STEPS = ['Tipo', 'Ubicaciones', 'Productos', 'Revisar'] as const;
+
 function locationCode(name: string): string {
   const base = name
     .normalize('NFD')
@@ -48,6 +71,22 @@ function locationCode(name: string): string {
     .slice(0, 36);
   const suffix = Date.now().toString(36).slice(-4).toUpperCase();
   return `${base || 'UBIC'}-${suffix}`;
+}
+
+function MovementBadge({ type }: { type: MovementTypeEnum }) {
+  const meta = MOVEMENT_META[type];
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
+        type === 'salida'
+          ? 'bg-primary/10 text-primary'
+          : 'bg-tertiary/15 text-tertiary'
+      }`}
+    >
+      <span className="material-symbols-outlined text-sm">{meta.icon}</span>
+      {meta.label}
+    </span>
+  );
 }
 
 function RequisitionStatusEdit({ req, onSaved }: { req: Requisition; onSaved: () => void }) {
@@ -177,6 +216,41 @@ function LocationSelect({
   );
 }
 
+function Stepper({ current }: { current: number }) {
+  return (
+    <ol className="mb-5 flex items-center gap-2">
+      {WIZARD_STEPS.map((label, index) => {
+        const state = index < current ? 'done' : index === current ? 'active' : 'todo';
+        return (
+          <li key={label} className="flex flex-1 items-center gap-2">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                state === 'done'
+                  ? 'bg-primary text-on-primary'
+                  : state === 'active'
+                    ? 'bg-primary/15 text-primary ring-2 ring-primary'
+                    : 'bg-surface-container text-on-surface-variant'
+              }`}
+            >
+              {state === 'done' ? '✓' : index + 1}
+            </span>
+            <span
+              className={`text-xs font-medium ${
+                state === 'todo' ? 'text-on-surface-variant' : 'text-on-surface'
+              }`}
+            >
+              {label}
+            </span>
+            {index < WIZARD_STEPS.length - 1 && (
+              <span className="mx-1 hidden h-px flex-1 bg-outline-variant/40 sm:block" />
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 function NewRequisitionForm({
   products,
   initialLocations,
@@ -187,7 +261,10 @@ function NewRequisitionForm({
   onCreated: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
   const [locations, setLocations] = useState<InventoryLocation[]>(initialLocations);
+
+  const [movementType, setMovementType] = useState<MovementTypeEnum>('salida');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [lines, setLines] = useState<DraftLine[]>([]);
@@ -203,13 +280,15 @@ function NewRequisitionForm({
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  const meta = MOVEMENT_META[movementType];
+
   useEffect(() => {
     setLocations(initialLocations);
   }, [initialLocations]);
 
   useEffect(() => {
-    if (mode === 'rfid' && open) scanRef.current?.focus();
-  }, [mode, open]);
+    if (mode === 'rfid' && open && step === 2) scanRef.current?.focus();
+  }, [mode, open, step]);
 
   const addOrIncrement = (product: ScannedProduct, qty: number) => {
     setLines((prev) => {
@@ -256,9 +335,7 @@ function NewRequisitionForm({
   };
 
   const updateQty = (key: string, qty: number) => {
-    setLines((prev) =>
-      prev.map((l) => (l.key === key ? { ...l, quantity: Math.max(1, qty) } : l)),
-    );
+    setLines((prev) => prev.map((l) => (l.key === key ? { ...l, quantity: Math.max(1, qty) } : l)));
   };
 
   const removeLine = (key: string) => setLines((prev) => prev.filter((l) => l.key !== key));
@@ -275,6 +352,8 @@ function NewRequisitionForm({
   };
 
   const resetForm = () => {
+    setStep(0);
+    setMovementType('salida');
     setOrigin('');
     setDestination('');
     setLines([]);
@@ -285,20 +364,41 @@ function NewRequisitionForm({
     setError('');
   };
 
-  const handleSubmit = async () => {
+  const totalUnits = lines.reduce((sum, l) => sum + l.quantity, 0);
+
+  const stepValid = (index: number): boolean => {
+    if (index === 0) return Boolean(movementType);
+    if (index === 1) return Boolean(origin) && Boolean(destination);
+    if (index === 2) return lines.length > 0;
+    return true;
+  };
+
+  const goNext = () => {
     setError('');
-    if (!origin || !destination) {
-      setError('Selecciona un origen y un destino del catálogo.');
+    if (!stepValid(step)) {
+      if (step === 1) setError('Selecciona un origen y un destino.');
+      else if (step === 2) setError('Agrega al menos un producto (manual o por RFID).');
       return;
     }
-    if (lines.length === 0) {
-      setError('Agrega al menos un producto (manual o por RFID).');
+    setStep((s) => Math.min(WIZARD_STEPS.length - 1, s + 1));
+  };
+
+  const goBack = () => {
+    setError('');
+    setStep((s) => Math.max(0, s - 1));
+  };
+
+  const handleSubmit = async () => {
+    setError('');
+    if (!stepValid(0) || !stepValid(1) || !stepValid(2)) {
+      setError('Completa todos los pasos antes de crear la requisición.');
       return;
     }
     setSaving(true);
     try {
       await requisitionsCreate({
         body: {
+          movement_type: movementType,
           origin,
           destination,
           status: 'solicitada',
@@ -316,8 +416,6 @@ function NewRequisitionForm({
     }
   };
 
-  const totalUnits = lines.reduce((sum, l) => sum + l.quantity, 0);
-
   if (!open) {
     return (
       <Button className="mb-4" icon="add" onClick={() => setOpen(true)}>
@@ -334,186 +432,307 @@ function NewRequisitionForm({
         </h2>
         <button
           className="text-on-surface-variant hover:text-on-surface"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            resetForm();
+            setOpen(false);
+          }}
           type="button"
         >
           <span className="material-symbols-outlined">close</span>
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <LocationSelect
-          id="req-origin"
-          label="Origen"
-          locations={locations}
-          onChange={setOrigin}
-          onCreate={(name) => handleCreateLocation(name, 'origin')}
-          value={origin}
-        />
-        <LocationSelect
-          id="req-dest"
-          label="Destino (a dónde se envía)"
-          locations={locations}
-          onChange={setDestination}
-          onCreate={(name) => handleCreateLocation(name, 'destination')}
-          value={destination}
-        />
-      </div>
+      <Stepper current={step} />
 
-      <div>
-        <div className="mb-2 flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase text-on-surface-variant">Productos</span>
-          <div className="ml-auto inline-flex overflow-hidden rounded-lg border border-outline-variant/40">
-            <button
-              className={`px-3 py-1 text-xs font-medium ${
-                mode === 'manual' ? 'bg-primary text-on-primary' : 'text-on-surface-variant'
-              }`}
-              onClick={() => setMode('manual')}
-              type="button"
-            >
-              Manual
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-medium ${
-                mode === 'rfid' ? 'bg-primary text-on-primary' : 'text-on-surface-variant'
-              }`}
-              onClick={() => setMode('rfid')}
-              type="button"
-            >
-              RFID / Handheld
-            </button>
+      {/* Paso 1: Tipo */}
+      {step === 0 && (
+        <div>
+          <p className="mb-3 text-sm text-on-surface-variant">¿Qué tipo de movimiento es?</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {(Object.keys(MOVEMENT_META) as MovementTypeEnum[]).map((type) => {
+              const m = MOVEMENT_META[type];
+              const selected = movementType === type;
+              return (
+                <button
+                  key={type}
+                  className={`flex items-start gap-3 rounded-xl border p-4 text-left transition ${
+                    selected
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                      : 'border-outline-variant/40 hover:border-outline-variant'
+                  }`}
+                  onClick={() => setMovementType(type)}
+                  type="button"
+                >
+                  <span
+                    className={`material-symbols-outlined text-2xl ${
+                      selected ? 'text-primary' : 'text-on-surface-variant'
+                    }`}
+                  >
+                    {m.icon}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-on-surface">{m.label}</span>
+                    <span className="mt-0.5 block text-xs text-on-surface-variant">{m.blurb}</span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
+      )}
 
-        {mode === 'manual' ? (
-          <div className="flex flex-wrap items-end gap-2">
-            <div className="min-w-[220px] flex-1">
-              <Select
-                id="req-manual-product"
-                onChange={(e) => setManualProductId(e.target.value)}
-                value={manualProductId}
+      {/* Paso 2: Ubicaciones */}
+      {step === 1 && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <LocationSelect
+            id="req-origin"
+            label={meta.originLabel}
+            locations={locations}
+            onChange={setOrigin}
+            onCreate={(name) => handleCreateLocation(name, 'origin')}
+            value={origin}
+          />
+          <LocationSelect
+            id="req-dest"
+            label={meta.destinationLabel}
+            locations={locations}
+            onChange={setDestination}
+            onCreate={(name) => handleCreateLocation(name, 'destination')}
+            value={destination}
+          />
+        </div>
+      )}
+
+      {/* Paso 3: Productos */}
+      {step === 2 && (
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase text-on-surface-variant">Productos</span>
+            <div className="ml-auto inline-flex overflow-hidden rounded-lg border border-outline-variant/40">
+              <button
+                className={`px-3 py-1 text-xs font-medium ${
+                  mode === 'manual' ? 'bg-primary text-on-primary' : 'text-on-surface-variant'
+                }`}
+                onClick={() => setMode('manual')}
+                type="button"
               >
-                <option value="">Seleccionar producto…</option>
-                {products.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.sku} — {p.name}
-                  </option>
-                ))}
-              </Select>
+                Manual
+              </button>
+              <button
+                className={`px-3 py-1 text-xs font-medium ${
+                  mode === 'rfid' ? 'bg-primary text-on-primary' : 'text-on-surface-variant'
+                }`}
+                onClick={() => setMode('rfid')}
+                type="button"
+              >
+                RFID / Handheld
+              </button>
             </div>
-            <div className="w-24">
-              <Input
-                aria-label="Cantidad"
-                min={1}
-                onChange={(e) => setManualQty(e.target.value)}
-                type="number"
-                value={manualQty}
-              />
-            </div>
-            <Button disabled={!manualProductId} icon="add" onClick={handleAddManual} variant="secondary">
-              Agregar
-            </Button>
           </div>
-        ) : (
-          <div>
+
+          {mode === 'manual' ? (
             <div className="flex flex-wrap items-end gap-2">
-              <div className="min-w-[240px] flex-1">
-                <input
-                  className="panoptes-input"
-                  onChange={(e) => setScanValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      void handleScan();
-                    }
-                  }}
-                  placeholder="Escanea RFID (EPC/ASCII) o teclea el SKU…"
-                  ref={scanRef}
-                  value={scanValue}
+              <div className="min-w-[220px] flex-1">
+                <Select
+                  id="req-manual-product"
+                  onChange={(e) => setManualProductId(e.target.value)}
+                  value={manualProductId}
+                >
+                  <option value="">Seleccionar producto…</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.sku} — {p.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div className="w-24">
+                <Input
+                  aria-label="Cantidad"
+                  min={1}
+                  onChange={(e) => setManualQty(e.target.value)}
+                  type="number"
+                  value={manualQty}
                 />
               </div>
-              <Button icon="nfc" onClick={handleScan} variant="secondary">
-                Leer
+              <Button disabled={!manualProductId} icon="add" onClick={handleAddManual} variant="secondary">
+                Agregar
               </Button>
             </div>
-            <p className="mt-1 text-xs text-on-surface-variant">
-              Cada lectura suma +1 al producto. Con el handheld, cada disparo llega como “Enter”.
-            </p>
-            {scanFeedback && (
-              <p
-                className={`mt-1 text-xs font-medium ${
-                  scanFeedback.type === 'ok' ? 'text-primary' : 'text-error'
-                }`}
-              >
-                {scanFeedback.msg}
+          ) : (
+            <div>
+              <div className="flex flex-wrap items-end gap-2">
+                <div className="min-w-[240px] flex-1">
+                  <input
+                    className="panoptes-input"
+                    onChange={(e) => setScanValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        void handleScan();
+                      }
+                    }}
+                    placeholder="Escanea RFID (EPC/ASCII) o teclea el SKU…"
+                    ref={scanRef}
+                    value={scanValue}
+                  />
+                </div>
+                <Button icon="nfc" onClick={handleScan} variant="secondary">
+                  Leer
+                </Button>
+              </div>
+              <p className="mt-1 text-xs text-on-surface-variant">
+                Cada lectura suma +1 al producto. Con el handheld, cada disparo llega como “Enter”.
               </p>
-            )}
-          </div>
-        )}
+              {scanFeedback && (
+                <p
+                  className={`mt-1 text-xs font-medium ${
+                    scanFeedback.type === 'ok' ? 'text-primary' : 'text-error'
+                  }`}
+                >
+                  {scanFeedback.msg}
+                </p>
+              )}
+            </div>
+          )}
 
-        <div className="mt-3 overflow-hidden rounded-lg border border-outline-variant/30">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="bg-surface-container-low">
-                <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">SKU</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">Producto</th>
-                <th className="w-28 px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">Cantidad</th>
-                <th className="w-12 px-3 py-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {lines.length === 0 ? (
-                <tr>
-                  <td className="px-3 py-6 text-center text-on-surface-variant" colSpan={4}>
-                    Sin productos aún. Agrégalos manual o por RFID.
-                  </td>
+          <div className="mt-3 overflow-hidden rounded-lg border border-outline-variant/30">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="bg-surface-container-low">
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">SKU</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">Producto</th>
+                  <th className="w-28 px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">Cantidad</th>
+                  <th className="w-12 px-3 py-2"></th>
                 </tr>
-              ) : (
-                lines.map((line) => (
+              </thead>
+              <tbody>
+                {lines.length === 0 ? (
+                  <tr>
+                    <td className="px-3 py-6 text-center text-on-surface-variant" colSpan={4}>
+                      Sin productos aún. Agrégalos manual o por RFID.
+                    </td>
+                  </tr>
+                ) : (
+                  lines.map((line) => (
+                    <tr key={line.key} className="border-t border-outline-variant/20">
+                      <td className="px-3 py-2 font-mono text-xs">{line.sku}</td>
+                      <td className="px-3 py-2">{line.name}</td>
+                      <td className="px-3 py-2">
+                        <Input
+                          aria-label={`Cantidad ${line.name}`}
+                          min={1}
+                          onChange={(e) => updateQty(line.key, Number(e.target.value))}
+                          type="number"
+                          value={line.quantity}
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        <button
+                          className="text-on-surface-variant hover:text-error"
+                          onClick={() => removeLine(line.key)}
+                          title="Quitar"
+                          type="button"
+                        >
+                          <span className="material-symbols-outlined text-base">delete</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          {lines.length > 0 && (
+            <p className="mt-1 text-right text-xs text-on-surface-variant">
+              {lines.length} productos · {totalUnits} piezas
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Paso 4: Revisar */}
+      {step === 3 && (
+        <div className="space-y-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border border-outline-variant/30 p-3">
+              <p className="text-xs uppercase text-on-surface-variant">Tipo</p>
+              <div className="mt-1">
+                <MovementBadge type={movementType} />
+              </div>
+            </div>
+            <div className="rounded-lg border border-outline-variant/30 p-3">
+              <p className="text-xs uppercase text-on-surface-variant">{meta.originLabel}</p>
+              <p className="mt-1 text-sm font-medium">{origin || '—'}</p>
+            </div>
+            <div className="rounded-lg border border-outline-variant/30 p-3">
+              <p className="text-xs uppercase text-on-surface-variant">{meta.destinationLabel}</p>
+              <p className="mt-1 text-sm font-medium">{destination || '—'}</p>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-lg border border-outline-variant/30">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="bg-surface-container-low">
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">SKU</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase text-on-surface-variant">Producto</th>
+                  <th className="w-24 px-3 py-2 text-right text-xs font-semibold uppercase text-on-surface-variant">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lines.map((line) => (
                   <tr key={line.key} className="border-t border-outline-variant/20">
                     <td className="px-3 py-2 font-mono text-xs">{line.sku}</td>
                     <td className="px-3 py-2">{line.name}</td>
-                    <td className="px-3 py-2">
-                      <Input
-                        aria-label={`Cantidad ${line.name}`}
-                        min={1}
-                        onChange={(e) => updateQty(line.key, Number(e.target.value))}
-                        type="number"
-                        value={line.quantity}
-                      />
-                    </td>
-                    <td className="px-3 py-2 text-right">
-                      <button
-                        className="text-on-surface-variant hover:text-error"
-                        onClick={() => removeLine(line.key)}
-                        title="Quitar"
-                        type="button"
-                      >
-                        <span className="material-symbols-outlined text-base">delete</span>
-                      </button>
-                    </td>
+                    <td className="px-3 py-2 text-right">{line.quantity}</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        {lines.length > 0 && (
-          <p className="mt-1 text-right text-xs text-on-surface-variant">
-            {lines.length} productos · {totalUnits} piezas
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t border-outline-variant/40">
+                  <td className="px-3 py-2 text-xs font-semibold uppercase text-on-surface-variant" colSpan={2}>
+                    Total de piezas
+                  </td>
+                  <td className="px-3 py-2 text-right font-semibold">{totalUnits}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <p className="text-xs text-on-surface-variant">
+            Tras crearla podrás generar el vale de {meta.label.toLowerCase()} en PDF desde la lista.
           </p>
-        )}
-      </div>
+        </div>
+      )}
 
       {error && <p className="text-sm text-error">{error}</p>}
 
-      <div className="flex gap-2">
-        <Button disabled={saving} onClick={handleSubmit}>
-          {saving ? 'Creando…' : 'Crear requisición'}
-        </Button>
-        <Button onClick={() => setOpen(false)} variant="secondary">
-          Cancelar
-        </Button>
+      {/* Navegación */}
+      <div className="flex items-center gap-2">
+        {step > 0 && (
+          <Button icon="arrow_back" onClick={goBack} variant="secondary">
+            Atrás
+          </Button>
+        )}
+        <div className="ml-auto flex gap-2">
+          <Button
+            onClick={() => {
+              resetForm();
+              setOpen(false);
+            }}
+            variant="ghost"
+          >
+            Cancelar
+          </Button>
+          {step < WIZARD_STEPS.length - 1 ? (
+            <Button disabled={!stepValid(step)} icon="arrow_forward" onClick={goNext}>
+              Siguiente
+            </Button>
+          ) : (
+            <Button disabled={saving} onClick={handleSubmit}>
+              {saving ? 'Creando…' : 'Crear requisición'}
+            </Button>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -584,7 +803,10 @@ const Requisitions = () => {
                     className="rounded-lg border border-outline-variant/30 bg-surface-container-low p-3"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-xs font-semibold text-primary">REQ #{req.id}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-semibold text-primary">REQ #{req.id}</p>
+                        <MovementBadge type={(req.movement_type ?? 'salida') as MovementTypeEnum} />
+                      </div>
                       <RequisitionStatusEdit onSaved={refresh} req={req} />
                     </div>
                     <p className="mt-1 text-sm font-medium">
@@ -611,6 +833,7 @@ const Requisitions = () => {
             <thead>
               <tr>
                 <th className="panoptes-table-header">ID</th>
+                <th className="panoptes-table-header">Tipo</th>
                 <th className="panoptes-table-header">Origen</th>
                 <th className="panoptes-table-header">Destino</th>
                 <th className="panoptes-table-header">Estado</th>
@@ -623,6 +846,9 @@ const Requisitions = () => {
               {data.results?.map((req) => (
                 <tr key={req.id} className="panoptes-table-row">
                   <td className="px-4 py-3 font-mono">#{req.id}</td>
+                  <td className="px-4 py-3">
+                    <MovementBadge type={(req.movement_type ?? 'salida') as MovementTypeEnum} />
+                  </td>
                   <td className="px-4 py-3">{req.origin}</td>
                   <td className="px-4 py-3">{req.destination}</td>
                   <td className="px-4 py-3">

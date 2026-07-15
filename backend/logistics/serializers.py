@@ -95,6 +95,7 @@ class RequisitionSerializer(serializers.ModelSerializer):
         model = Requisition
         fields = [  # noqa: RUF012
             "id",
+            "movement_type",
             "origin",
             "destination",
             "status",

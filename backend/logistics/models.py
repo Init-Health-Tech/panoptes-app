@@ -15,6 +15,11 @@ class RequisitionStatus(models.TextChoices):
     ENTREGADA = "entregada", _("Entregada")
 
 
+class RequisitionType(models.TextChoices):
+    SALIDA = "salida", _("Salida")
+    ENTRADA = "entrada", _("Entrada")
+
+
 class OrderStatus(models.TextChoices):
     BORRADOR = "borrador", _("Borrador")
     CONFIRMADA = "confirmada", _("Confirmada")
@@ -65,6 +70,11 @@ class Provider(OrganizationModel):
 
 
 class Requisition(OrganizationModel):
+    movement_type = models.CharField(
+        max_length=16,
+        choices=RequisitionType.choices,
+        default=RequisitionType.SALIDA,
+    )
     origin = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
     status = models.CharField(

@@ -339,6 +339,12 @@ export type Message = {
     message: string;
 };
 
+/**
+ * * `salida` - Salida
+ * * `entrada` - Entrada
+ */
+export type MovementTypeEnum = 'salida' | 'entrada';
+
 export type Organization = {
     readonly id: number;
     name: string;
@@ -709,6 +715,7 @@ export type PatchedPurchaseOrder = {
 export type PatchedRfidTag = {
     readonly id?: number;
     code?: string;
+    readonly code_ascii?: string;
     item_type?: string;
     /**
      * Producto del catálogo al que pertenece esta unidad física.
@@ -716,7 +723,13 @@ export type PatchedRfidTag = {
     catalog_item?: number | null;
     readonly catalog_sku?: string | null;
     readonly catalog_name?: string | null;
+    /**
+     * Número de lote del producto (si aplica).
+     */
     lot?: string;
+    /**
+     * Fecha de caducidad (si aplica).
+     */
     expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
@@ -734,6 +747,7 @@ export type PatchedRfidTag = {
 
 export type PatchedRequisition = {
     readonly id?: number;
+    movement_type?: MovementTypeEnum;
     origin?: string;
     destination?: string;
     status?: RequisitionStatusEnum;
@@ -990,6 +1004,7 @@ export type RfidReadWebhook = {
 export type RfidTag = {
     readonly id: number;
     code: string;
+    readonly code_ascii: string;
     item_type?: string;
     /**
      * Producto del catálogo al que pertenece esta unidad física.
@@ -997,7 +1012,13 @@ export type RfidTag = {
     catalog_item?: number | null;
     readonly catalog_sku: string | null;
     readonly catalog_name: string | null;
+    /**
+     * Número de lote del producto (si aplica).
+     */
     lot?: string;
+    /**
+     * Fecha de caducidad (si aplica).
+     */
     expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
@@ -1015,6 +1036,7 @@ export type RfidTag = {
 
 export type Requisition = {
     readonly id: number;
+    movement_type?: MovementTypeEnum;
     origin: string;
     destination: string;
     status?: RequisitionStatusEnum;
@@ -1480,7 +1502,13 @@ export type PatchedRfidTagWritable = {
      * Producto del catálogo al que pertenece esta unidad física.
      */
     catalog_item?: number | null;
+    /**
+     * Número de lote del producto (si aplica).
+     */
     lot?: string;
+    /**
+     * Fecha de caducidad (si aplica).
+     */
     expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
@@ -1488,6 +1516,7 @@ export type PatchedRfidTagWritable = {
 };
 
 export type PatchedRequisitionWritable = {
+    movement_type?: MovementTypeEnum;
     origin?: string;
     destination?: string;
     status?: RequisitionStatusEnum;
@@ -1646,7 +1675,13 @@ export type RfidTagWritable = {
      * Producto del catálogo al que pertenece esta unidad física.
      */
     catalog_item?: number | null;
+    /**
+     * Número de lote del producto (si aplica).
+     */
     lot?: string;
+    /**
+     * Fecha de caducidad (si aplica).
+     */
     expires_on?: string | null;
     status?: StatusBf9Enum;
     last_location?: string;
@@ -1654,6 +1689,7 @@ export type RfidTagWritable = {
 };
 
 export type RequisitionWritable = {
+    movement_type?: MovementTypeEnum;
     origin: string;
     destination: string;
     status?: RequisitionStatusEnum;
@@ -1735,6 +1771,146 @@ export type ActiveModulesRetrieveResponses = {
 };
 
 export type ActiveModulesRetrieveResponse = ActiveModulesRetrieveResponses[keyof ActiveModulesRetrieveResponses];
+
+export type AuthCsrfRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/csrf/';
+};
+
+export type AuthCsrfRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type AuthLoginCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/login/';
+};
+
+export type AuthLoginCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type AuthLogoutCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/logout/';
+};
+
+export type AuthLogoutCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type AuthUserRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/user/';
+};
+
+export type AuthUserRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type BulkImportCatalogCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/catalog/';
+};
+
+export type BulkImportCatalogCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type BulkImportCatalogTemplateRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/catalog/template/';
+};
+
+export type BulkImportCatalogTemplateRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type BulkImportInventoryCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/inventory/';
+};
+
+export type BulkImportInventoryCreateResponses = {
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type BulkImportInventoryCreateResponse = BulkImportInventoryCreateResponses[keyof BulkImportInventoryCreateResponses];
+
+export type BulkImportInventoryTemplateRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/inventory/template/';
+};
+
+export type BulkImportInventoryTemplateRetrieveResponses = {
+    200: Blob | File;
+};
+
+export type BulkImportInventoryTemplateRetrieveResponse = BulkImportInventoryTemplateRetrieveResponses[keyof BulkImportInventoryTemplateRetrieveResponses];
+
+export type BulkImportLocationsCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/locations/';
+};
+
+export type BulkImportLocationsCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
+
+export type BulkImportLocationsTemplateRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/bulk-import/locations/template/';
+};
+
+export type BulkImportLocationsTemplateRetrieveResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
 
 export type ClientsListData = {
     body?: never;
@@ -2738,6 +2914,20 @@ export type LogisticsDashboardStatsRetrieveResponses = {
 };
 
 export type LogisticsDashboardStatsRetrieveResponse = LogisticsDashboardStatsRetrieveResponses[keyof LogisticsDashboardStatsRetrieveResponses];
+
+export type LogisticsScanProductCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/logistics/scan-product/';
+};
+
+export type LogisticsScanProductCreateResponses = {
+    /**
+     * No response body
+     */
+    200: unknown;
+};
 
 export type MaterialDispatchesListData = {
     body?: never;

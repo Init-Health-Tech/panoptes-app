@@ -17,6 +17,7 @@ from logistics.models import (
     Requisition,
     RequisitionLine,
     RequisitionStatus,
+    RequisitionType,
     SalesOrder,
     SalesOrderLine,
 )
@@ -1073,8 +1074,11 @@ class Command(BaseCommand):
             origin="Almacén Central Telecomba",
             destination="Sucursal Norte",
             status=RequisitionStatus.SOLICITADA,
-            defaults={},
+            defaults={"movement_type": RequisitionType.SALIDA},
         )
+        if req_out.movement_type != RequisitionType.SALIDA:
+            req_out.movement_type = RequisitionType.SALIDA
+            req_out.save(update_fields=["movement_type"])
         if not req_out.lines.exists():
             RequisitionLine.objects.create(
                 organization=org, requisition=req_out, product=products["RTR-AX3000"], quantity=25
@@ -1089,8 +1093,11 @@ class Command(BaseCommand):
             origin="CEDIS Bajío",
             destination="Sucursal Occidente",
             status=RequisitionStatus.EN_TRANSITO,
-            defaults={},
+            defaults={"movement_type": RequisitionType.ENTRADA},
         )
+        if req_in.movement_type != RequisitionType.ENTRADA:
+            req_in.movement_type = RequisitionType.ENTRADA
+            req_in.save(update_fields=["movement_type"])
         if not req_in.lines.exists():
             RequisitionLine.objects.create(
                 organization=org, requisition=req_in, product=products["SW-GIGA-24"], quantity=10

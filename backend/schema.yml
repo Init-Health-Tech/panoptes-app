@@ -18,6 +18,120 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActiveModules'
           description: ''
+  /api/auth/csrf/:
+    get:
+      operationId: auth_csrf_retrieve
+      description: 'Bootstrap CSRF: set the cookie and hand the token back in the
+        body.'
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/user/:
+    get:
+      operationId: auth_user_retrieve
+      tags:
+      - auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/bulk-import/catalog/:
+    post:
+      operationId: bulk_import_catalog_create
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/bulk-import/catalog/template/:
+    get:
+      operationId: bulk_import_catalog_template_retrieve
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/bulk-import/inventory/:
+    post:
+      operationId: bulk_import_inventory_create
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/bulk-import/inventory/template/:
+    get:
+      operationId: bulk_import_inventory_template_retrieve
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/bulk-import/locations/:
+    post:
+      operationId: bulk_import_locations_create
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/bulk-import/locations/template/:
+    get:
+      operationId: bulk_import_locations_template_retrieve
+      tags:
+      - bulk-import
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/clients/:
     get:
       operationId: clients_list
@@ -1469,6 +1583,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/LogisticsDashboardStats'
           description: ''
+  /api/logistics/scan-product/:
+    post:
+      operationId: logistics_scan_product_create
+      description: |-
+        Resuelve un identificador (EPC hex, ASCII o SKU) a un producto de logística.
+
+        Se usa para armar líneas de requisición leyendo tags RFID con un handheld o
+        tecleando el SKU manualmente. El tag RFID se mapea al producto por nombre
+        (``item_type``) o por catálogo; si no hay tag, se intenta por SKU/nombre.
+      tags:
+      - logistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/material-dispatches/:
     get:
       operationId: material_dispatches_list
@@ -4641,8 +4771,9 @@ components:
           nullable: true
         estimated_out_hours:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         proximity_next_request:
           type: integer
           nullable: true
@@ -4796,8 +4927,9 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         notes:
           type: string
           maxLength: 255
@@ -5007,6 +5139,14 @@ components:
           type: string
       required:
       - message
+    MovementTypeEnum:
+      enum:
+      - salida
+      - entrada
+      type: string
+      description: |-
+        * `salida` - Salida
+        * `entrada` - Entrada
     Organization:
       type: object
       properties:
@@ -5037,8 +5177,9 @@ components:
           type: string
         demo_duration_days:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         demo_expires_at:
           type: string
           format: date-time
@@ -5830,8 +5971,9 @@ components:
           nullable: true
         estimated_out_hours:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         proximity_next_request:
           type: integer
           nullable: true
@@ -6002,8 +6144,9 @@ components:
           nullable: true
         minutes_between:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         notes:
           type: string
           maxLength: 255
@@ -6052,6 +6195,9 @@ components:
         code:
           type: string
           maxLength: 128
+        code_ascii:
+          type: string
+          readOnly: true
         item_type:
           type: string
           maxLength: 128
@@ -6067,6 +6213,15 @@ components:
           type: string
           readOnly: true
           nullable: true
+        lot:
+          type: string
+          description: Número de lote del producto (si aplica).
+          maxLength: 64
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+          description: Fecha de caducidad (si aplica).
         status:
           $ref: '#/components/schemas/StatusBf9Enum'
         last_location:
@@ -6113,6 +6268,8 @@ components:
         id:
           type: integer
           readOnly: true
+        movement_type:
+          $ref: '#/components/schemas/MovementTypeEnum'
         origin:
           type: string
           maxLength: 255
@@ -6361,8 +6518,9 @@ components:
           type: string
         demo_duration_days:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         demo_expires_at:
           type: string
           format: date-time
@@ -6615,8 +6773,9 @@ components:
           nullable: true
         minutes_between:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         notes:
           type: string
           maxLength: 255
@@ -6683,8 +6842,9 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 1
+          format: int64
         unit_price:
           type: string
           format: decimal
@@ -6718,8 +6878,9 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 0
+          format: int64
         unit_price:
           type: string
           format: decimal
@@ -6824,6 +6985,9 @@ components:
         code:
           type: string
           maxLength: 128
+        code_ascii:
+          type: string
+          readOnly: true
         item_type:
           type: string
           maxLength: 128
@@ -6839,6 +7003,15 @@ components:
           type: string
           readOnly: true
           nullable: true
+        lot:
+          type: string
+          description: Número de lote del producto (si aplica).
+          maxLength: 64
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+          description: Fecha de caducidad (si aplica).
         status:
           $ref: '#/components/schemas/StatusBf9Enum'
         last_location:
@@ -6883,6 +7056,7 @@ components:
       - catalog_name
       - catalog_sku
       - code
+      - code_ascii
       - created
       - custody_id
       - custody_label
@@ -6899,6 +7073,8 @@ components:
         id:
           type: integer
           readOnly: true
+        movement_type:
+          $ref: '#/components/schemas/MovementTypeEnum'
         origin:
           type: string
           maxLength: 255
@@ -6944,8 +7120,9 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 1
+          format: int64
       required:
       - id
       - product
@@ -7040,8 +7217,9 @@ components:
           readOnly: true
         quantity:
           type: integer
-          maximum: 2147483647
+          maximum: 9223372036854775807
           minimum: 1
+          format: int64
         unit_price:
           type: string
           format: decimal
