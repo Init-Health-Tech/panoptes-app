@@ -1,12 +1,12 @@
 # Panoptes MONOLITO en la VM (todo en un dominio)
 
-Frontend **y** backend en el **mismo origen** (`avant.init.com.mx`). Django sirve el SPA
+Frontend **y** backend en el **mismo origen** (`api.panoptes.init.com.mx`). Django sirve el SPA
 de React (bundles de webpack via WhiteNoise) y la API juntos. Al ser mismo origen **no hay
 CORS ni cookies cross-subdominio**: el login deja de dar guerra.
 
 - Contenedor único de app en `127.0.0.1:58427` (loopback, puerto raro).
 - Red y volumen propios (`panoptes_internal`, `panoptes_pgdata`): no chocan con Odoo/Artemis/Overleaf.
-- Nginx: `avant.init.com.mx` → `http://127.0.0.1:58427`.
+- Nginx: `api.panoptes.init.com.mx` → `http://127.0.0.1:58427`.
 
 Ruta del repo en la VM (ajústala si la tuya difiere): `/opt/apps/panoptes-app`.
 
@@ -63,8 +63,8 @@ Rellena al menos:
 - `SECRET_KEY` = algo largo y aleatorio (`python -c "import secrets;print(secrets.token_urlsafe(50))"`).
 - `POSTGRES_PASSWORD` = una contraseña fuerte.
 - `DATABASE_URL` = `postgres://panoptes:<misma-password>@db:5432/panoptes`.
-- `ALLOWED_HOSTS=avant.init.com.mx`
-- `CSRF_TRUSTED_ORIGINS=https://avant.init.com.mx`
+- `ALLOWED_HOSTS=api.panoptes.init.com.mx`
+- `CSRF_TRUSTED_ORIGINS=https://api.panoptes.init.com.mx`
 
 Deja **vacías/comentadas** `FRONTEND_URL`, `CORS_ALLOWED_ORIGINS`, `SESSION_COOKIE_DOMAIN`,
 `CSRF_COOKIE_DOMAIN` (son solo para el deploy separado con Vercel).
@@ -101,13 +101,13 @@ curl -sI http://127.0.0.1:58427/login/ | head -5
 
 ---
 
-## 3. Nginx + TLS para `avant.init.com.mx`
+## 3. Nginx + TLS para `api.panoptes.init.com.mx`
 
 ```bash
-sudo tee /etc/nginx/sites-available/avant.init.com.mx > /dev/null <<'EOF'
+sudo tee /etc/nginx/sites-available/api.panoptes.init.com.mx > /dev/null <<'EOF'
 server {
     listen 80;
-    server_name avant.init.com.mx;
+    server_name api.panoptes.init.com.mx;
 
     # Archivos grandes (imports de Excel, etc.)
     client_max_body_size 25m;
@@ -123,24 +123,26 @@ server {
 }
 EOF
 
-sudo ln -sf /etc/nginx/sites-available/avant.init.com.mx /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/api.panoptes.init.com.mx /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 
 # Certificado (redirige HTTP->HTTPS automáticamente):
-sudo certbot --nginx -d avant.init.com.mx
+sudo certbot --nginx -d api.panoptes.init.com.mx
 ```
 
-### DNS y Vercel (importante)
+### DNS (importante)
 
-- Apunta `avant.init.com.mx` **A** → IP de la VM (`62.238.32.245`) y, si usas IPv6, **AAAA** → la de la VM.
-- **Quita** `avant.init.com.mx` del proyecto de Vercel (Project → Settings → Domains), o Vercel
-  seguirá respondiendo ese dominio y competirá con la VM.
-- El subdominio `api.avant.init.com.mx` ya no se necesita en monolito (puedes dejarlo o borrarlo).
+- Apunta `api.panoptes.init.com.mx` **A** → IP de la VM (`62.238.32.245`). Si tienes IPv6,
+  la **AAAA** debe apuntar a la VM también (o no la pongas, para que certbot use solo IPv4).
+- El certbot **falla** si el DNS todavía no resuelve a la VM: verifica antes con
+  `dig +short api.panoptes.init.com.mx` (debe devolver la IP de la VM).
+- Los subdominios del deploy separado (`avant.init.com.mx`, `api.avant.init.com.mx`) ya no se
+  necesitan en monolito. Si alguno sigue en Vercel, quítalo para que no compita.
 
 Verifica desde tu Mac:
 
 ```bash
-curl -sI https://avant.init.com.mx/login/ | head -5
+curl -sI https://api.panoptes.init.com.mx/login/ | head -5
 ```
 
 ---
@@ -156,10 +158,10 @@ $DC python manage.py seed_modules
 $DC python manage.py seed_packages
 
 # Crear org + usuario demo que expira en 7 días (imprime la contraseña una vez)
-$DC python manage.py provision_demo demo@avant.init.com.mx --name "Avant Demo" --days 7 --packages pkg_full
+$DC python manage.py provision_demo demo@panoptes.init.com.mx --name "Panoptes Demo" --days 7 --packages pkg_full
 
 # Sembrar datos de ejemplo DENTRO de esa org demo (usa el slug que imprimió provision_demo)
-$DC python manage.py seed_demo --org avant-demo --profile clinical
+$DC python manage.py seed_demo --org panoptes-demo --profile clinical
 ```
 
 > `--packages` admite: `pkg_full`, `pkg_instrumental`, `pkg_inventory`, `pkg_logistics`.

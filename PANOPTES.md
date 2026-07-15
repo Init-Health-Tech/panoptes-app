@@ -22,7 +22,7 @@ docker compose exec backend python manage.py seed_demo
 
 ## Deploy en VM (monolito, RECOMENDADO)
 
-Frontend **y** API en el mismo dominio **https://avant.init.com.mx** (una sola imagen Docker).
+Frontend **y** API en el mismo dominio **https://api.panoptes.init.com.mx** (una sola imagen Docker).
 Sin CORS ni cookies cross-subdominio: el login funciona sin líos.
 
 - [docs/deploy-monolith-vm.md](docs/deploy-monolith-vm.md) — teardown, build full, Nginx, demo
