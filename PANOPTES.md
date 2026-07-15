@@ -25,7 +25,7 @@ docker compose exec backend python manage.py seed_demo
 Frontend en **https://avant.init.com.mx** (Vercel) y API en **https://api.avant.init.com.mx** (VM):
 
 - [docs/deploy-vercel-vm.md](docs/deploy-vercel-vm.md) — dominios, CORS, cookies
-- [docs/deploy-backend-vm.md](docs/deploy-backend-vm.md) — SSH, secrets GitHub Actions, Nginx, primer setup
+- [docs/deploy-backend-vm.md](docs/deploy-backend-vm.md) — Docker Compose manual en la VM + Nginx
 
 ## Cuentas demo
 
