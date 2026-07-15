@@ -66,6 +66,10 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    # No authentication class => DRF won't enforce CSRF here. The session is still
+    # loaded by Django's SessionMiddleware, so logout() flushes it regardless. This
+    # keeps logout reliable cross-origin (Vercel SPA) without a CSRF round-trip.
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):
