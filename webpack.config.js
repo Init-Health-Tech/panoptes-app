@@ -11,7 +11,15 @@ module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   const isStandalone = process.env.STANDALONE === '1' || process.env.VERCEL === '1';
   const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-  const apiBaseUrl = process.env.API_BASE_URL || '';
+  const apiBaseUrl = (process.env.API_BASE_URL || '').replace(/\/$/, '');
+
+  // On Vercel the SPA cannot call same-origin /api — fail the build if unset.
+  if (process.env.VERCEL === '1' && !apiBaseUrl) {
+    throw new Error(
+      'API_BASE_URL is required on Vercel. Set it in Project → Settings → Environment Variables ' +
+        '(e.g. https://api.avant.init.com.mx) for Production, then Redeploy.',
+    );
+  }
 
   const localhostOutput = {
     path: path.resolve('./frontend/webpack_bundles/'),
@@ -84,6 +92,7 @@ module.exports = (env, argv) => {
         new HtmlWebpackPlugin({
           template: path.resolve(__dirname, 'frontend/public/index.html'),
           filename: 'index.html',
+          apiBaseUrl,
         }),
       new webpack.DefinePlugin({
         'process.env.API_BASE_URL': JSON.stringify(apiBaseUrl),
