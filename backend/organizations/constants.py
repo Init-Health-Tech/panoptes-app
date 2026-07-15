@@ -74,6 +74,19 @@ PRODUCT_PACKAGE_SEED_DATA = [
         ],
     },
     {
+        "code": "pkg_warehouse",
+        "name": "Almacén y distribución",
+        "description": (
+            "Inventario RFID + requisiciones de entrada/salida entre almacenes "
+            "+ catálogo (productos y proveedores). Sin ventas/compras."
+        ),
+        "modules": [
+            "inventory_realtime",
+            "logistics_requisitions",
+            "logistics_catalog",
+        ],
+    },
+    {
         "code": "pkg_full",
         "name": "Panoptes completo",
         "description": "Todos los módulos técnicos del catálogo.",

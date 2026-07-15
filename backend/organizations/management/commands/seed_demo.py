@@ -45,6 +45,14 @@ LOGISTICS_MODULES = [
     "logistics_sales_purchases",
 ]
 
+# Almacén/distribución: inventario RFID + requisiciones (entradas/salidas) + catálogo
+# (productos y proveedores). Sin ventas/compras.
+WAREHOUSE_MODULES = [
+    "inventory_realtime",
+    "logistics_requisitions",
+    "logistics_catalog",
+]
+
 ALL_MODULE_CODES = [entry["code"] for entry in MODULE_SEED_DATA]
 
 # Seriales ASCII demo (exactamente 12 chars → EPC canónico de 24 hex).
@@ -75,6 +83,15 @@ def avant_epc(seq: int) -> str:
     return ascii_to_hex_epc(avant_ascii(seq))
 
 
+def telecom_ascii(seq: int) -> str:
+    # 6 (TCOMBA) + 6 dígitos = 12 chars ASCII → EPC canónico de 24 hex.
+    return f"TCOMBA{seq:06d}"
+
+
+def telecom_epc(seq: int) -> str:
+    return ascii_to_hex_epc(telecom_ascii(seq))
+
+
 class Command(BaseCommand):
     help = (
         "Seed demo organizations (mixed, clínica, logística), users, sample data "
@@ -96,10 +113,11 @@ class Command(BaseCommand):
         parser.add_argument(
             "--profile",
             default="clinical",
-            choices=["clinical", "mixed", "logistics"],
+            choices=["clinical", "mixed", "logistics", "warehouse"],
             help=(
                 "Qué conjunto de datos sembrar cuando usas --org "
-                "(default: clinical, igual que la demo 'clinica')."
+                "(default: clinical). 'warehouse' = inventario + requisiciones "
+                "entrada/salida + catálogo (sin ventas/compras)."
             ),
         )
 
@@ -184,6 +202,8 @@ class Command(BaseCommand):
 
         if profile == "logistics":
             module_codes = LOGISTICS_MODULES
+        elif profile == "warehouse":
+            module_codes = WAREHOUSE_MODULES
         elif profile == "mixed":
             module_codes = ALL_MODULE_CODES
         else:
@@ -199,12 +219,17 @@ class Command(BaseCommand):
         enable_modules_for_organization(org, list(active_codes))
 
         prefix = (slug[:3] or "ORG").upper()
-        self._seed_inventory(org, prefix=prefix)
-        if profile in ("clinical", "mixed"):
-            self._seed_clinical_data(org)
-            self._seed_instrumental_data(org, prefix=prefix)
-        if profile in ("logistics", "mixed"):
-            self._seed_logistics_data(org)
+        if profile == "warehouse":
+            # Telecom: inventario RFID de equipos + proveedores + requisiciones
+            # entrada/salida (NO siembra el inventario médico genérico).
+            self._seed_warehouse_data(org)
+        else:
+            self._seed_inventory(org, prefix=prefix)
+            if profile in ("clinical", "mixed"):
+                self._seed_clinical_data(org)
+                self._seed_instrumental_data(org, prefix=prefix)
+            if profile in ("logistics", "mixed"):
+                self._seed_logistics_data(org)
 
         self.stdout.write(
             self.style.SUCCESS(
@@ -303,6 +328,35 @@ class Command(BaseCommand):
             create_fields.setdefault("lot", "")
             create_fields.setdefault("expires_on", None)
         return RFIDTag.objects.create(organization=org, code=code, **create_fields)
+
+    def _ensure_tag(
+        self,
+        org,
+        code,
+        *,
+        item_type,
+        status,
+        last_location,
+        inventory_location=None,
+    ):
+        """Upsert an RFID tag by its (already-encoded) EPC code."""
+        fields = {
+            "item_type": item_type,
+            "status": status,
+            "last_location": last_location,
+        }
+        if inventory_location is not None:
+            fields["inventory_location"] = inventory_location
+
+        tag = RFIDTag.objects.filter(organization=org, code=code).first()
+        if tag:
+            for key, value in fields.items():
+                setattr(tag, key, value)
+            tag.save()
+            return tag
+        return RFIDTag.objects.create(
+            organization=org, code=code, lot="", expires_on=None, **fields
+        )
 
     def _ensure_api_key(self, organization):
         if OrganizationAPIKey.objects.filter(organization=organization, is_active=True).exists():
@@ -931,4 +985,117 @@ class Command(BaseCommand):
                 product=product_sutura,
                 quantity=20,
                 unit_price=Decimal("60.00"),
+            )
+
+    def _seed_warehouse_data(self, org):
+        """Demo de almacén/distribución de TELECOM: inventario RFID de routers/módems/etc,
+        proveedores de telecom y requisiciones de salida/entrada entre almacenes."""
+        from inventory.models import InventoryLocation, InventoryLocationType
+
+        # Almacenes (ubicaciones de inventario)
+        loc_central, _ = InventoryLocation.objects.get_or_create(
+            organization=org,
+            code="ALM-CENTRAL",
+            defaults={
+                "name": "Almacén Central Telecomba",
+                "location_type": InventoryLocationType.WAREHOUSE,
+            },
+        )
+        loc_norte, _ = InventoryLocation.objects.get_or_create(
+            organization=org,
+            code="SUC-NORTE",
+            defaults={
+                "name": "Sucursal Norte",
+                "location_type": InventoryLocationType.WAREHOUSE,
+            },
+        )
+        loc_occ, _ = InventoryLocation.objects.get_or_create(
+            organization=org,
+            code="SUC-OCC",
+            defaults={
+                "name": "Sucursal Occidente",
+                "location_type": InventoryLocationType.WAREHOUSE,
+            },
+        )
+
+        # Inventario RFID: equipo de telecom con serial ASCII TCOMBA000001..
+        telecom_stock = [
+            (1, "Router WiFi 6 AX3000", RFIDTagStatus.EN_STOCK, loc_central),
+            (2, "Módem GPON ONT dual-band", RFIDTagStatus.EN_STOCK, loc_central),
+            (3, "Switch Gigabit 24 puertos", RFIDTagStatus.EN_STOCK, loc_central),
+            (4, "Antena sectorial 5 GHz", RFIDTagStatus.EN_STOCK, loc_central),
+            (5, "Repetidor mesh WiFi", RFIDTagStatus.EN_TRANSITO, loc_norte),
+            (6, "ONT fibra óptica XPON", RFIDTagStatus.EN_STOCK, loc_central),
+            (7, "Router empresarial VPN", RFIDTagStatus.EN_STOCK, loc_central),
+            (8, "Decodificador IPTV 4K", RFIDTagStatus.EN_TRANSITO, loc_occ),
+        ]
+        for seq, item_type, status, loc in telecom_stock:
+            self._ensure_tag(
+                org,
+                telecom_epc(seq),
+                item_type=item_type,
+                status=status,
+                last_location=loc.name,
+                inventory_location=loc,
+            )
+
+        # Catálogo de productos de telecom
+        product_specs = [
+            ("RTR-AX3000", "Router WiFi 6 AX3000", "Routers", "pza"),
+            ("MDM-GPON-01", "Módem GPON ONT dual-band", "Módems", "pza"),
+            ("SW-GIGA-24", "Switch Gigabit 24 puertos", "Switches", "pza"),
+            ("ONT-XPON-01", "ONT fibra óptica XPON", "ONT", "pza"),
+            ("MESH-WIFI-01", "Repetidor mesh WiFi", "Repetidores", "pza"),
+            ("IPTV-4K-01", "Decodificador IPTV 4K", "Decodificadores", "pza"),
+        ]
+        products = {}
+        for sku, name, category, unit in product_specs:
+            products[sku], _ = Product.objects.get_or_create(
+                organization=org,
+                sku=sku,
+                defaults={"name": name, "category": category, "unit": unit},
+            )
+
+        # Proveedores de telecom (de quienes adquieren la mercancía)
+        for business_name, contact in [
+            ("Cisco Distribución MX", "ventas@ciscodist.mx"),
+            ("Huawei Technologies MX", "mayoreo@huawei.mx"),
+            ("TP-Link México", "b2b@tp-link.mx"),
+        ]:
+            Provider.objects.get_or_create(
+                organization=org,
+                business_name=business_name,
+                defaults={"contact": contact},
+            )
+
+        # Requisición de SALIDA (Almacén Central → Sucursal Norte)
+        req_out, _ = Requisition.objects.get_or_create(
+            organization=org,
+            origin="Almacén Central Telecomba",
+            destination="Sucursal Norte",
+            status=RequisitionStatus.SOLICITADA,
+            defaults={},
+        )
+        if not req_out.lines.exists():
+            RequisitionLine.objects.create(
+                organization=org, requisition=req_out, product=products["RTR-AX3000"], quantity=25
+            )
+            RequisitionLine.objects.create(
+                organization=org, requisition=req_out, product=products["MDM-GPON-01"], quantity=40
+            )
+
+        # Requisición de ENTRADA/tránsito (CEDIS Bajío → Sucursal Occidente)
+        req_in, _ = Requisition.objects.get_or_create(
+            organization=org,
+            origin="CEDIS Bajío",
+            destination="Sucursal Occidente",
+            status=RequisitionStatus.EN_TRANSITO,
+            defaults={},
+        )
+        if not req_in.lines.exists():
+            RequisitionLine.objects.create(
+                organization=org, requisition=req_in, product=products["SW-GIGA-24"], quantity=10
+            )
+            RequisitionLine.objects.create(
+                organization=org, requisition=req_in, product=products["ONT-XPON-01"], quantity=15
             )
