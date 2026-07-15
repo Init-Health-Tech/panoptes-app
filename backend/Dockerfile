@@ -26,5 +26,10 @@ RUN poetry install --with dev --no-root --no-interaction --no-ansi
 WORKDIR /home/user/app/backend
 COPY backend/ /home/user/app/backend
 
+# Writable dirs for collectstatic (runs as non-root `user`)
+RUN mkdir -p /home/user/app/backend/staticfiles \
+    /home/user/app/frontend/webpack_bundles \
+  && chown -R user:user /home/user/app
+
 USER user
 CMD gunicorn project_name.wsgi --log-file - -b 0.0.0.0:8000 --reload
