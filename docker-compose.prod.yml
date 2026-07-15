@@ -1,12 +1,16 @@
-# Producción en VM — aislado de otros backends.
-# Puerto host raro (válido ≤65535): 58427 → gunicorn interno :8000
+# Producción MONOLITO en VM — frontend + backend en el MISMO origen.
+# Django sirve el SPA de React (bundles de webpack via WhiteNoise) y la API juntos,
+# así que NO hay CORS ni cookies cross-subdominio: el login funciona sin líos.
+#
+# Aislado de otros servicios de la VM:
+#   - Solo escucha en loopback (127.0.0.1) en un puerto raro: 58427
+#   - Red interna propia (panoptes_internal) y volumen propio (panoptes_pgdata)
 #
 # Uso:
 #   docker compose -f docker-compose.prod.yml --env-file backend/.env up -d --build
-#   docker compose -f docker-compose.prod.yml exec backend python manage.py migrate --noinput
-#   docker compose -f docker-compose.prod.yml exec backend python manage.py collectstatic --noinput
+#   docker compose -f docker-compose.prod.yml --env-file backend/.env exec backend python manage.py migrate --noinput
 #
-# Proxy (Caddy/Nginx): api.avant.init.com.mx → http://127.0.0.1:58427
+# Proxy (Nginx):  avant.init.com.mx  ->  http://127.0.0.1:58427
 
 name: panoptes-prod
 
@@ -43,10 +47,10 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
-    # migrate + collectstatic on every start so the DB schema and the Django-rendered
-    # login CSS (WhiteNoise + ManifestStaticFilesStorage) are always in sync.
+    # migrate + collectstatic en cada arranque: mantiene el esquema de la DB y los
+    # estáticos (WhiteNoise + ManifestStaticFilesStorage: bundles de React + CSS) al día.
     command: >
       sh -c "python manage.py migrate --noinput &&
       python manage.py collectstatic --noinput &&
@@ -63,7 +67,7 @@ services:
       RABBITMQ_URL: amqp://guest:guest@broker:5672//
       CELERY_BROKER_URL: amqp://guest:guest@broker:5672//
     ports:
-      # Solo loopback + puerto raro para no chocar con otros APIs en la VM
+      # Solo loopback + puerto raro: Nginx hace de reverse proxy hacia aquí.
       - "127.0.0.1:58427:8000"
     depends_on:
       db:
@@ -78,7 +82,7 @@ services:
   celery:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
     command: celery --app=project_name worker --loglevel=info
     env_file:

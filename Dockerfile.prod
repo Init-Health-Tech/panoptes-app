@@ -1,0 +1,66 @@
+# Monolito para VM: una sola imagen que sirve el SPA de React (bundles de webpack)
+# y la API de Django desde el MISMO origen. Así no hay CORS ni cookies cross-subdominio.
+#
+# Build:  docker compose -f docker-compose.prod.yml --env-file backend/.env build
+# Nota:   el contexto de build es la raíz del repo (ver docker-compose.prod.yml).
+
+# ---- Stage 1: compilar los bundles del frontend ----
+# Usamos node completo (no slim) para que las deps nativas (@swc/core, tailwind oxide)
+# se instalen sin problemas. Esta etapa se descarta; su tamaño no afecta la imagen final.
+FROM node:22 AS frontend
+
+ENV NODE_ENV=production
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile=false
+
+COPY . .
+
+# Sin STANDALONE => build de monolito: emite frontend/webpack_bundles/* + webpack-stats.json
+# (django-webpack-loader lee ese stats file y WhiteNoise sirve los bundles).
+RUN pnpm exec webpack --progress --bail --mode=production
+
+# ---- Stage 2: app de Python (Django + gunicorn) ----
+FROM python:3.12-slim
+
+ENV PYTHONFAULTHANDLER=1 \
+  PYTHONUNBUFFERED=1 \
+  PYTHONHASHSEED=random \
+  PIP_NO_CACHE_DIR=off \
+  PIP_DISABLE_PIP_VERSION_CHECK=on \
+  PIP_DEFAULT_TIMEOUT=100 \
+  POETRY_VERSION=2.0.1
+
+RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
+
+RUN apt-get update && apt-get install python3-dev gcc build-essential libpq-dev -y \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN pip install "poetry==$POETRY_VERSION"
+COPY pyproject.toml /home/user/app/
+COPY *poetry.lock /home/user/app/
+
+WORKDIR /home/user/app/
+
+RUN poetry config virtualenvs.create false
+RUN poetry install --with dev --no-root --no-interaction --no-ansi
+
+COPY backend/ /home/user/app/backend
+
+# Traer los bundles ya compilados del stage de frontend.
+# Django espera:  <repo>/frontend/webpack_bundles/  y  <repo>/webpack-stats.json
+COPY --from=frontend /app/frontend/webpack_bundles /home/user/app/frontend/webpack_bundles
+COPY --from=frontend /app/webpack-stats.json /home/user/app/webpack-stats.json
+
+# Dirs escribibles para collectstatic/media (corre como usuario no-root `user`)
+RUN mkdir -p /home/user/app/backend/staticfiles \
+    /home/user/app/backend/mediafiles \
+  && chown -R user:user /home/user/app
+
+WORKDIR /home/user/app/backend
+USER user
+
+CMD gunicorn project_name.wsgi --log-file - -b 0.0.0.0:8000

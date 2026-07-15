@@ -20,9 +20,16 @@ docker compose exec backend python manage.py seed_demo
 - **Admin Django:** http://localhost:8000/admin/
 - **Webpack dev server:** corre dentro del contenedor `frontend`; desde la raíz del repo usa `pnpm run dev` si trabajas en local (no desde `frontend/`).
 
-## Deploy separado (Vercel + VM)
+## Deploy en VM (monolito, RECOMENDADO)
 
-Frontend en **https://avant.init.com.mx** (Vercel) y API en **https://api.avant.init.com.mx** (VM):
+Frontend **y** API en el mismo dominio **https://avant.init.com.mx** (una sola imagen Docker).
+Sin CORS ni cookies cross-subdominio: el login funciona sin líos.
+
+- [docs/deploy-monolith-vm.md](docs/deploy-monolith-vm.md) — teardown, build full, Nginx, demo
+
+## Deploy separado (Vercel + VM) — alternativa
+
+Frontend en Vercel y API en `api.avant.init.com.mx` (VM). Requiere cookies cross-subdominio:
 
 - [docs/deploy-vercel-vm.md](docs/deploy-vercel-vm.md) — dominios, CORS, cookies
 - [docs/deploy-backend-vm.md](docs/deploy-backend-vm.md) — Docker Compose manual en la VM + Nginx
