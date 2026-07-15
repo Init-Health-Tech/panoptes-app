@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from datetime import date
 
 from inventory.models import RFIDTag, RFIDTagStatus
@@ -30,6 +30,7 @@ from organizations.models import (
     OrganizationModule,
     OrganizationRole,
 )
+from organizations.services_platform import enable_modules_for_organization
 
 # Control de instrumental product + inventario (clinical org offering).
 CLINICAL_MODULES = [
@@ -77,12 +78,39 @@ def avant_epc(seq: int) -> str:
 class Command(BaseCommand):
     help = (
         "Seed demo organizations (mixed, clínica, logística), users, sample data "
-        "and optional RFID API keys for local development."
+        "and optional RFID API keys for local development.\n"
+        "Use --org <slug> to seed the sample data INTO an existing organization "
+        "(e.g. a demo created with provision_demo)."
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--org",
+            dest="org_slug",
+            default=None,
+            help=(
+                "Slug de una organización existente a la que sembrarle los datos demo "
+                "(en vez de crear las orgs demo por defecto)."
+            ),
+        )
+        parser.add_argument(
+            "--profile",
+            default="clinical",
+            choices=["clinical", "mixed", "logistics"],
+            help=(
+                "Qué conjunto de datos sembrar cuando usas --org "
+                "(default: clinical, igual que la demo 'clinica')."
+            ),
+        )
 
     def handle(self, *args, **options):
         call_command("seed_modules")
         call_command("seed_packages")
+
+        if options.get("org_slug"):
+            self._seed_into_existing_org(options["org_slug"], options["profile"])
+            return
+
         User = get_user_model()
         created_keys: list[tuple[str, str]] = []
 
@@ -143,6 +171,46 @@ class Command(BaseCommand):
         else:
             self.stdout.write("")
             self.stdout.write("RFID API keys ya existen — rota desde Django admin si necesitas una nueva.")
+
+    def _seed_into_existing_org(self, slug, profile):
+        """Seed the sample dataset into an already-existing org (keeps its account_type)."""
+        try:
+            org = Organization.objects.get(slug=slug)
+        except Organization.DoesNotExist:
+            raise CommandError(
+                f"No existe una organización con slug '{slug}'. "
+                "Revísalo en el admin o usa `provision_demo` para crearla primero."
+            )
+
+        if profile == "logistics":
+            module_codes = LOGISTICS_MODULES
+        elif profile == "mixed":
+            module_codes = ALL_MODULE_CODES
+        else:
+            module_codes = CLINICAL_MODULES
+
+        # Activa los módulos del perfil SIN desactivar los que ya tenga (unión).
+        active_codes = set(
+            OrganizationModule.objects.filter(organization=org, is_active=True).values_list(
+                "module__code", flat=True
+            )
+        )
+        active_codes.update(module_codes)
+        enable_modules_for_organization(org, list(active_codes))
+
+        prefix = (slug[:3] or "ORG").upper()
+        self._seed_inventory(org, prefix=prefix)
+        if profile in ("clinical", "mixed"):
+            self._seed_clinical_data(org)
+            self._seed_instrumental_data(org, prefix=prefix)
+        if profile in ("logistics", "mixed"):
+            self._seed_logistics_data(org)
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Datos demo ({profile}) sembrados en '{org.name}' (slug: {org.slug})."
+            )
+        )
 
     def _ensure_organization(self, slug, name, industry_type, module_codes, account_type="internal"):
         org, _ = Organization.objects.get_or_create(
